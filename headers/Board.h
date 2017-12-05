@@ -18,7 +18,7 @@ private:
 	std::array<Tile, 37>* tilesPtr;
 };
 
-usdfhbsudfbsudfnhi;
+test_test();
 
 #endif // BOARD_H
 
