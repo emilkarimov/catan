@@ -1,0 +1,21 @@
+﻿  Tile.cpp
+c:\users\bram\documents\master\advanced programming\project\catan\src\tile.cpp(4): fatal error C1083: Cannot open include file: 'Tile.h': No such file or directory
+  Settlement.cpp
+c:\users\bram\documents\master\advanced programming\project\catan\src\settlement.cpp(4): fatal error C1083: Cannot open include file: 'Settlement.h': No such file or directory
+  Road.cpp
+c:\users\bram\documents\master\advanced programming\project\catan\src\road.cpp(4): fatal error C1083: Cannot open include file: 'Road.h': No such file or directory
+  ResourceCard.cpp
+c:\users\bram\documents\master\advanced programming\project\catan\src\resourcecard.cpp(3): fatal error C1083: Cannot open include file: 'ResourceCard.h': No such file or directory
+  Player.cpp
+  Main.cpp
+c:\users\bram\documents\master\advanced programming\project\catan\src\main.cpp(8): fatal error C1083: Cannot open include file: 'Building.h': No such file or directory
+  GameEngine.cpp
+  City.cpp
+c:\users\bram\documents\master\advanced programming\project\catan\src\city.cpp(4): fatal error C1083: Cannot open include file: 'City.h': No such file or directory
+  Card.cpp
+c:\users\bram\documents\master\advanced programming\project\catan\src\card.cpp(4): fatal error C1083: Cannot open include file: 'Card.h': No such file or directory
+  Building.cpp
+c:\users\bram\documents\master\advanced programming\project\catan\src\building.cpp(4): fatal error C1083: Cannot open include file: 'Building.h': No such file or directory
+  Board.cpp
+c:\users\bram\documents\master\advanced programming\project\catan\src\board.cpp(4): fatal error C1083: Cannot open include file: 'Board.h': No such file or directory
+  Generating Code...
