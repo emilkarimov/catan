@@ -18,6 +18,8 @@ private:
 	std::array<Tile, 37>* tilesPtr;
 };
 
+usdfhbsudfbsudfnhi;
+
 #endif // BOARD_H
 
 
