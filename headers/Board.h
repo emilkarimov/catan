@@ -1,7 +1,6 @@
 // Board.h
 // Board class
 // tortoise bla bla bla
-// change from git
 #ifndef BOARD_H
 #define BOARD_H
 
