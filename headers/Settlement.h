@@ -6,21 +6,20 @@
 #include <string> // C++ standard string class
 #include <array> //
 #include "Building.h" // Building class definition
+#include "Enums.h"
 
 class Settlement : public Building {
 public:
-	Settlement();
+	Settlement(int, int, TileIntersection);
 	virtual ~Settlement() = default; // virtual destructor
 
-	void setLoc(int, int, int);
-	std::array<int, 3> getLoc() const;
+	const std::array<int, 3>& getLoc() const;
 
 	// keyword virtual signals intent to override    
 	virtual void draw() const override;
 	virtual std::string toString() const override;
-	virtual void check_location() const override;
 private:
-	std::array<int, 3> cornerLoc;
+	std::array<int, 3> loc;
 };
 
 #endif // SETTLEMENT_H

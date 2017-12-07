@@ -6,23 +6,16 @@
 using namespace std;
 
 // constructor 
-City::City()
+City::City(int x, int y, TileIntersection intersect)
 	: Building() {
-	cornerLoc[0] = -1;
-	cornerLoc[1] = -1;
-	cornerLoc[2] = -1;
-}
-
-// set location
-void City::setLoc(int a, int b, int c) {
-	cornerLoc[0] = a;
-	cornerLoc[1] = b;
-	cornerLoc[2] = c;
+	loc[0] = x;
+	loc[1] = y;
+	loc[2] = intersect;
 }
 
 // get location
-std::array<int, 3> City::getLoc() const {
-	return cornerLoc;
+const std::array<int, 3>& City::getLoc() const {
+	return loc;
 }
 
 // draw
@@ -32,10 +25,8 @@ void City::draw() const {
 
 // to string
 std::string City::toString() const {
-	return "this is a City";
-}
-
-// check location ???
-void City::check_location() const {
-	cout << "check location\n";
+	return "this is a city with coordinates: " +
+		std::to_string(loc[0]) + " " +
+		std::to_string(loc[1]) + " " +
+		std::to_string(loc[2]);
 }

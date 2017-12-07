@@ -23,9 +23,8 @@ public:
 	virtual std::string toString() const override;
 private:
 	Devtype type;
-	bool played{ false };
+	bool played{ 0 };
 };
 
 #endif // RESOURCECARD_H
 
-//something

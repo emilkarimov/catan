@@ -6,11 +6,6 @@ using namespace std;
 
 // constructor
 Building::Building() {
-	onBoard = false;
-}
-
-bool Building::isOnBoard() const {
-	return onBoard;
 }
 
 // toString Building's information (virtual, but not pure virtual)

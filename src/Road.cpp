@@ -6,21 +6,16 @@
 using namespace std;
 
 // constructor 
-Road::Road()
+Road::Road(int x, int y, TileEdge edge)
 	: Building() {
-	edgeLoc[0] = -1;
-	edgeLoc[1] = -1;
-}
-
-// set location
-void Road::setLoc(int a, int b) {
-	edgeLoc[0] = a;
-	edgeLoc[1] = b;
+	loc[0] = x;
+	loc[1] = y;
+	loc[2] = edge;
 }
 
 // get location
-std::array<int, 2> Road::getLoc() const {
-	return edgeLoc;
+const std::array<int, 3>& Road::getLoc() const {
+	return loc;
 }
 
 // draw
@@ -30,10 +25,6 @@ void Road::draw() const {
 
 // to string
 std::string Road::toString() const {
-	return "this is road";
-}
-
-// check location ???
-void Road::check_location() const {
-	cout << "check location\n";
+	return "this is a road with coordinates: " + std::to_string(getLoc()[0]) + 
+		" " + std::to_string(getLoc()[1]) + " " + std::to_string(getLoc()[2]);
 }

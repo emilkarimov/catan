@@ -18,11 +18,6 @@ private:
 	std::array<Tile, 37>* tilesPtr;
 };
 
-test_test();
-
 #endif // BOARD_H
-
-//trololo
-//djkfghskjld
 
 
