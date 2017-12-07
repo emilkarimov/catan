@@ -17,7 +17,6 @@ void rollDice();
 
 int main()
 {
-	cout << "create players" << "\n";
 	// create players
 	Player player1 = Player("Emil", RED);
 	Player player2 = Player("Bram", GREEN);
@@ -65,7 +64,6 @@ int main()
 	player1.addResource(LUMBER, 0);
 	player1.addResource(ORE, 1);
 	cout << player1.toString() << "\n\n";
-
 
 	return 0;
 }
