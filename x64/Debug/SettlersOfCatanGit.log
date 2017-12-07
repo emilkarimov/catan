@@ -1,2 +1,16 @@
-﻿  Main.cpp
-  SettlersOfCatanGit.vcxproj -> C:\Users\454b\source\repos\catan\x64\Debug\SettlersOfCatanGit.exe
+﻿  Tile.cpp
+  Settlement.cpp
+  Road.cpp
+  ResourceCard.cpp
+  Player.cpp
+  Main.cpp
+  GameEngine.cpp
+  DevelopmentCard.cpp
+  City.cpp
+  Card.cpp
+  Building.cpp
+  Board.cpp
+  Generating Code...
+c:\a\ut\advanced programming\settlers of catan on github\catan\src\player.cpp(158): warning C4715: 'Player::getColor': not all control paths return a value
+  SettlersOfCatanGit.vcxproj -> C:\A\UT\Advanced Programming\Settlers Of Catan on GitHub\catan\x64\Debug\SettlersOfCatanGit.exe
+  SettlersOfCatanGit.vcxproj -> C:\A\UT\Advanced Programming\Settlers Of Catan on GitHub\catan\x64\Debug\SettlersOfCatanGit.pdb (Partial PDB)
