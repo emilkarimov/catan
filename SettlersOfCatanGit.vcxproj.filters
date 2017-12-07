@@ -89,5 +89,8 @@
     <ClInclude Include="headers\DevelopmentCard.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="TestGitHeader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

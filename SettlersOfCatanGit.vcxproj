@@ -142,6 +142,7 @@
     <ClInclude Include="headers\Road.h" />
     <ClInclude Include="headers\Settlement.h" />
     <ClInclude Include="headers\Tile.h" />
+    <ClInclude Include="TestGitHeader.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
