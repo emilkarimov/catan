@@ -54,8 +54,11 @@ int main()
 	player1.buildCity(5, 6, BOTTOM);
 
 	// test of getLoc function
-	std::array<int, 3> testArray = player1.getSettlements()[1].getLoc();
-	cout << "testArray: " << testArray[0] << "\n\n";
+	std::array<int, 3> testArray1 = player1.getSettlements()[1].getLoc();
+	cout << "testArray: " << testArray1[0] << " " << testArray1[1] << " " << testArray1[2] << "\n\n";
+
+	std::array<int, 3> testArray0 = player1.getSettlements()[0].getLoc();
+	cout << "testArray: " << testArray0[0] << " " << testArray0[1] << " " << testArray0[2] << "\n\n";
 
 	// add resources to player 1
 	player1.addResource(GRAIN, 1);
