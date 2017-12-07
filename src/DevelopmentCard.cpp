@@ -17,7 +17,7 @@ string DevelopmentCard::toString() const {
 }
 
 void DevelopmentCard::draw() const {
-	cout << "draw resouce card\n";
+	cout << "draw development card\n";
 }
 
 bool DevelopmentCard::checkplayedcard() const {
