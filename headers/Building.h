@@ -1,5 +1,6 @@
 // Building.h
 // Building abstract base class.
+// git change
 #ifndef BUILDING_H
 #define BUILDING_H
 
