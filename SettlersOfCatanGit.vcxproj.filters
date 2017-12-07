@@ -89,7 +89,7 @@
     <ClInclude Include="headers\DevelopmentCard.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="TestGitHeader.h">
+    <ClInclude Include="headers\TestGitHeader2.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
