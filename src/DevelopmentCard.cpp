@@ -1,6 +1,8 @@
 // DevelopmentCard.cpp
 // DevelopmentCard class member-function definitions.
-#include "DeveleopmentCard.h" // Card class definition
+#include "DevelopmentCard.h" // Card class definition
+#include <iostream>
+
 using namespace std;
 
 // constructor

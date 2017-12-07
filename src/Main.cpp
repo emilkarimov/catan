@@ -17,6 +17,7 @@ void rollDice();
 
 int main()
 {
+	cout << "create players" << "\n";
 	// create players
 	Player player1 = Player("Emil", RED);
 	Player player2 = Player("Bram", GREEN);

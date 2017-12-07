@@ -1,8 +1,8 @@
 #pragma once
-// ResourceCard.h
-// ResourceCard class derived from Card.
-#ifndef RESOURCECARD_H
-#define RESOURCECARD_H
+// DevelopmentCard.h
+// DevelopmentCard class derived from Card.
+#ifndef DEVELOPMENTCARD_H
+#define DEVELOPMENTCARD_H
 
 #include <string> // C++ standard string class
 #include <array> //
@@ -26,5 +26,5 @@ private:
 	bool played{ 0 };
 };
 
-#endif // RESOURCECARD_H
+#endif // DEVELOPMENTCARD_H
 
