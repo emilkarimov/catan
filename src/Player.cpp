@@ -125,7 +125,7 @@ void Player::buildCity(int x, int y, TileIntersection intersec) {
 // to string
 std::string Player::toString() const {
 	return getName() + ":" +
-		"\ncolor: " + std::to_string(getColor()) +
+		"\ncolor: " + (getColor()) +
 		"\nroads: " + std::to_string(getNumRoads()) +
 		"\nsettlements: " + std::to_string(getNumSettlements()) +
 		"\ncities: " + std::to_string(getNumCities()) +
@@ -144,8 +144,17 @@ std::string Player::getName() const {
 }
 
 // get color
-Color Player::getColor() const {
-	return color;
+std::string Player::getColor() const {
+	switch (color) {
+	case RED:
+			return "red";
+	case GREEN:
+		return "green";
+	case BLUE:
+		return "blue";
+	case YELLOW:
+		return "yellow";
+	}
 }
 
 // get references to roads

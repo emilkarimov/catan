@@ -18,7 +18,7 @@ public:
         
 	std::string toString() const;
 	std::string getName() const;
-	Color getColor() const;
+	std::string getColor() const;
 
 	size_t getNumSettlements() const;
 	size_t getNumRoads() const;

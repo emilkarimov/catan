@@ -19,7 +19,7 @@ public:
 	void draw() const;
 	std::string toString() const;
 private:
-	std::array<int, 2> coord;
+	std::array<int, 2> coord; // coordinates of the tile
 	Terrain type;
 	int diceNum;
 };
