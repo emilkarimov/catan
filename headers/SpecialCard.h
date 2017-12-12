@@ -1,6 +1,6 @@
-#pragma once
-// SpecialCard.h
-// SpecialCard class derived from Card.
+/// \file
+/// SpecialCard.h
+/// SpecialCard class derived from Card.
 #ifndef SPECIALCARD_H
 #define SPECIALCARD_H
 

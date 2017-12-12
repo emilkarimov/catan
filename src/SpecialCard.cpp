@@ -1,5 +1,6 @@
-// SpecialCard.cpp
-// SpecialCard class member-function definitions.
+/// \file
+/// SpecialCard.cpp
+/// SpecialCard class member-function definitions.
 #include "SpecialCard.h" // Card class definition
 #include <iostream>
 
