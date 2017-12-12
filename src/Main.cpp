@@ -34,9 +34,11 @@ int main()
 	player.buildRoad(-1, 0, UP);
 	player.buildSettlement(1, 0, BOTTOM);
 	player.buildRoad(0, -1, RIGHT);
-	player.addResource(LUMBER, 1);
-	player.addResource(ORE, 1);
-	player.addResource(WOOL, 1);
+	player.addResource(LUMBER, 5);
+	player.addResource(ORE, 5);
+	player.addResource(WOOL, 5);
+	player.addResource(BRICK, 5);
+	player.addResource(GRAIN, 5);
 	player.addDevCard(KNIGHT);
 	cout << player.toString() << "\n";
 

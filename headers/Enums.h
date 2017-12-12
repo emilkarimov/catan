@@ -5,6 +5,7 @@
 
 #ifndef ENUMS_H
 #define ENUMS_H
+
 /// enum to denote the type of tiles
 enum Terrain { DESERT, FIELDS, HILLS, PASTURE, FOREST, MOUNTAINS, SEA };
 
@@ -28,5 +29,11 @@ enum Color { RED, GREEN, BLUE, YELLOW };
 
 /// enum for turn stages
 enum TurnStage { START, ROLLED};
+
+/// build costs in GRAIN, BRICK, WOOL, LUMBER, ORE;
+//std::array<unsigned int, 5> ROAD_COST{ 0, 1, 0, 1, 0 };
+//std::array<unsigned int, 5> SETTLEMENT_COST{ 1, 1, 1, 1, 0 };
+//std::array<unsigned int, 5> CITY_COST{ 2, 0, 0, 0, 3 };
+//std::array<unsigned int, 5> DEV_COST{ 1, 0, 1, 0, 1 };
 
 #endif // ENUMS_H

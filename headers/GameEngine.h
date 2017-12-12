@@ -6,7 +6,6 @@
 #define GAMEENGINE_H
 
 #include <string> // C++ standard string class
-#include <array>
 #include <vector>
 #include "Enums.h"
 #include "Player.h"
@@ -35,9 +34,6 @@ public:
 	/// possible moves a player can take
 	std::string possibleMoves(Player& player, TurnStage stage);
 
-	/// can player play special card?
-	bool canPlayDev(Player& player);
-
 	/// print info about all the players
 	void printInfoPlayers();
 
@@ -46,10 +42,6 @@ public:
 
 	/// find tile with specific x y coordinates and return the reference
 	Tile* findTile(int x, int y);
-
-
-
-
 
 
 private:

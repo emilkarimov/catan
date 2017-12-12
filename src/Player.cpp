@@ -6,6 +6,12 @@
 #include <iostream>
 using namespace std;
 
+// build costs
+std::array<unsigned int, 5> ROAD_COST{ 0, 1, 0, 1, 0 };
+std::array<unsigned int, 5> SETTLEMENT_COST{ 1, 1, 1, 1, 0 };
+std::array<unsigned int, 5> CITY_COST{ 2, 0, 0, 0, 3 };
+std::array<unsigned int, 5> DEV_COST{ 1, 0, 1, 0, 1 };
+
 // constructor 
 Player::Player(string name, Color color)
 	: name(name), color(color) {}
@@ -239,4 +245,42 @@ void Player::addDevCard(Devtype type) {
 // get number of development cards
 size_t Player::getNumDev() const {
 	return developmentCards.size();
+}
+
+
+// can play development card?
+bool Player::canPlayDev() {
+	if (getNumDev() > 0) {
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
+// can the player build a settlement?
+bool Player::canBuildSettlement() {
+	return getNumLumber() >= SETTLEMENT_COST[LUMBER] &&
+		getNumBrick() >= SETTLEMENT_COST[BRICK] &&
+		getNumGrain() >= SETTLEMENT_COST[GRAIN] &&
+		getNumWool() >= SETTLEMENT_COST[WOOL];
+}
+
+// can the player build a city?
+bool Player::canBuildCity() {
+	return getNumGrain() >= CITY_COST[GRAIN] &&
+		getNumOre() >= CITY_COST[ORE];
+}
+
+// can a player build a road?
+bool Player::canBuildRoad() {
+	return getNumLumber() >= ROAD_COST[LUMBER] &&
+		getNumBrick() >= ROAD_COST[BRICK];
+}
+
+// can a player buy a development card?
+bool Player::canBuyDev() {
+	return getNumGrain() >= DEV_COST[GRAIN] &&
+		getNumWool() >= DEV_COST[WOOL] &&
+		getNumOre() >= DEV_COST[ORE];
 }

@@ -7,6 +7,8 @@
 #include <string>
 using namespace std;
 
+
+
 // constructor 
 GameEngine::GameEngine(std::vector<Player> players, std::vector<Tile> tiles)
 	: players(players), tiles(tiles) {
@@ -92,9 +94,59 @@ void GameEngine::firstStage() {
 // 2nd stage - players take actions in turn
 void GameEngine::secondStage() {
 	for (Player& player : players) {
-		TurnStage stage = START;
-		cout << player.getName() + ", what is your next move?: \n";
+		TurnStage stage = START; // stage of the turn
+		std::string moveInput; // input from user
+		cout << "\n" << player.getName() + ", what is your move? \noptions:\n";
 		cout << possibleMoves(player, stage);
+
+		// handle initial move (roll or play dev card)
+		bool NotLegalMove{ true }; 
+		while (NotLegalMove) {
+			cin >> moveInput;
+			if (moveInput == "1") {
+				cout << "roll dice" << "\n";
+				NotLegalMove = false;
+			}
+			else if (moveInput == "2" && player.canPlayDev()) {
+				cout << "Play development card" << "\n";
+				NotLegalMove = false;
+			}
+			else {
+				cout << "Illegal move. Choose a valid move from the options above" << "\n";
+			}
+		}
+
+		// roll the dice if the first move was to play dev card
+		if (moveInput != "1") {
+			cout << "\n" << player.getName() + ", what is your move? \noptions:\n"
+				<< "1 - roll dice\n";
+			bool NotLegalMove{ true };
+			while (NotLegalMove) {
+				cin >> moveInput;
+				if (moveInput == "1") {
+					cout << "roll dice" << "\n";
+					NotLegalMove = false;
+				}
+				else {
+					cout << "Illegal move. Choose a valid move from the options above" << "\n";
+				}
+			}
+		}
+
+		stage = ROLLED; // dice was rolled
+
+		// next moves
+		bool endOfTurn{ false };
+		while (!endOfTurn) {
+			cout << "\n" << player.getName() + ", what is your move? \noptions:\n";
+			cout << possibleMoves(player, stage);
+			endOfTurn = true;
+		}
+
+
+
+
+
 	}
 }
 
@@ -103,25 +155,32 @@ std::string GameEngine::possibleMoves(Player& player, TurnStage stage) {
 	std::string possible = "";
 	switch (stage) {
 	case START:
-		possible += "1 - roll dice";
-		if (canPlayDev(player)) {
-			possible += "\n2 - play special card";
+		possible += "1 - roll dice\n";
+		if (player.canPlayDev()) {
+			possible += "2 - play development card\n";
 		}
 		break;
+	case ROLLED:
+		if (player.canPlayDev()) {
+			possible += "2 - play development card\n";
+		}
+		if (player.canBuildSettlement()) {
+			possible += "3 - build settlement\n";
+		}
+		if (player.canBuildCity()) {
+			possible += "4 - build city\n";
+		}
+		if (player.canBuildRoad()) {
+			possible += "5 - build road\n";
+		}
+		if (player.canBuyDev()) {
+			possible += "6 - buy development card\n";
+		}
+
 	default:
 		break;
 	}
 	return possible;
-}
-
-// can play special card?
-bool GameEngine::canPlayDev(Player& player) {
-	if (player.getNumDev() > 0) {
-		return true;
-	}
-	else {
-		return false;
-	}
 }
 
 // get info about all the players

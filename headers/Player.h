@@ -119,6 +119,20 @@ public:
 	/// get number of development cards
 	size_t getNumDev() const;
 
+	/// can player play special card?
+	bool canPlayDev();
+
+	/// can a player build a settlement?
+	bool canBuildSettlement();
+
+	/// can a player build a city?
+	bool canBuildCity();
+	
+	/// can a player build a road?
+	bool canBuildRoad();
+
+	/// can a player buy a development card?
+	bool canBuyDev();
 private:
 	// buildings
 	/// roads

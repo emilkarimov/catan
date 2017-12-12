@@ -120,6 +120,7 @@
     <ClCompile Include="src\Building.cpp" />
     <ClCompile Include="src\Card.cpp" />
     <ClCompile Include="src\City.cpp" />
+    <ClCompile Include="src\Constants.cpp" />
     <ClCompile Include="src\DevelopmentCard.cpp" />
     <ClCompile Include="src\GameEngine.cpp" />
     <ClCompile Include="src\Main.cpp" />
@@ -136,6 +137,7 @@
     <ClInclude Include="headers\Building.h" />
     <ClInclude Include="headers\Card.h" />
     <ClInclude Include="headers\City.h" />
+    <ClInclude Include="headers\Constants.h" />
     <ClInclude Include="headers\DevelopmentCard.h" />
     <ClInclude Include="headers\Enums.h" />
     <ClInclude Include="headers\GameEngine.h" />
