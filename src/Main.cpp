@@ -22,24 +22,16 @@ using namespace std;
 
 void rollDice();
 void iterOneCheck();
+void testFirstStage();
 vector<Tile> createDefaultTiles();
 vector<Player> createDefaultPlayers();
 
 int main()
 {
-	// Default tiles
-	vector<Tile> defaultTiles = createDefaultTiles();
-	vector<Player> defaultPlayers = createDefaultPlayers();
-	vector<Player> onePlayer;
-	onePlayer.push_back(Player("Alex", RED));
-	GameEngine game(onePlayer, defaultTiles);
-	game.firstStage();
-	game.printInfoPlayers();
-
 
 
 	// Iteration 1 tests
-	//iterOneCheck();
+	iterOneCheck();
 
 
 	return 0;
@@ -177,3 +169,17 @@ vector<Player> createDefaultPlayers() {
 
 	return defaultPlayers;
 }
+
+void testFirstStage() {
+	// Default tiles
+	vector<Tile> defaultTiles = createDefaultTiles();
+	vector<Player> defaultPlayers = createDefaultPlayers();
+
+	// only one player (for testing)
+	vector<Player> onePlayer;
+	onePlayer.push_back(Player("Alex", RED));
+	GameEngine game(onePlayer, defaultTiles);
+	game.firstStage();
+	game.printInfoPlayers();
+}
+
