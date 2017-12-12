@@ -26,4 +26,7 @@ enum TileEdge { UP, RIGHT, DOWN };
 /// enum for possible colors for the players
 enum Color { RED, GREEN, BLUE, YELLOW };
 
+/// enum for turn stages
+enum TurnStage { START, ROLLED};
+
 #endif // ENUMS_H

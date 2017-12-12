@@ -7,6 +7,7 @@
 #include <string> // C++ standard string class
 #include "ResourceCard.h"
 #include "DevelopmentCard.h"
+#include "SpecialCard.h"
 #include "Road.h"
 #include "Settlement.h"
 #include "City.h"
@@ -109,6 +110,8 @@ public:
 	/// \param qnt number of cards to be removed
 	void removeResource(Resource type, unsigned int qnt);
 
+	/// getter number of special cards
+	size_t getNumSpecial() const;
 
 private:
 	// buildings
@@ -145,6 +148,9 @@ private:
 
 	/// color
 	Color color;
+
+	/// special cards
+	std::vector<SpecialCard> specialCards;
 };
 
 #endif // PLAYER_H

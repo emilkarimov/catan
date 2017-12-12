@@ -224,3 +224,8 @@ size_t Player::getNumOre() const {
 size_t Player::getNumResources() const {
 	return getNumGrain() + getNumBrick() + getNumWool() + getNumLumber() + getNumOre();
 }
+
+/// getter number of special cards
+size_t Player::getNumSpecial() const {
+	return specialCards.size();
+}

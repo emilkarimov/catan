@@ -29,6 +29,15 @@ public:
 	/// 1st stage - players build two settlements and two roads
 	void firstStage();
 
+	/// 2nd stage - players take actions in turn
+	void secondStage();
+
+	/// possible moves a player can take
+	std::string possibleMoves(Player& player, TurnStage stage);
+
+	/// can player play special card?
+	bool canPlaySpecial(Player& player);
+
 	/// print info about all the players
 	void printInfoPlayers();
 

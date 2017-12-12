@@ -88,6 +88,42 @@ void GameEngine::firstStage() {
 	}
 }
 
+
+// 2nd stage - players take actions in turn
+void GameEngine::secondStage() {
+	for (Player& player : players) {
+		TurnStage stage = START;
+		cout << player.getName() + ", what is your next move?: \n";
+		cout << possibleMoves(player, stage);
+	}
+}
+
+// returns a string with possible moves a player can take
+std::string GameEngine::possibleMoves(Player& player, TurnStage stage) {
+	std::string possible = "";
+	switch (stage) {
+	case START:
+		possible += "1 - roll dice";
+		if (canPlaySpecial(player)) {
+			possible += "\n2 - play special card";
+		}
+		break;
+	default:
+		break;
+	}
+	return possible;
+}
+
+// can play special card?
+bool GameEngine::canPlaySpecial(Player& player) {
+	if (player.getNumSpecial() > 0) {
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
 // get info about all the players
 void GameEngine::printInfoPlayers() {
 	for (Player& player : players) {
