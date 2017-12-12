@@ -1,4 +1,5 @@
-// Board.cpp
+/// \file
+/// Board.cpp
 // Board class member-function definitions.
 
 #include "Board.h" // Tile class definition

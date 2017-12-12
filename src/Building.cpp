@@ -1,6 +1,7 @@
-// Building.cpp
-// Abstract-base-class Building member-function definitions.
-// Note: No definitions are given for pure virtual functions.
+/// \file
+/// Building.cpp
+/// Abstract-base-class Building member-function definitions.
+
 #include "Building.h" // Building class definition
 using namespace std;
 

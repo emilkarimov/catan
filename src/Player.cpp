@@ -1,5 +1,6 @@
-// Player.cpp
-// Player class member-function definitions.
+/// \file
+/// Player.cpp
+/// Player class member-function definitions.
 
 #include "Player.h" // Player class definition
 #include <iostream>
@@ -81,6 +82,9 @@ void Player::removeResource(Resource type, unsigned int quantity) {
 		}
 		break;
 
+	case NORES:
+		break; // add nothing
+
 	default:
 		break;
 	}
@@ -127,15 +131,37 @@ std::string Player::toString() const {
 	return getName() + ":" +
 		"\ncolor: " + (getColor()) +
 		"\nroads: " + std::to_string(getNumRoads()) +
-		"\nsettlements: " + std::to_string(getNumSettlements()) +
-		"\ncities: " + std::to_string(getNumCities()) +
+		"\n" + toStringRoads() +
+		"settlements: " + std::to_string(getNumSettlements()) +
+		"\n" + toStringSettlements() +
+		"cities: " + std::to_string(getNumCities()) +
 		"\nnumber of resources: " + std::to_string(getNumResources()) +
-		"\ngrain: " + std::to_string(getNumGrain()) +
-		"\nbrick: " + std::to_string(getNumBrick()) +
-		"\nwool: " + std::to_string(getNumWool()) +
-		"\nlumber: " + std::to_string(getNumLumber()) +
-		"\nore: " + std::to_string(getNumOre()) +
+		"\n    grain: " + std::to_string(getNumGrain()) +
+		"\n    brick: " + std::to_string(getNumBrick()) +
+		"\n    wool: " + std::to_string(getNumWool()) +
+		"\n    lumber: " + std::to_string(getNumLumber()) +
+		"\n    ore: " + std::to_string(getNumOre()) +
 		"\nVP: " + std::to_string(getVictoryPoints());
+}
+
+// text for all roads
+std::string Player::toStringRoads() const {
+	std::string stringRoads = {};
+	for (const Road& road : roads) {
+		stringRoads += "    " + road.toString() + "\n";
+	}
+
+	return stringRoads;
+}
+
+// text for all settlements
+std::string Player::toStringSettlements() const {
+	std::string stringSettlements = {};
+	for (const Settlement& settlement : settlements) {
+		stringSettlements += "    " + settlement.toString() + "\n";
+	}
+
+	return stringSettlements;
 }
 
 // get name
@@ -147,13 +173,15 @@ std::string Player::getName() const {
 std::string Player::getColor() const {
 	switch (color) {
 	case RED:
-			return "red";
+		return "red";
 	case GREEN:
 		return "green";
 	case BLUE:
 		return "blue";
 	case YELLOW:
 		return "yellow";
+	default:
+		return "wrong color";
 	}
 }
 

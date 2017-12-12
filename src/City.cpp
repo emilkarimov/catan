@@ -1,5 +1,6 @@
-// City.cpp
-// City class member-function definitions.
+\/// \file
+/// City.cpp
+/// City class member-function definitions.
 
 #include "City.h" // City class definition
 #include <iostream>

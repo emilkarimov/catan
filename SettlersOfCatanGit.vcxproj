@@ -126,6 +126,7 @@
     <ClCompile Include="src\Player.cpp" />
     <ClCompile Include="src\ResourceCard.cpp" />
     <ClCompile Include="src\Road.cpp" />
+    <ClCompile Include="src\Robber.cpp" />
     <ClCompile Include="src\Settlement.cpp" />
     <ClCompile Include="src\Tile.cpp" />
   </ItemGroup>

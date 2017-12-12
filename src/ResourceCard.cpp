@@ -1,5 +1,6 @@
-// ResourceCard.cpp
-// ResourceCard class member-function definitions.
+/// \file
+/// ResourceCard.cpp
+/// ResourceCard class member-function definitions.
 #include "ResourceCard.h" // Card class definition
 #include <iostream>
 using namespace std;
