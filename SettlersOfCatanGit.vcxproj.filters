@@ -95,9 +95,6 @@
     <ClInclude Include="headers\DevelopmentCard.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="headers\TestGitHeader2.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="headers\Robber.h">
       <Filter>Header Files</Filter>
     </ClInclude>

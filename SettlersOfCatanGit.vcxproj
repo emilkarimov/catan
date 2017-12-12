@@ -145,7 +145,6 @@
     <ClInclude Include="headers\Robber.h" />
     <ClInclude Include="headers\Settlement.h" />
     <ClInclude Include="headers\SpecialCard.h" />
-    <ClInclude Include="headers\TestGitHeader2.h" />
     <ClInclude Include="headers\Tile.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
