@@ -140,6 +140,7 @@
     <ClInclude Include="headers\Player.h" />
     <ClInclude Include="headers\ResourceCard.h" />
     <ClInclude Include="headers\Road.h" />
+    <ClInclude Include="headers\Robber.h" />
     <ClInclude Include="headers\Settlement.h" />
     <ClInclude Include="headers\TestGitHeader2.h" />
     <ClInclude Include="headers\Tile.h" />
