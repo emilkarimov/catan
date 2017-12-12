@@ -1,4 +1,4 @@
-\/// \file
+/// \file
 /// City.cpp
 /// City class member-function definitions.
 
