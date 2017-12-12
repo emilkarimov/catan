@@ -113,6 +113,12 @@ public:
 	/// getter number of special cards
 	size_t getNumSpecial() const;
 
+	/// add develompent card
+	void addDevCard(Devtype type);
+
+	/// get number of development cards
+	size_t getNumDev() const;
+
 private:
 	// buildings
 	/// roads

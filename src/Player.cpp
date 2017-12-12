@@ -136,11 +136,12 @@ std::string Player::toString() const {
 		"\n" + toStringSettlements() +
 		"cities: " + std::to_string(getNumCities()) +
 		"\nnumber of resources: " + std::to_string(getNumResources()) +
-		"\n    grain: " + std::to_string(getNumGrain()) +
-		"\n    brick: " + std::to_string(getNumBrick()) +
-		"\n    wool: " + std::to_string(getNumWool()) +
-		"\n    lumber: " + std::to_string(getNumLumber()) +
-		"\n    ore: " + std::to_string(getNumOre()) +
+		"\n  grain: " + std::to_string(getNumGrain()) +
+		"\n  brick: " + std::to_string(getNumBrick()) +
+		"\n  wool: " + std::to_string(getNumWool()) +
+		"\n  lumber: " + std::to_string(getNumLumber()) +
+		"\n  ore: " + std::to_string(getNumOre()) +
+		"\ndevelopment cards: " + std::to_string(getNumDev()) +
 		"\nVP: " + std::to_string(getVictoryPoints());
 }
 
@@ -148,7 +149,7 @@ std::string Player::toString() const {
 std::string Player::toStringRoads() const {
 	std::string stringRoads = {};
 	for (const Road& road : roads) {
-		stringRoads += "    " + road.toString() + "\n";
+		stringRoads += "  " + road.toString() + "\n";
 	}
 
 	return stringRoads;
@@ -158,7 +159,7 @@ std::string Player::toStringRoads() const {
 std::string Player::toStringSettlements() const {
 	std::string stringSettlements = {};
 	for (const Settlement& settlement : settlements) {
-		stringSettlements += "    " + settlement.toString() + "\n";
+		stringSettlements += "  " + settlement.toString() + "\n";
 	}
 
 	return stringSettlements;
@@ -225,7 +226,17 @@ size_t Player::getNumResources() const {
 	return getNumGrain() + getNumBrick() + getNumWool() + getNumLumber() + getNumOre();
 }
 
-/// getter number of special cards
+// getter number of special cards
 size_t Player::getNumSpecial() const {
 	return specialCards.size();
+}
+
+// add develompent card
+void Player::addDevCard(Devtype type) {
+	developmentCards.push_back(DevelopmentCard(type));
+}
+
+// get number of development cards
+size_t Player::getNumDev() const {
+	return developmentCards.size();
 }

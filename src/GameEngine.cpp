@@ -104,7 +104,7 @@ std::string GameEngine::possibleMoves(Player& player, TurnStage stage) {
 	switch (stage) {
 	case START:
 		possible += "1 - roll dice";
-		if (canPlaySpecial(player)) {
+		if (canPlayDev(player)) {
 			possible += "\n2 - play special card";
 		}
 		break;
@@ -115,8 +115,8 @@ std::string GameEngine::possibleMoves(Player& player, TurnStage stage) {
 }
 
 // can play special card?
-bool GameEngine::canPlaySpecial(Player& player) {
-	if (player.getNumSpecial() > 0) {
+bool GameEngine::canPlayDev(Player& player) {
+	if (player.getNumDev() > 0) {
 		return true;
 	}
 	else {

@@ -36,7 +36,7 @@ public:
 	std::string possibleMoves(Player& player, TurnStage stage);
 
 	/// can player play special card?
-	bool canPlaySpecial(Player& player);
+	bool canPlayDev(Player& player);
 
 	/// print info about all the players
 	void printInfoPlayers();

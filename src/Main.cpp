@@ -28,10 +28,30 @@ vector<Player> createDefaultPlayers();
 
 int main()
 {
+	// player initialisation
+	Player player = Player("Alex", RED);
+	player.buildSettlement(-1, 0, TOP);
+	player.buildRoad(-1, 0, UP);
+	player.buildSettlement(1, 0, BOTTOM);
+	player.buildRoad(0, -1, RIGHT);
+	player.addResource(LUMBER, 1);
+	player.addResource(ORE, 1);
+	player.addResource(WOOL, 1);
+	player.addDevCard(KNIGHT);
+	cout << player.toString() << "\n";
 
+	// only one player is in the game
+	vector<Player> onePlayer;
+	onePlayer.push_back(player);
+	vector<Tile> defaultTiles = createDefaultTiles();
+	GameEngine game(onePlayer, defaultTiles);
+	game.secondStage();
+
+	// test first stage
+	// testFirstStage();
 
 	// Iteration 1 tests
-	iterOneCheck();
+	//iterOneCheck();
 
 
 	return 0;
