@@ -23,38 +23,23 @@ using namespace std;
 void rollDice();
 void iterOneCheck();
 void testFirstStage();
+void testSecondStage();
 vector<Tile> createDefaultTiles();
 vector<Player> createDefaultPlayers();
 
 int main()
 {
-	// test first stage
-	//testFirstStage();
-
-	// player initialisation
-	Player player = Player("Alex", RED);
-	player.buildSettlement(-1, 0, TOP);
-	player.buildRoad(-1, 0, UP);
-	player.buildSettlement(1, 0, BOTTOM);
-	player.buildRoad(0, -1, RIGHT);
-	player.addResource(LUMBER, 5);
-	player.addResource(ORE, 5);
-	player.addResource(WOOL, 5);
-	player.addResource(BRICK, 5);
-	player.addResource(GRAIN, 5);
-	player.addDevCard(KNIGHT);
-	cout << player.toString() << "\n";
-
-	// only one player is in the game
-	vector<Player> onePlayer;
-	onePlayer.push_back(player);
-	vector<Tile> defaultTiles = createDefaultTiles();
-	GameEngine game(onePlayer, defaultTiles);
-	game.secondStage();
-
+	// Let's keep the main clean. If you want to do some tests with your code, you can just create
+	// a function and call it from here like it is done below:
 
 	// Iteration 1 tests
 	//iterOneCheck();
+
+	// test first stage
+	//testFirstStage();
+
+	// test second stage
+	testSecondStage();
 
 
 	return 0;
@@ -206,3 +191,26 @@ void testFirstStage() {
 	game.printInfoPlayers();
 }
 
+
+void testSecondStage() {
+	// player initialisation
+	Player player = Player("Alex", RED);
+	player.buildSettlement(-1, 0, TOP);
+	player.buildRoad(-1, 0, UP);
+	player.buildSettlement(1, 0, BOTTOM);
+	player.buildRoad(0, -1, RIGHT);
+	player.addResource(LUMBER, 5);
+	player.addResource(ORE, 5);
+	player.addResource(WOOL, 5);
+	player.addResource(BRICK, 5);
+	player.addResource(GRAIN, 5);
+	player.addDevCard(KNIGHT);
+	cout << player.toString() << "\n";
+
+	// only one player is in the game
+	vector<Player> onePlayer;
+	onePlayer.push_back(player);
+	vector<Tile> defaultTiles = createDefaultTiles();
+	GameEngine game(onePlayer, defaultTiles);
+	game.secondStage();
+}
