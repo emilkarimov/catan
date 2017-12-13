@@ -36,10 +36,10 @@ int main()
 	//iterOneCheck();
 
 	// test first stage
-	//testFirstStage();
+	testFirstStage();
 
 	// test second stage
-	testSecondStage();
+	//testSecondStage();
 
 
 	return 0;
@@ -211,6 +211,7 @@ void testSecondStage() {
 	vector<Player> onePlayer;
 	onePlayer.push_back(player);
 	vector<Tile> defaultTiles = createDefaultTiles();
-	GameEngine game(onePlayer, defaultTiles);
+	Board board = Board(defaultTiles);
+	GameEngine game(onePlayer, board);
 	game.secondStage();
 }

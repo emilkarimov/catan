@@ -7,8 +7,8 @@
 using namespace std;
 
 // constructor 
-Board::Board(array<Tile, 37>* a)
-	: tilesPtr(a) {}
+Board::Board(std::vector<Tile> tiles)
+	: tiles(tiles) {}
 
 // draw
 void Board::draw() const {
@@ -18,4 +18,14 @@ void Board::draw() const {
 // to string
 std::string Board::toString() const {
 	return "this is a Board";
+}
+
+// find tile with specific x y coordinates and return the reference
+Tile* Board::getTile(int x, int y) {
+	for (Tile& tileRef : tiles) {
+		if (tileRef.getCoord()[0] == x && tileRef.getCoord()[1] == y) {
+			return &tileRef;
+		}
+	}
+	return nullptr; // return tilePtr if the coordinates are not correct
 }

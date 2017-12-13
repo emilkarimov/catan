@@ -10,6 +10,7 @@
 #include "Enums.h"
 #include "Player.h"
 #include "Tile.h"
+#include "Board.h"
 
 /// GameEngine class
 ///
@@ -17,7 +18,7 @@
 class GameEngine {
 public:
 	/// constructor
-	GameEngine(std::vector<Player> players, std::vector<Tile> tiles);
+	GameEngine(std::vector<Player> players, Board board);
 
 	/// destructor
 	~GameEngine() = default;
@@ -46,7 +47,7 @@ public:
 
 private:
 	std::vector<Player> players;
-	std::vector<Tile> tiles;
+	Board board;
 
 };
 

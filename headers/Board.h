@@ -8,6 +8,7 @@
 #include <string> // C++ standard string class
 #include <array>
 #include "Tile.h"
+#include <vector>
 
 /// Board class
 ///
@@ -16,7 +17,7 @@ class Board {
 public:
 	/// constructor
 	/// \param a array with pointers to 37 tiles
-	Board(std::array<Tile, 37>* a);
+	Board(std::vector<Tile> tiles);
 	/// destructor
 	~Board() = default; // virtual destructor
 
@@ -25,9 +26,13 @@ public:
 
 	/// textual info
 	std::string toString() const;
+
+	/// find tile with specific x y coordinates and return the reference
+	Tile* getTile(int x, int y);
+
 private:
 	/// pointers to tiles
-	std::array<Tile, 37>* tilesPtr;
+	std::vector<Tile> tiles;
 };
 
 #endif // BOARD_H
