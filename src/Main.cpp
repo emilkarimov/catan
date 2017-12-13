@@ -28,6 +28,9 @@ vector<Player> createDefaultPlayers();
 
 int main()
 {
+	// test first stage
+	//testFirstStage();
+
 	// player initialisation
 	Player player = Player("Alex", RED);
 	player.buildSettlement(-1, 0, TOP);
@@ -49,8 +52,6 @@ int main()
 	GameEngine game(onePlayer, defaultTiles);
 	game.secondStage();
 
-	// test first stage
-	// testFirstStage();
 
 	// Iteration 1 tests
 	//iterOneCheck();
