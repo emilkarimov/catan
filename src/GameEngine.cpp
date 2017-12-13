@@ -177,6 +177,10 @@ std::string GameEngine::possibleMoves(Player& player, TurnStage stage) {
 			possible += "6 - buy development card\n";
 		}
 
+		possible += "8 - trade with bank\n";
+		possible += "9 - trade with players\n";
+		possible += "e - end turn\n";
+		break;
 	default:
 		break;
 	}
