@@ -1,5 +1,6 @@
-// Road.cpp
-// Road class member-function definitions.
+/// \file
+/// Road.cpp
+/// Road class member-function definitions.
 
 #include "Road.h" // Road class definition
 #include <iostream>
@@ -25,6 +26,20 @@ void Road::draw() const {
 
 // to string
 std::string Road::toString() const {
-	return "this is a road with coordinates: " + std::to_string(getLoc()[0]) + 
-		" " + std::to_string(getLoc()[1]) + " " + std::to_string(getLoc()[2]);
+	std::string edgeString{ "" };
+	std::array<int, 3> roadLoc = getLoc();
+	if (roadLoc[2] == UP) {
+		edgeString += "UP";
+	}
+	else if (roadLoc[2] == RIGHT) {
+		edgeString += "RIGHT";
+	}
+	else if (roadLoc[2] == DOWN) {
+		edgeString += "DOWN";
+	}
+	else {
+		edgeString += "ERROR";
+	}
+	return "r: " + std::to_string(roadLoc[0]) +
+		" " + std::to_string(roadLoc[1]) + " " + edgeString;
 }

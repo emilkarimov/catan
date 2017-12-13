@@ -1,9 +1,16 @@
-// Player.cpp
-// Player class member-function definitions.
+/// \file
+/// Player.cpp
+/// Player class member-function definitions.
 
 #include "Player.h" // Player class definition
 #include <iostream>
 using namespace std;
+
+// build costs
+std::array<unsigned int, 5> ROAD_COST{ 0, 1, 0, 1, 0 };
+std::array<unsigned int, 5> SETTLEMENT_COST{ 1, 1, 1, 1, 0 };
+std::array<unsigned int, 5> CITY_COST{ 2, 0, 0, 0, 3 };
+std::array<unsigned int, 5> DEV_COST{ 1, 0, 1, 0, 1 };
 
 // constructor 
 Player::Player(string name, Color color)
@@ -81,6 +88,9 @@ void Player::removeResource(Resource type, unsigned int quantity) {
 		}
 		break;
 
+	case NORES:
+		break; // add nothing
+
 	default:
 		break;
 	}
@@ -127,15 +137,38 @@ std::string Player::toString() const {
 	return getName() + ":" +
 		"\ncolor: " + (getColor()) +
 		"\nroads: " + std::to_string(getNumRoads()) +
-		"\nsettlements: " + std::to_string(getNumSettlements()) +
-		"\ncities: " + std::to_string(getNumCities()) +
+		"\n" + toStringRoads() +
+		"settlements: " + std::to_string(getNumSettlements()) +
+		"\n" + toStringSettlements() +
+		"cities: " + std::to_string(getNumCities()) +
 		"\nnumber of resources: " + std::to_string(getNumResources()) +
-		"\ngrain: " + std::to_string(getNumGrain()) +
-		"\nbrick: " + std::to_string(getNumBrick()) +
-		"\nwool: " + std::to_string(getNumWool()) +
-		"\nlumber: " + std::to_string(getNumLumber()) +
-		"\nore: " + std::to_string(getNumOre()) +
+		"\n  grain: " + std::to_string(getNumGrain()) +
+		"\n  brick: " + std::to_string(getNumBrick()) +
+		"\n  wool: " + std::to_string(getNumWool()) +
+		"\n  lumber: " + std::to_string(getNumLumber()) +
+		"\n  ore: " + std::to_string(getNumOre()) +
+		"\ndevelopment cards: " + std::to_string(getNumDev()) +
 		"\nVP: " + std::to_string(getVictoryPoints());
+}
+
+// text for all roads
+std::string Player::toStringRoads() const {
+	std::string stringRoads = {};
+	for (const Road& road : roads) {
+		stringRoads += "  " + road.toString() + "\n";
+	}
+
+	return stringRoads;
+}
+
+// text for all settlements
+std::string Player::toStringSettlements() const {
+	std::string stringSettlements = {};
+	for (const Settlement& settlement : settlements) {
+		stringSettlements += "  " + settlement.toString() + "\n";
+	}
+
+	return stringSettlements;
 }
 
 // get name
@@ -147,13 +180,15 @@ std::string Player::getName() const {
 std::string Player::getColor() const {
 	switch (color) {
 	case RED:
-			return "red";
+		return "red";
 	case GREEN:
 		return "green";
 	case BLUE:
 		return "blue";
 	case YELLOW:
 		return "yellow";
+	default:
+		return "wrong color";
 	}
 }
 
@@ -195,4 +230,57 @@ size_t Player::getNumOre() const {
 // get sum of all the resources
 size_t Player::getNumResources() const {
 	return getNumGrain() + getNumBrick() + getNumWool() + getNumLumber() + getNumOre();
+}
+
+// getter number of special cards
+size_t Player::getNumSpecial() const {
+	return specialCards.size();
+}
+
+// add develompent card
+void Player::addDevCard(Devtype type) {
+	developmentCards.push_back(DevelopmentCard(type));
+}
+
+// get number of development cards
+size_t Player::getNumDev() const {
+	return developmentCards.size();
+}
+
+
+// can play development card?
+bool Player::canPlayDev() {
+	if (getNumDev() > 0) {
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
+// can the player build a settlement?
+bool Player::canBuildSettlement() {
+	return getNumLumber() >= SETTLEMENT_COST[LUMBER] &&
+		getNumBrick() >= SETTLEMENT_COST[BRICK] &&
+		getNumGrain() >= SETTLEMENT_COST[GRAIN] &&
+		getNumWool() >= SETTLEMENT_COST[WOOL];
+}
+
+// can the player build a city?
+bool Player::canBuildCity() {
+	return getNumGrain() >= CITY_COST[GRAIN] &&
+		getNumOre() >= CITY_COST[ORE];
+}
+
+// can a player build a road?
+bool Player::canBuildRoad() {
+	return getNumLumber() >= ROAD_COST[LUMBER] &&
+		getNumBrick() >= ROAD_COST[BRICK];
+}
+
+// can a player buy a development card?
+bool Player::canBuyDev() {
+	return getNumGrain() >= DEV_COST[GRAIN] &&
+		getNumWool() >= DEV_COST[WOOL] &&
+		getNumOre() >= DEV_COST[ORE];
 }

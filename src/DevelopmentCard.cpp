@@ -1,5 +1,6 @@
-// DevelopmentCard.cpp
-// DevelopmentCard class member-function definitions.
+/// \file
+/// DevelopmentCard.cpp
+/// DevelopmentCard class member-function definitions.
 #include "DevelopmentCard.h" // Card class definition
 #include <iostream>
 

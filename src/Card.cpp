@@ -1,6 +1,7 @@
-// Card.cpp
-// Abstract-base-class Card member-function definitions.
-// Note: No definitions are given for pure virtual functions.
+/// \file
+/// Card.cpp
+/// Abstract-base-class Card member-function definitions.
+
 #include "Card.h" // Card class definition
 using namespace std;
 

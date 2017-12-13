@@ -1,5 +1,6 @@
-// Settlement.cpp
-// Settlement class member-function definitions.
+/// \file
+/// Settlement.cpp
+/// Settlement class member-function definitions.
 
 #include "Settlement.h" // Settlement class definition
 #include <iostream>
@@ -25,8 +26,19 @@ void Settlement::draw() const {
 
 // to string
 std::string Settlement::toString() const {
-	return "this is a settlement with coordinates: " +
+	std::string settlementString{ "" };
+	if (loc[2] == TOP) {
+		settlementString += "TOP";
+	}
+	else if (loc[2] == BOTTOM) {
+		settlementString += "BOTTOM";
+	}
+	else {
+		settlementString += "ERROR";
+	}
+
+	return "s: " +
 		std::to_string(loc[0]) + " " +
 		std::to_string(loc[1]) + " " +
-		std::to_string(loc[2]);
+		settlementString;
 }

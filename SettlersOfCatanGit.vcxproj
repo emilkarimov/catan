@@ -101,7 +101,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Users\454b\source\repos\catan\headers;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\A\UT\Advanced Programming\Settlers Of Catan on GitHub\catan\headers;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -109,7 +109,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Users\454b\source\repos\catan\headers;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\A\UT\Advanced Programming\Settlers Of Catan on GitHub\catan\headers;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -120,13 +120,16 @@
     <ClCompile Include="src\Building.cpp" />
     <ClCompile Include="src\Card.cpp" />
     <ClCompile Include="src\City.cpp" />
+    <ClCompile Include="src\Constants.cpp" />
     <ClCompile Include="src\DevelopmentCard.cpp" />
     <ClCompile Include="src\GameEngine.cpp" />
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\Player.cpp" />
     <ClCompile Include="src\ResourceCard.cpp" />
     <ClCompile Include="src\Road.cpp" />
+    <ClCompile Include="src\Robber.cpp" />
     <ClCompile Include="src\Settlement.cpp" />
+    <ClCompile Include="src\SpecialCard.cpp" />
     <ClCompile Include="src\Tile.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -134,13 +137,16 @@
     <ClInclude Include="headers\Building.h" />
     <ClInclude Include="headers\Card.h" />
     <ClInclude Include="headers\City.h" />
+    <ClInclude Include="headers\Constants.h" />
     <ClInclude Include="headers\DevelopmentCard.h" />
     <ClInclude Include="headers\Enums.h" />
     <ClInclude Include="headers\GameEngine.h" />
     <ClInclude Include="headers\Player.h" />
     <ClInclude Include="headers\ResourceCard.h" />
     <ClInclude Include="headers\Road.h" />
+    <ClInclude Include="headers\Robber.h" />
     <ClInclude Include="headers\Settlement.h" />
+    <ClInclude Include="headers\SpecialCard.h" />
     <ClInclude Include="headers\Tile.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
