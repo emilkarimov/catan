@@ -20,6 +20,12 @@ void GameEngine::start() {
 
 }
 
+// checks if a corner is available for placing a settlements
+bool GameEngine::cornerFree(int x, int y, TileIntersection intersec) {
+	cout << "location if fine\n";
+	return true;
+}
+
 // 1st stage - players build two settlements and two roads
 void GameEngine::firstStage() {
 	// first settlement and road
@@ -37,6 +43,7 @@ void GameEngine::firstStage() {
 		else {
 			intersec = TOP;
 		}
+		cornerFree(x, y, intersec); // check location
 		players[i].buildSettlement(x, y, intersec);
 
 		// road

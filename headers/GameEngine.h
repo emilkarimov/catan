@@ -41,8 +41,8 @@ public:
 	/// add initial resources depending on the second settlement
 	void addInitResources(Player& player);
 
-	/// find tile with specific x y coordinates and return the reference
-	Tile* findTile(int x, int y);
+	/// checks if a corner is available for placing a settlements
+	bool cornerFree(int x, int y, TileIntersection intersec);
 
 
 private:
