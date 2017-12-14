@@ -17,6 +17,7 @@
 #include "Tile.h"
 #include "Robber.h"
 #include "GameEngine.h"
+#include "CornerCoord.h"
 
 using namespace std;
 
@@ -41,10 +42,15 @@ int main()
 	// test second stage
 	//testSecondStage();
 
-	std::vector<int> a{ 1, 2, 3 };
-	std::vector<int> b{ 1, 2, 3 };
+	CornerCoord a = CornerCoord(1, 2, TOP);
+	CornerCoord b = CornerCoord(0, 2, TOP);
+
 	if (a == b) {
 		cout << "equal\n";
+	}
+
+	if (a != b) {
+		cout << "not equal\n";
 	}
 
 	return 0;
