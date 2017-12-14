@@ -36,11 +36,16 @@ int main()
 	//iterOneCheck();
 
 	// test first stage
-	testFirstStage();
+	//testFirstStage();
 
 	// test second stage
 	//testSecondStage();
 
+	std::vector<int> a{ 1, 2, 3 };
+	std::vector<int> b{ 1, 2, 3 };
+	if (a == b) {
+		cout << "equal\n";
+	}
 
 	return 0;
 }

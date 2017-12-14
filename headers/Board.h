@@ -30,6 +30,10 @@ public:
 	/// find tile with specific x y coordinates and return the reference
 	Tile* getTile(int x, int y);
 
+	/// coordinates of adjacent corners. Actual tiles with these coordinates might not exist
+	/// if the corner is on the border 
+	std::array<std::array<int, 3>, 3> getAdjacentCorners(int x, int y, TileIntersection intersect);
+
 private:
 	/// pointers to tiles
 	std::vector<Tile> tiles;

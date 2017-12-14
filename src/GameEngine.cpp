@@ -20,9 +20,17 @@ void GameEngine::start() {
 
 }
 
-// checks if a corner is available for placing a settlements
+// checks if a corner is available for placing a settlement
 bool GameEngine::cornerFree(int x, int y, TileIntersection intersec) {
-	cout << "location if fine\n";
+	std::array<std::array<int, 3>, 3> corners;
+	corners = board.getAdjacentCorners(x, y, intersec);
+	for (unsigned int i{ 0 }; i < 3; ++i) {
+		for (Player& player : players) {
+			if (player.hasPropertyAtCoord(corners[i][0], corners[i][1], corners[i][2])) {
+				return false;
+			}
+		}
+	}
 	return true;
 }
 
@@ -43,7 +51,7 @@ void GameEngine::firstStage() {
 		else {
 			intersec = TOP;
 		}
-		cornerFree(x, y, intersec); // check location
+		cout << "corner free?: " << cornerFree(x, y, intersec) << "\n"; // check location
 		players[i].buildSettlement(x, y, intersec);
 
 		// road
@@ -77,6 +85,7 @@ void GameEngine::firstStage() {
 		else {
 			intersec = TOP;
 		}
+		cout << "corner free?: " << cornerFree(x, y, intersec) << "\n"; // check location
 		players[i].buildSettlement(x, y, intersec);
 		addInitResources(players[i]); // add initial resources 
 
