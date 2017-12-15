@@ -79,3 +79,44 @@ std::array<std::array<int, 3>, 3> Board::getAdjacentCorners(int x, int y, TileIn
 	corners[2] = cornerRight;
 	return corners;
 }
+
+std::vector<std::array<int, 3>> Board::findCornersAtDiceNum(unsigned int diceNum) {
+	std::vector<std::array<int, 3>> corners;
+	for (const Tile& tile : tiles) {
+		if (tile.getDiceNum() == diceNum) {
+			std::array<std::array<int, 3>, 6> sixCorners{ getSixCorners(tile.getCoord()[0], tile.getCoord()[1]) };
+			for (auto corner : sixCorners) {
+				corners.push_back(corner);
+			}
+		}
+	}
+
+	return corners;
+}
+
+std::vector<Tile> Board::findTilesWithDiceNum(unsigned int diceNum) {
+	std::vector<Tile> tilesWithDiceNum;
+	for (const Tile& tile : tiles) {
+		if (tile.getDiceNum() == diceNum) {
+			tilesWithDiceNum.push_back(tile);
+		}
+	}
+
+	return tilesWithDiceNum;
+}
+
+
+std::array<std::array<int, 3>, 6> Board::getSixCorners(int x, int y) {
+	// coordinates of the six corners
+	std::array<int, 3> c1{ x, y, TOP };
+	std::array<int, 3> c2{ x + 1, y + 1, BOTTOM };
+	std::array<int, 3> c3{ x, y - 1, TOP };
+	std::array<int, 3> c4{ x, y, BOTTOM };
+	std::array<int, 3> c5{ x - 1, y - 1, TOP };
+	std::array<int, 3> c6{ x, y + 1, BOTTOM };
+
+	// put all 6 corners in one array
+	std::array<std::array<int, 3>, 6> allCorners{ c1, c2, c3, c4, c5, c6 };
+
+	return allCorners;
+}

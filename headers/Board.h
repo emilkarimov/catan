@@ -34,6 +34,14 @@ public:
 	/// if the corner is on the border 
 	std::array<std::array<int, 3>, 3> getAdjacentCorners(int x, int y, TileIntersection intersect);
 
+	/// finds all tiles with a specific dice number
+	std::vector<std::array<int, 3>> findCornersAtDiceNum(unsigned int diceNum);
+
+	std::vector<Tile> findTilesWithDiceNum(unsigned int diceNum);
+
+	/// all corners of a pecific tile
+	std::array<std::array<int, 3>, 6> getSixCorners(int x, int y);
+
 private:
 	/// pointers to tiles
 	std::vector<Tile> tiles;

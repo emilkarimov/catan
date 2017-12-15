@@ -7,7 +7,9 @@
 #include <string>
 using namespace std;
 
-
+// number of resources distributed for settlements and cities
+unsigned int NUMRESSET{ 1 };
+unsigned int NUMRESCITY{ 2 };
 
 // constructor 
 GameEngine::GameEngine(std::vector<Player> players, Board board)
@@ -250,3 +252,23 @@ void GameEngine::addInitResources(Player& player) {
 	}
 }
 
+
+// distribute resources depending on the rolled dice number
+void GameEngine::distributeResources(unsigned int diceNum) {
+	std::vector<Tile> tilesWithDiceNum{ board.findTilesWithDiceNum(diceNum) };
+	for (Tile& tile : tilesWithDiceNum) {
+		std::array<int, 2> tileCoord{ tile.getCoord() };
+		Resource res{ tile.produces() };
+		std::array<std::array<int, 3>, 6> corners{ board.getSixCorners(tileCoord[0], tileCoord[1]) };
+		for (auto corner : corners) {
+			for (Player& player : players) {
+				if (player.hasSettlementAtCoord(corner[0], corner[1], corner[2])) {
+					player.addResource(res, NUMRESSET);
+				}
+				if (player.hasCityAtCoord(corner[0], corner[1], corner[2])) {
+					player.addResource(res, NUMRESCITY);
+				}
+			}
+		}
+	}
+}

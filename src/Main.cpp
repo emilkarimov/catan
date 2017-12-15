@@ -25,6 +25,8 @@ void rollDice();
 void iterOneCheck();
 void testFirstStage();
 void testSecondStage();
+void testFindCorners();
+void testDestributeResources();
 vector<Tile> createDefaultTiles();
 vector<Player> createDefaultPlayers();
 
@@ -42,18 +44,11 @@ int main()
 	// test second stage
 	//testSecondStage();
 
-	CornerCoord a = CornerCoord(1, 2, TOP);
-	CornerCoord b = CornerCoord(0, 2, TOP);
+	// test findCorners
+	//testFindCorners();
 
-	if (a == b) {
-		cout << "equal\n";
-	}
-
-	if (a != b) {
-		cout << "not equal\n";
-	}
-
-	return 0;
+	// test distribution of resources
+	testDestributeResources();
 }
 
 
@@ -225,4 +220,56 @@ void testSecondStage() {
 	Board board = Board(defaultTiles);
 	GameEngine game(onePlayer, board);
 	game.secondStage();
+}
+
+void testFindCorners() {
+	// Default tiles
+	vector<Tile> defaultTiles = createDefaultTiles();
+
+	// only one player (for testing)
+	vector<Player> onePlayer;
+	onePlayer.push_back(Player("Alex", RED));
+	Board board = Board(defaultTiles);
+	GameEngine game(onePlayer, board);
+	game.printInfoPlayers();
+
+	std::vector<std::array<int, 3>> corners;
+	corners = board.findCornersAtDiceNum(2);
+	for (auto corner : corners) {
+		cout << corner[0] << " " << corner[1] << " " << corner[2] << "\n";
+	}
+}
+
+void testDestributeResources() {
+	// player initialisation
+	Player player1 = Player("Alex", RED);
+	player1.buildSettlement(-1, 0, TOP);
+	player1.buildRoad(-1, 0, UP);
+	player1.buildSettlement(1, 0, BOTTOM);
+	player1.buildRoad(0, -1, RIGHT);
+
+	// player initialisation
+	Player player2 = Player("Emil", GREEN);
+	player2.buildSettlement(0, -2, TOP);
+	player2.buildSettlement(0, 2, BOTTOM);
+
+	// two players in the game
+	vector<Player> players;
+	players.push_back(player1);
+	players.push_back(player2);
+	vector<Tile> defaultTiles = createDefaultTiles();
+	Board board = Board(defaultTiles);
+	GameEngine game(players, board);
+	game.distributeResources(2);
+	game.printInfoPlayers();
+	game.distributeResources(4);
+	game.printInfoPlayers();
+	game.distributeResources(9);
+	game.printInfoPlayers();
+	game.distributeResources(3);
+	game.printInfoPlayers();
+	game.distributeResources(6);
+	game.printInfoPlayers();
+	game.distributeResources(12);
+	game.printInfoPlayers();
 }

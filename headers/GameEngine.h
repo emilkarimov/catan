@@ -44,6 +44,11 @@ public:
 	/// checks if a corner is available for placing a settlements
 	bool cornerFree(int x, int y, TileIntersection intersec);
 
+	/// roll dice and continue based on 
+	unsigned int rollDice();
+
+	/// distribute resources depending on the rolled dice number
+	void distributeResources(unsigned int diceNum);
 
 private:
 	std::vector<Player> players;
