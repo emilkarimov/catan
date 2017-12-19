@@ -45,26 +45,31 @@ public:
 	/// checks if a corner is available for placing a settlements
 	bool cornerFree(int x, int y, TileIntersection intersec);
 
+	/// roll dice and continue based on 
+	unsigned int rollDice();
+
 	/// distribute resources depending on the rolled dice number
 	void distributeResources(unsigned int diceNum);
 
+	/// what to do after rolling dice depending on the number rolles
+	void handleRollDice(Player& player);
+
 	/// handle robber function that is called when dice roll result is 7 or Knight card is played
-	void handleRobber(Robber& robber, Player& player);
+	void handleRobber(Player& player);
 
 	/// retrieve players on a tile
 	bool playersOnTile(Player& p, int x, int y) const;
 
-	/// play development card
-	void GameEngine::playDevCard(Player& player, Robber& robber);
+	///
+	void GameEngine::playDevCard(Player& player);
 
-	/// update special cards
+	///
 	void GameEngine::updateSpecialCards();
-
-	void testfunction(Robber& robber);
 
 private:
 	std::vector<Player> players;
 	Board board;
+	Robber robber;
 
 };
 
