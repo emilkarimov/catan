@@ -23,7 +23,7 @@ public:
 	Terrain getTerrainType() const;
 
 	/// getter number of tile
-	int getDiceNum() const;
+	unsigned int getDiceNum() const;
 
 	/// getter coordinates of tile
 	std::array<int, 2> getCoord() const;
@@ -39,6 +39,7 @@ public:
 
 	/// type of resource the tile produces
 	Resource produces() const;
+
 
 private:
 	/// coordinates of the tile

@@ -85,7 +85,7 @@ public:
 	/// getter to access the cities
 	/// \return vector of cities the player has. Cannot be modified
 	const std::vector<City> getCities() const;
-
+	
 	/// build road
 	/// \param x x coord
 	/// \param y y coord
@@ -137,6 +137,15 @@ public:
 
 	/// can a player buy a development card?
 	bool canBuyDev();
+
+	/// check if a player has a settlement on specific coord
+	bool hasSettlementAtCoord(int x, int y, int z) const;
+
+	/// check if a player has a city on specific coord
+	bool hasCityAtCoord(int x, int y, int z) const;
+
+	/// check if a player has a settlement or a city on specific coord
+	bool hasPropertyAtCoord(int x, int y, int z) const;
 private:
 	// buildings
 	/// roads

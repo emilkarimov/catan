@@ -289,3 +289,30 @@ bool Player::canBuyDev() {
 		getNumWool() >= DEV_COST[WOOL] &&
 		getNumOre() >= DEV_COST[ORE];
 }
+
+/// check if a player has a settlement on specific coord
+bool Player::hasSettlementAtCoord(int x, int y, int z) const {
+	std::array<int, 3> coord{ x, y, z };
+	for (const Settlement& settlement : settlements) {
+		if (settlement.getLoc() == coord) {
+			return true;
+		}
+	}
+	return false;
+}
+
+/// check if a player has a city on specific coord
+bool Player::hasCityAtCoord(int x, int y, int z) const {
+	std::array<int, 3> coord{ x, y, z };
+	for (const City& city : cities) {
+		if (city.getLoc() == coord) {
+			return true;
+		}
+	}
+	return false;
+}
+
+/// check if a player has a settlement or a city on specific coord
+bool Player::hasPropertyAtCoord(int x, int y, int z) const {
+	return (hasCityAtCoord(x, y, z) || hasSettlementAtCoord(x, y, z));
+}

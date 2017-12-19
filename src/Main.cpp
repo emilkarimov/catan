@@ -7,7 +7,6 @@
 #include <algorithm>
 #include <map>
 #include <iostream>
-#include <time.h>
 
 #include "Building.h"
 #include "City.h"
@@ -18,53 +17,44 @@
 #include "Tile.h"
 #include "Robber.h"
 #include "GameEngine.h"
+#include "CornerCoord.h"
 
 using namespace std;
 
 void rollDice();
 void iterOneCheck();
 void testFirstStage();
+void testSecondStage();
+void testFindCorners();
+void testDestributeResources();
+void testRobber();
 vector<Tile> createDefaultTiles();
 vector<Player> createDefaultPlayers();
 
 int main()
 {
-	// player initialisation
-	Player player = Player("Alex", RED);
-	player.buildSettlement(-1, 0, TOP);
-	player.buildRoad(-1, 0, UP);
-	player.buildSettlement(1, 0, BOTTOM);
-	player.buildRoad(0, -1, RIGHT);
-	player.addResource(LUMBER, 5);
-	player.addResource(ORE, 5);
-	player.addResource(WOOL, 5);
-	player.addResource(BRICK, 5);
-	player.addResource(GRAIN, 5);
-	player.addDevCard(KNIGHT);
-	cout << player.toString() << "\n";
-
-	Robber robber = Robber(0,0);
-	cout << robber.toString() << endl;
-	array <int, 2> robber_location = robber.getLoc();
-	cout << "robber is in " << robber_location[0] << " " << robber_location[1] << endl;
-
-	// only one player is in the game
-	vector<Player> onePlayer;
-	onePlayer.push_back(player);
-	vector<Tile> defaultTiles = createDefaultTiles();
-	GameEngine game(onePlayer, defaultTiles);
-	//game.secondStage();
-
-	// test first stage
-	// testFirstStage();
+	// Let's keep the main clean. If you want to do some tests with your code, you can just create
+	// a function and call it from here like it is done below:
 
 	// Iteration 1 tests
 	//iterOneCheck();
 
-	game.handleRobber(robber, player);
+	// test first stage
+	//testFirstStage();
 
-	return 0;
+	// test second stage
+	//testSecondStage();
+
+	// test findCorners
+	//testFindCorners();
+
+	// test distribution of resources
+	//testDestributeResources();
+
+	// test handle robber
+	testRobber();
 }
+
 
 
 
@@ -72,7 +62,6 @@ int main()
 
 void rollDice()
 {
-	srand(time(NULL));
 	int die1, die2;
 	for (int i = 0; i < 20; i++)
 		die1 = (rand() % 6) + 1;
@@ -213,3 +202,92 @@ void testFirstStage() {
 	game.printInfoPlayers();
 }
 
+
+void testSecondStage() {
+	// player initialisation
+	Player player = Player("Alex", RED);
+	player.buildSettlement(-1, 0, TOP);
+	player.buildRoad(-1, 0, UP);
+	player.buildSettlement(1, 0, BOTTOM);
+	player.buildRoad(0, -1, RIGHT);
+	player.addResource(LUMBER, 5);
+	player.addResource(ORE, 5);
+	player.addResource(WOOL, 5);
+	player.addResource(BRICK, 5);
+	player.addResource(GRAIN, 5);
+	player.addDevCard(KNIGHT);
+	cout << player.toString() << "\n";
+
+	// only one player is in the game
+	vector<Player> onePlayer;
+	onePlayer.push_back(player);
+	vector<Tile> defaultTiles = createDefaultTiles();
+	Board board = Board(defaultTiles);
+	GameEngine game(onePlayer, board);
+	game.secondStage();
+}
+
+void testFindCorners() {
+	// Default tiles
+	vector<Tile> defaultTiles = createDefaultTiles();
+
+	// only one player (for testing)
+	vector<Player> onePlayer;
+	onePlayer.push_back(Player("Alex", RED));
+	Board board = Board(defaultTiles);
+	GameEngine game(onePlayer, board);
+	game.printInfoPlayers();
+
+	std::vector<std::array<int, 3>> corners;
+	corners = board.findCornersAtDiceNum(2);
+	for (auto corner : corners) {
+		cout << corner[0] << " " << corner[1] << " " << corner[2] << "\n";
+	}
+}
+
+void testDestributeResources() {
+	// player initialisation
+	Player player1 = Player("Alex", RED);
+	player1.buildSettlement(-1, 0, TOP);
+	player1.buildRoad(-1, 0, UP);
+	player1.buildSettlement(1, 0, BOTTOM);
+	player1.buildRoad(0, -1, RIGHT);
+
+	// player initialisation
+	Player player2 = Player("Emil", GREEN);
+	player2.buildSettlement(0, -2, TOP);
+	player2.buildSettlement(0, 2, BOTTOM);
+
+	// two players in the game
+	vector<Player> players;
+	players.push_back(player1);
+	players.push_back(player2);
+	vector<Tile> defaultTiles = createDefaultTiles();
+	Board board = Board(defaultTiles);
+	GameEngine game(players, board);
+	game.distributeResources(2);
+	game.printInfoPlayers();
+	game.distributeResources(4);
+	game.printInfoPlayers();
+	game.distributeResources(9);
+	game.printInfoPlayers();
+	game.distributeResources(3);
+	game.printInfoPlayers();
+	game.distributeResources(6);
+	game.printInfoPlayers();
+	game.distributeResources(12);
+	game.printInfoPlayers();
+}
+
+
+void testRobber() {
+	Robber robber = Robber(0, 0);
+	vector<Player> twoPlayers;
+	vector<Tile> defaultTiles = createDefaultTiles();
+	twoPlayers.push_back(Player("Alex", RED));
+	twoPlayers.push_back(Player("Emil", BLUE));
+
+	GameEngine game(twoPlayers, defaultTiles);
+	game.testfunction(robber);
+	game.printInfoPlayers();
+}
