@@ -52,7 +52,7 @@ int main()
 	//testDestributeResources();
 
 	// test handle robber
-	testRobber();
+	//testRobber();
 }
 
 
