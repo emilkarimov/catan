@@ -258,7 +258,7 @@ void GameEngine::playDevCard(Player& player) {
 	cout << "Which development card would you like to play:\n";
 	for (int index = 0; index < cards.size(); ++index) {
 		if (cards[index].getType() == VICTORY) {
-			cout << "   VICTORY";
+			cout << "   VICTORY" << endl;
 		}
 		else {
 			string type = cards[index].toString();
@@ -268,7 +268,9 @@ void GameEngine::playDevCard(Player& player) {
 	cin >> choise;
 	Devtype chosentype = cards[choise-1].getType();
 	string z;
-	string type1, type2;
+	string type;
+	string grain = "GRAIN";
+	string brick = "BRICK";
 	switch (chosentype) {
 	case KNIGHT:
 		///handlerobber();
@@ -303,31 +305,35 @@ void GameEngine::playDevCard(Player& player) {
 		player.buildRoad(x, y, edge);
 		break;
 	case YEAROFPLENTY:
-		cout << "identify 2 resources that you want to add:\n";
-		cin >> type2 >> type2;
-		for (int i = 0; i < 1; ++i) {
-			if (type1 == "GRAIN") {
+		for (int i = 0; i < 2; ++i) {
+			label:
+			cout << "identify the resource that you want to add:";
+			cin >> type;
+			cout << type;
+			if (type == "GRAIN") { // type == grain) {
 				player.addResource(GRAIN, 1);
 			}
-			if (type1 == "BRICK") {
+			else if (type == "BRICK") {
 				player.addResource(BRICK, 1);
 			}
-			if (type1 == "WOOL") {
+			else if (type == string("WOOL")) {
 				player.addResource(WOOL, 1);
 			}
-			if (type1 == "LUMBER") {
+			else if (type == string("LUMBER")) {
 				player.addResource(LUMBER, 1);
 			}
-			if (type1 == "ORE") {
+			else if (type == string("ORE")) {
 				player.addResource(ORE, 1);
 			}
-			type1 = type2;
+			else {
+				goto label;
+			}
 		}
 		break;
 	case MONOPOLY:
-		cout << "what type of reasource would you like to take";
+		cout << "what type of reasource would you like to take\n";
 		cin >> z;
-		if (z == "GRAIN") {
+		if (z == string("GRAIN")) {
 			for (auto e : players) {
 				if (e.getName() == player.getName()) {
 					break;
@@ -338,7 +344,7 @@ void GameEngine::playDevCard(Player& player) {
 				}
 			}
 		}
-		if (z == "BRICK") {
+		if (z == string("BRICK")) {
 			for (auto e : players) {
 				if (e.getName() == player.getName()) {
 					break;
@@ -349,7 +355,7 @@ void GameEngine::playDevCard(Player& player) {
 				}
 			}
 		}
-		if (z == "WOOL") {
+		if (z == string("WOOL")) {
 			for (auto e : players) {
 				if (e.getName() == player.getName()) {
 					break;
@@ -360,7 +366,7 @@ void GameEngine::playDevCard(Player& player) {
 				}
 			}
 		}
-		if (z == "LUMBER") {
+		if (z == string("LUMBER")) {
 			for (auto e : players) {
 				if (e.getName() == player.getName()) {
 					break;
@@ -371,7 +377,7 @@ void GameEngine::playDevCard(Player& player) {
 				}
 			}
 		}
-		if (z == "ORE") {
+		if (z == string("ORE")) {
 			for (auto e : players) {
 				if (e.getName() == player.getName()) {
 					break;
@@ -400,5 +406,9 @@ void GameEngine::updateSpecialCards() {
 			break;
 		}
 	}
-	
+	for (auto p : players) {
+		if (p.getNumKnightcards() >= 3) {
+			p.addspecialCard(LARGESTARMY);
+		}
+	}
 }

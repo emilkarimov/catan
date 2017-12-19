@@ -1,3 +1,2 @@
-﻿  Player.cpp
-c:\users\bram\source\repos\catan\src\player.cpp(283): warning C4715: 'Player::hasLargestArmy': not all control paths return a value
+﻿  Main.cpp
   SettlersOfCatanGit.vcxproj -> C:\Users\bram\Source\Repos\catan\x64\Debug\SettlersOfCatanGit.exe

@@ -45,29 +45,32 @@ int main()
 	player.addResource(WOOL, 5);
 	player.addResource(BRICK, 5);
 	player.addResource(GRAIN, 5);
-	player.addDevCard(KNIGHT);
+	player.addDevCard(YEAROFPLENTY);
 	cout << player.toString() << "\n";
 	deck.buyDevelopmentCard(player);
 	cout << player.toString() << "\n";
 	deck.toString();
-	for (int i = 0; i < 4; ++i) {
+	for (int i = 0; i < 3; ++i) {
 		deck.buyDevelopmentCard(player);
 	}
-	
+	cout << player.toString() << "\n";
+	deck.toString();
 	// only one player is in the game
 	vector<Player> onePlayer;
 	onePlayer.push_back(player);
 	vector<Tile> defaultTiles = createDefaultTiles();
 	GameEngine game(onePlayer, defaultTiles);
 	game.secondStage();
+	game.playDevCard(player);
 
 	// test first stage
-	testFirstStage();
+	// testFirstStage();
 
 	// Iteration 1 tests
 	//iterOneCheck();
-
-
+	cout << player.toString();
+	string z;
+	cin >> z;
 	return 0;
 }
 
