@@ -42,13 +42,13 @@ int main()
 	//testFirstStage();
 
 	// test second stage
-	//testSecondStage();
+	testSecondStage();
 
 	// test findCorners
 	//testFindCorners();
 
 	// test distribution of resources
-	testDestributeResources();
+	//testDestributeResources();
 }
 
 
