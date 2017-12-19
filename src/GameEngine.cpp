@@ -262,11 +262,11 @@ void GameEngine::playDevCard(Player& player) {
 		}
 		else {
 			string type = cards[index].toString();
-			cout << index << "  " << type << endl;
+			cout << index+1 << "  " << type << endl;
 		}
 	}
 	cin >> choise;
-	Devtype chosentype = cards[choise].getType();
+	Devtype chosentype = cards[choise-1].getType();
 	string z;
 	string type1, type2;
 	switch (chosentype) {
@@ -385,4 +385,20 @@ void GameEngine::playDevCard(Player& player) {
 		break;
 	}
 	player.removeDevCard(chosentype);
+}
+
+void GameEngine::updateSpecialCards() {
+	for (auto p : players) {
+		if (p.hasLargestArmy()) {
+			Player currentowner = p;
+			for (auto p : players) {
+				if (p.getNumKnightcards() > currentowner.getNumKnightcards()) {
+					p.addspecialCard(LARGESTARMY);
+					currentowner.removespecialCard(LARGESTARMY);
+				}
+			}
+			break;
+		}
+	}
+	
 }

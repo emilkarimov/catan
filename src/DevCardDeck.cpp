@@ -29,8 +29,6 @@ void DevCardDeck::buyDevelopmentCard(Player& player) {
 	int index = rand() % range;
 	Devtype type = deck[index + 1].getType();
 	deck.erase(deck.begin() + index);
-	if (type == VICTORY)
-
 	player.addDevCard(type);
 	player.removeResource(WOOL, 1);
 	player.removeResource(GRAIN, 1);

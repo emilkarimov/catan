@@ -56,6 +56,9 @@ public:
 	/// getter number of victory points
 	size_t getVictoryPoints() const;
 
+	/// getter number of knight development cards
+	int getNumKnightcards() const;
+
 	/// getter number of victory point development cards
 	int getNumVictorycards() const;
 
@@ -115,6 +118,15 @@ public:
 
 	/// getter number of special cards
 	size_t getNumSpecial() const;
+	
+	///
+	void addspecialCard(SpecialType type);
+
+	///
+	void Player::removespecialCard(SpecialType type);
+
+	///
+	bool hasLargestArmy();
 
 	/// add develompent card
 	void addDevCard(Devtype type);

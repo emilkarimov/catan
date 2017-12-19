@@ -50,6 +50,9 @@ int main()
 	deck.buyDevelopmentCard(player);
 	cout << player.toString() << "\n";
 	deck.toString();
+	for (int i = 0; i < 4; ++i) {
+		deck.buyDevelopmentCard(player);
+	}
 	
 	// only one player is in the game
 	vector<Player> onePlayer;

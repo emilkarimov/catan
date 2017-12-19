@@ -113,6 +113,16 @@ size_t Player::getNumCities() const {
 	return cities.size();
 }
 
+int Player::getNumKnightcards() const {
+	int num{ 0 };
+	for (auto Devcards : developmentCards) {
+		if (Devcards.getType() == KNIGHT) {
+			num += 1;
+		}
+	}
+	return num;
+}
+
 int Player::getNumVictorycards() const {
 	int num{ 0 };
 	for (auto Devcards : developmentCards) {
@@ -125,7 +135,7 @@ int Player::getNumVictorycards() const {
 
 // get number of victory points
 size_t Player::getVictoryPoints() const {
-	return getNumSettlements() + 2 * getNumCities() + getNumVictorycards();
+	return getNumSettlements() + 2 * getNumCities() + getNumVictorycards() + getNumSpecial();
 }
 
 // build a settlement
@@ -248,6 +258,30 @@ size_t Player::getNumSpecial() const {
 	return specialCards.size();
 }
 
+void Player::addspecialCard(SpecialType type) {
+	specialCards.push_back(SpecialCard(type));
+}
+
+void Player::removespecialCard(SpecialType type) {
+	for (int i = 0; i < specialCards.size(); ++i) {
+		if (specialCards[i].getType() == type) {
+			specialCards.erase(specialCards.begin() + i);
+			break;
+		}
+	}
+}
+
+// 
+bool Player::hasLargestArmy() {
+	for (auto e : specialCards) {
+		if (e.getType() == LONGESTROAD) {
+			return true;
+		}
+		else
+			return false;
+	}
+}
+
 // add develompent card
 void Player::addDevCard(Devtype type) {
 	developmentCards.push_back(DevelopmentCard(type));
@@ -261,7 +295,7 @@ vector<DevelopmentCard> Player::returnDevcards() const {
 // remove development card
 void Player::removeDevCard(Devtype type) {
 	for (int i = 0; i < developmentCards.size(); ++i) {
-		if (developmentCards[i].getType() == KNIGHT) {
+		if (developmentCards[i].getType() == type) {
 			developmentCards.erase(developmentCards.begin() + i);
 			break;
 		}
