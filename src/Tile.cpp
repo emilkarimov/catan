@@ -19,7 +19,7 @@ Terrain Tile::getTerrainType() const {
 }
 
 // get dice number
-int Tile::getDiceNum() const {
+unsigned int Tile::getDiceNum() const {
 	return diceNum;
 }
 

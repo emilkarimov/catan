@@ -138,6 +138,7 @@
     <ClInclude Include="headers\Card.h" />
     <ClInclude Include="headers\City.h" />
     <ClInclude Include="headers\Constants.h" />
+    <ClInclude Include="headers\CornerCoord.h" />
     <ClInclude Include="headers\DevelopmentCard.h" />
     <ClInclude Include="headers\Enums.h" />
     <ClInclude Include="headers\GameEngine.h" />

@@ -107,5 +107,8 @@
     <ClInclude Include="headers\Constants.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="headers\CornerCoord.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

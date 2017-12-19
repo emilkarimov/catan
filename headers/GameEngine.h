@@ -10,6 +10,7 @@
 #include "Enums.h"
 #include "Player.h"
 #include "Tile.h"
+#include "Board.h"
 
 /// GameEngine class
 ///
@@ -17,7 +18,7 @@
 class GameEngine {
 public:
 	/// constructor
-	GameEngine(std::vector<Player> players, std::vector<Tile> tiles);
+	GameEngine(std::vector<Player> players, Board board);
 
 	/// destructor
 	~GameEngine() = default;
@@ -40,13 +41,18 @@ public:
 	/// add initial resources depending on the second settlement
 	void addInitResources(Player& player);
 
-	/// find tile with specific x y coordinates and return the reference
-	Tile* findTile(int x, int y);
+	/// checks if a corner is available for placing a settlements
+	bool cornerFree(int x, int y, TileIntersection intersec);
 
+	/// roll dice and continue based on 
+	unsigned int rollDice();
+
+	/// distribute resources depending on the rolled dice number
+	void distributeResources(unsigned int diceNum);
 
 private:
 	std::vector<Player> players;
-	std::vector<Tile> tiles;
+	Board board;
 
 };
 
