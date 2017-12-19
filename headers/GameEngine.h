@@ -10,6 +10,7 @@
 #include "Enums.h"
 #include "Player.h"
 #include "Tile.h"
+#include "Robber.h"
 
 /// GameEngine class
 ///
@@ -43,6 +44,11 @@ public:
 	/// find tile with specific x y coordinates and return the reference
 	Tile* findTile(int x, int y);
 
+	/// handle robber function that is called when dice roll result is 7 or Knight card is played
+	void handleRobber(Robber& robber, Player& player);
+
+	/// retrieve players on a tile
+	std::vector <Player> getPlayersOnTile(int x, int y);
 
 private:
 	std::vector<Player> players;

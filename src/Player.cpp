@@ -202,6 +202,11 @@ const std::vector<Settlement> Player::getSettlements() const {
 	return settlements;
 }
 
+// get references to cities
+const std::vector<City> Player::getCities() const {
+	return cities;
+}
+
 // get grain number
 size_t Player::getNumGrain() const {
 	return grain.size();

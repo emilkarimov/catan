@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <map>
 #include <iostream>
+#include <time.h>
 
 #include "Building.h"
 #include "City.h"
@@ -42,12 +43,17 @@ int main()
 	player.addDevCard(KNIGHT);
 	cout << player.toString() << "\n";
 
+	Robber robber = Robber(0,0);
+	cout << robber.toString() << endl;
+	array <int, 2> robber_location = robber.getLoc();
+	cout << "robber is in " << robber_location[0] << " " << robber_location[1] << endl;
+
 	// only one player is in the game
 	vector<Player> onePlayer;
 	onePlayer.push_back(player);
 	vector<Tile> defaultTiles = createDefaultTiles();
 	GameEngine game(onePlayer, defaultTiles);
-	game.secondStage();
+	//game.secondStage();
 
 	// test first stage
 	// testFirstStage();
@@ -55,6 +61,7 @@ int main()
 	// Iteration 1 tests
 	//iterOneCheck();
 
+	game.handleRobber(robber, player);
 
 	return 0;
 }
@@ -65,6 +72,7 @@ int main()
 
 void rollDice()
 {
+	srand(time(NULL));
 	int die1, die2;
 	for (int i = 0; i < 20; i++)
 		die1 = (rand() % 6) + 1;

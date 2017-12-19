@@ -243,3 +243,72 @@ Tile* GameEngine::findTile(int x, int y) {
 	}
 	return nullptr; // return tilePtr if the coordinates are not correct
 }
+
+
+// retrieve players on a tile
+std::vector <Player> GameEngine::getPlayersOnTile(int x, int y) {
+	vector <Player> matchingPlayers;
+	array <int, 2> tileinfocus;
+	tileinfocus[0] = x;
+	tileinfocus[1] = y;
+
+	for (vector<Player>::iterator counterof_players = players.begin(); counterof_players != players.end(); counterof_players++) {
+		vector<Settlement> listof_settlements = counterof_players->getSettlements();
+		vector<City> listof_cities = counterof_players->getCities();
+
+		for (vector<Settlement>::iterator counterof_settlements = listof_settlements.begin(); counterof_settlements != listof_settlements.end(); counterof_settlements++) {
+			if (tileinfocus[0] == counterof_settlements->getLoc()[0] && tileinfocus[1] == counterof_settlements->getLoc()[1])
+				matchingPlayers.push_back(*counterof_players);
+			else {
+				for (vector<City>::iterator counterof_cities = listof_cities.begin(); counterof_cities != listof_cities.end(); counterof_cities++) {
+					if (tileinfocus[0] == counterof_cities->getLoc()[0] && tileinfocus[1] == counterof_cities->getLoc()[1])
+						matchingPlayers.push_back(*counterof_players);
+					else;
+				}
+			}
+		}
+	}
+
+	return matchingPlayers;
+}
+
+
+// handle robber function that is called when dice roll result is 7 or Knight card is played
+// move the robber, then randomly draw a resource card from the player on the new tile and add it to the player in turn
+void GameEngine::handleRobber(Robber& robber, Player& player) {
+	// set location of the robber
+	std::array <int, 2> newLoc;
+	cout << "enter new tile coordinates for the robber:";
+	cin >> newLoc[0] >> newLoc[1];
+
+	// check that new location is different than the old one
+	std::array <int, 2> oldLoc;
+	oldLoc = robber.getLoc();
+	while (newLoc[0] == oldLoc[0] && newLoc[1] == oldLoc[1]) {
+		cout << "same location is not allowed, enter different coordinates:";
+		cin >> newLoc[0] >> newLoc[1];
+	}
+
+	// set the location using new coordinates
+	robber.setLoc(newLoc[0], newLoc[1]); 
+	
+	// retrieve players on the new tile
+	vector <Player> players_on_tile = getPlayersOnTile(newLoc[0], newLoc[1]);
+	//act based on the vector size
+	if (players_on_tile.capacity() == 0) {
+		cout << "no players on the tile chosen. nothing to do" << endl;
+	}
+	else if (players_on_tile.capacity() == 1) {
+		//random index draw
+		//players_on_tile[0].removeResource();
+		//player.addResource();
+	}
+	else {
+		// more than 1 player on the tile, pick one
+		int index;
+		cout << "more than 1 player on the tile, pick one (0, 1, etc):";
+		cin >> index;
+		//players_on_tile[index].removeResource();
+		//player.addResource();
+	}
+}

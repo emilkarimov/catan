@@ -82,6 +82,10 @@ public:
 	/// \return vector of settlements the player has. Cannot be modified
 	const std::vector<Settlement> getSettlements() const;
 
+	/// getter to access the cities
+	/// \return vector of cities the player has. Cannot be modified
+	const std::vector<City> getCities() const;
+
 	/// build road
 	/// \param x x coord
 	/// \param y y coord
