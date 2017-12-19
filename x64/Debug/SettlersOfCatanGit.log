@@ -1,19 +1,2 @@
-﻿  Tile.cpp
-  SpecialCard.cpp
-  Settlement.cpp
-  Robber.cpp
-  Road.cpp
-  ResourceCard.cpp
-  Player.cpp
-  Main.cpp
-  GameEngine.cpp
-  DevelopmentCard.cpp
-  DevCardDeck.cpp
-  Constants.cpp
-  City.cpp
-  Card.cpp
-  Building.cpp
-  Board.cpp
-  Generating Code...
-c:\users\454b\source\repos\catan\src\player.cpp(294): warning C4715: 'Player::hasLargestArmy': not all control paths return a value
-  SettlersOfCatanGit.vcxproj -> C:\Users\454b\source\repos\catan\x64\Debug\SettlersOfCatanGit.exe
+﻿  GameEngine.cpp
+  SettlersOfCatanGit.vcxproj -> C:\Users\Bram\Source\Repos\catan\x64\Debug\SettlersOfCatanGit.exe

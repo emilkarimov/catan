@@ -113,7 +113,7 @@ void GameEngine::firstStage() {
 
 // 2nd stage - players take actions in turn
 void GameEngine::secondStage() {
-	for (Player& player : players) {
+	for (auto player : players) {
 		TurnStage stage = START; // stage of the turn
 		std::string moveInput; // input from user
 		cout << "\n" << player.getName() + ", what is your move? \noptions:\n";
@@ -454,7 +454,7 @@ void GameEngine::playDevCard(Player& player) {
 	switch (chosentype) {
 	case KNIGHT:
 		handleRobber(player);
-		cout << "played a knight card";
+		cout << "played a knight card\n";
 		break;
 	case ROADBUILDING:
 		int x, y;
@@ -490,7 +490,7 @@ void GameEngine::playDevCard(Player& player) {
 			cout << "identify the resource that you want to add:";
 			cin >> type;
 			cout << type;
-			if (type == "GRAIN") { // type == grain) {
+			if (type == "GRAIN") { 
 				player.addResource(GRAIN, 1);
 			}
 			else if (type == "BRICK") {
@@ -513,10 +513,9 @@ void GameEngine::playDevCard(Player& player) {
 	case MONOPOLY:
 		cout << "what type of reasource would you like to take\n";
 		cin >> z;
-		if (z == string("GRAIN")) {
+		if (z == "GRAIN") {
 			for (auto e : players) {
 				if (e.getName() == player.getName()) {
-					break;
 				}
 				else {
 					player.addResource(GRAIN, e.getNumGrain());
@@ -524,10 +523,9 @@ void GameEngine::playDevCard(Player& player) {
 				}
 			}
 		}
-		if (z == string("BRICK")) {
+		else if (z == "BRICK") {
 			for (auto e : players) {
 				if (e.getName() == player.getName()) {
-					break;
 				}
 				else {
 					player.addResource(BRICK, e.getNumGrain());
@@ -535,10 +533,9 @@ void GameEngine::playDevCard(Player& player) {
 				}
 			}
 		}
-		if (z == string("WOOL")) {
+		else if (z == "WOOL") {
 			for (auto e : players) {
 				if (e.getName() == player.getName()) {
-					break;
 				}
 				else {
 					player.addResource(WOOL, e.getNumGrain());
@@ -546,10 +543,9 @@ void GameEngine::playDevCard(Player& player) {
 				}
 			}
 		}
-		if (z == string("LUMBER")) {
+		else if (z == "LUMBER") {
 			for (auto e : players) {
 				if (e.getName() == player.getName()) {
-					break;
 				}
 				else {
 					player.addResource(GRAIN, e.getNumGrain());
@@ -557,10 +553,9 @@ void GameEngine::playDevCard(Player& player) {
 				}
 			}
 		}
-		if (z == string("ORE")) {
+		else if (z == "ORE") {
 			for (auto e : players) {
 				if (e.getName() == player.getName()) {
-					break;
 				}
 				else {
 					player.addResource(GRAIN, e.getNumGrain());
@@ -568,6 +563,7 @@ void GameEngine::playDevCard(Player& player) {
 				}
 			}
 		}
+	default:
 		break;
 	}
 	player.removeDevCard(chosentype);
@@ -582,7 +578,7 @@ void GameEngine::updateSpecialCards() {
 				if (p.getNumKnightcards() > currentowner.getNumKnightcards()) {
 					p.addspecialCard(LARGESTARMY);
 					currentowner.removespecialCard(LARGESTARMY);
-					cout << "new owner of specialcard11" << p.getName() << endl;
+					cout << "new owner of specialcard" << p.getName() << endl;
 				}
 			}
 			break;
