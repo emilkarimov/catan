@@ -101,7 +101,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\A\UT\Advanced Programming\Settlers Of Catan on GitHub\catan\headers;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\bram\source\repos\catan\headers;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -109,7 +109,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\A\UT\Advanced Programming\Settlers Of Catan on GitHub\catan\headers;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\bram\source\repos\catan\headers;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -121,6 +121,7 @@
     <ClCompile Include="src\Card.cpp" />
     <ClCompile Include="src\City.cpp" />
     <ClCompile Include="src\Constants.cpp" />
+    <ClCompile Include="src\DevCardDeck.cpp" />
     <ClCompile Include="src\DevelopmentCard.cpp" />
     <ClCompile Include="src\GameEngine.cpp" />
     <ClCompile Include="src\Main.cpp" />
@@ -138,6 +139,7 @@
     <ClInclude Include="headers\Card.h" />
     <ClInclude Include="headers\City.h" />
     <ClInclude Include="headers\Constants.h" />
+    <ClInclude Include="headers\DevCardDeck.h" />
     <ClInclude Include="headers\DevelopmentCard.h" />
     <ClInclude Include="headers\Enums.h" />
     <ClInclude Include="headers\GameEngine.h" />

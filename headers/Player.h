@@ -56,6 +56,9 @@ public:
 	/// getter number of victory points
 	size_t getVictoryPoints() const;
 
+	/// getter number of victory point development cards
+	int getNumVictorycards() const;
+
 	/// getter number of grain cards
 	size_t getNumGrain() const;
 
@@ -115,6 +118,12 @@ public:
 
 	/// add develompent card
 	void addDevCard(Devtype type);
+
+	/// return vector of development cards
+	std::vector<DevelopmentCard> returnDevcards() const;
+
+	/// remove develompent card
+	void removeDevCard(Devtype type);
 
 	/// get number of development cards
 	size_t getNumDev() const;

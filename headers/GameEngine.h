@@ -43,6 +43,9 @@ public:
 	/// find tile with specific x y coordinates and return the reference
 	Tile* findTile(int x, int y);
 
+	///
+	void GameEngine::playDevCard(Player& player);
+
 
 private:
 	std::vector<Player> players;

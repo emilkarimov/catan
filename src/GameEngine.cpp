@@ -3,6 +3,7 @@
 /// GameEngine class member-function definitions.
 
 #include "GameEngine.h" // Robber class definition
+#include "DevCardDeck.h"
 #include <iostream>
 #include <string>
 using namespace std;
@@ -100,7 +101,8 @@ void GameEngine::secondStage() {
 		cout << possibleMoves(player, stage);
 
 		// handle initial move (roll or play dev card)
-		bool NotLegalMove{ true }; 
+		bool NotLegalMove{ true };
+		bool devcardplayed{ false };
 		while (NotLegalMove) {
 			cin >> moveInput;
 			if (moveInput == "1") {
@@ -109,6 +111,8 @@ void GameEngine::secondStage() {
 			}
 			else if (moveInput == "2" && player.canPlayDev()) {
 				cout << "Play development card" << "\n";
+				playDevCard(player);
+				devcardplayed = true;
 				NotLegalMove = false;
 			}
 			else {
@@ -242,4 +246,143 @@ Tile* GameEngine::findTile(int x, int y) {
 		}
 	}
 	return nullptr; // return tilePtr if the coordinates are not correct
+}
+
+
+
+
+// play development card
+void GameEngine::playDevCard(Player& player) {
+	int choise{ 0 };
+	vector<DevelopmentCard> cards = player.returnDevcards();
+	cout << "Which development card would you like to play:\n";
+	for (auto i = cards.begin(); i < cards.end(); ++i) {
+		if (cards[i].getType() == VICTORY) {
+			cout << "   VICTORY"
+		}
+		else {
+			string type = cards[i].toString();
+			cout << i << "  " << type << endl;
+		}
+	}
+	cin >> choise;
+	Devtype chosentype = cards[choise].getType();
+	string z;
+	string type1, type2;
+	switch (chosentype) {
+	case KNIGHT:
+		///handlerobber();
+		cout << "played a knight card";
+		break;
+	case ROADBUILDING:
+		int x, y;
+		TileEdge edge;
+		cout << "identify location for first road:\n";
+		cin >> x >> y >> z;
+		if (z == "UP") {
+			edge = UP;
+		}
+		else if (z == "RIGHT") {
+			edge = RIGHT;
+		}
+		else {
+			edge = DOWN;
+		}
+		player.buildRoad(x, y, edge);
+		cout << "identify location for second road:\n";
+		cin >> x >> y >> z;
+		if (z == "UP") {
+			edge = UP;
+		}
+		else if (z == "RIGHT") {
+			edge = RIGHT;
+		}
+		else {
+			edge = DOWN;
+		}
+		player.buildRoad(x, y, edge);
+		break;
+	case YEAROFPLENTY:
+		cout << "identify 2 resources that you want to add:\n";
+		cin >> type2 >> type2;
+		for (int i = 0; i < 1; ++i) {
+			if (type1 == "GRAIN") {
+				player.addResource(GRAIN, 1);
+			}
+			if (type1 == "BRICK") {
+				player.addResource(BRICK, 1);
+			}
+			if (type1 == "WOOL") {
+				player.addResource(WOOL, 1);
+			}
+			if (type1 == "LUMBER") {
+				player.addResource(LUMBER, 1);
+			}
+			if (type1 == "ORE") {
+				player.addResource(ORE, 1);
+			}
+			type1 = type2;
+		}
+		break;
+	case MONOPOLY:
+		cout << "what type of reasource would you like to take";
+		cin >> z;
+		if (z == "GRAIN") {
+			for (auto e : players) {
+				if (e.getName() == player.getName()) {
+					break;
+				}
+				else {
+					player.addResource(GRAIN, e.getNumGrain());
+					e.removeResource(GRAIN, e.getNumGrain());
+				}
+			}
+		}
+		if (z == "BRICK") {
+			for (auto e : players) {
+				if (e.getName() == player.getName()) {
+					break;
+				}
+				else {
+					player.addResource(BRICK, e.getNumGrain());
+					e.removeResource(BRICK, e.getNumGrain());
+				}
+			}
+		}
+		if (z == "WOOL") {
+			for (auto e : players) {
+				if (e.getName() == player.getName()) {
+					break;
+				}
+				else {
+					player.addResource(WOOL, e.getNumGrain());
+					e.removeResource(WOOL, e.getNumGrain());
+				}
+			}
+		}
+		if (z == "LUMBER") {
+			for (auto e : players) {
+				if (e.getName() == player.getName()) {
+					break;
+				}
+				else {
+					player.addResource(GRAIN, e.getNumGrain());
+					e.removeResource(GRAIN, e.getNumGrain());
+				}
+			}
+		}
+		if (z == "ORE") {
+			for (auto e : players) {
+				if (e.getName() == player.getName()) {
+					break;
+				}
+				else {
+					player.addResource(GRAIN, e.getNumGrain());
+					e.removeResource(GRAIN, e.getNumGrain());
+				}
+			}
+		}
+		break;
+	}
+	player.removeDevCard(chosentype);
 }

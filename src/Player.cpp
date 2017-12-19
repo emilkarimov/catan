@@ -4,6 +4,7 @@
 
 #include "Player.h" // Player class definition
 #include <iostream>
+#include <vector>
 using namespace std;
 
 // build costs
@@ -112,9 +113,19 @@ size_t Player::getNumCities() const {
 	return cities.size();
 }
 
+int Player::getNumVictorycards() const {
+	int num{ 0 };
+	for (auto Devcards : developmentCards) {
+		if (Devcards.getType() == VICTORY) {
+			num += 1;
+		}
+	}
+	return num;
+}
+
 // get number of victory points
 size_t Player::getVictoryPoints() const {
-	return getNumSettlements() + 2 * getNumCities();
+	return getNumSettlements() + 2 * getNumCities() + getNumVictorycards();
 }
 
 // build a settlement
@@ -240,6 +251,21 @@ size_t Player::getNumSpecial() const {
 // add develompent card
 void Player::addDevCard(Devtype type) {
 	developmentCards.push_back(DevelopmentCard(type));
+}
+
+// return vector of development cards
+vector<DevelopmentCard> Player::returnDevcards() const {
+	return developmentCards;
+}
+
+// remove development card
+void Player::removeDevCard(Devtype type) {
+	for (int i = 0; i < developmentCards.size(); ++i) {
+		if (developmentCards[i].getType() == KNIGHT) {
+			developmentCards.erase(developmentCards.begin() + i);
+			break;
+		}
+	}
 }
 
 // get number of development cards

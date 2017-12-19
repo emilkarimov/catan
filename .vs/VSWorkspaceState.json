@@ -1,8 +1,9 @@
 {
   "ExpandedNodes": [
     "",
-    "\\headers"
+    "\\headers",
+    "\\src"
   ],
-  "SelectedNode": "\\SettlersOfCatanGit.sln",
+  "SelectedNode": "\\src\\GameEngine.cpp",
   "PreviewInSolutionExplorer": false
 }

@@ -17,6 +17,7 @@
 #include "Tile.h"
 #include "Robber.h"
 #include "GameEngine.h"
+#include "DevCardDeck.h"
 
 using namespace std;
 
@@ -27,7 +28,12 @@ vector<Tile> createDefaultTiles();
 vector<Player> createDefaultPlayers();
 
 int main()
-{
+{	
+	// deck initialization
+
+	DevCardDeck deck;
+	deck.initDeck();
+	deck.toString();
 	// player initialisation
 	Player player = Player("Alex", RED);
 	player.buildSettlement(-1, 0, TOP);
@@ -41,7 +47,10 @@ int main()
 	player.addResource(GRAIN, 5);
 	player.addDevCard(KNIGHT);
 	cout << player.toString() << "\n";
-
+	deck.buyDevelopmentCard(player);
+	cout << player.toString() << "\n";
+	deck.toString();
+	
 	// only one player is in the game
 	vector<Player> onePlayer;
 	onePlayer.push_back(player);
@@ -50,7 +59,7 @@ int main()
 	game.secondStage();
 
 	// test first stage
-	// testFirstStage();
+	testFirstStage();
 
 	// Iteration 1 tests
 	//iterOneCheck();
