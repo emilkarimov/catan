@@ -256,13 +256,13 @@ void GameEngine::playDevCard(Player& player) {
 	int choise{ 0 };
 	vector<DevelopmentCard> cards = player.returnDevcards();
 	cout << "Which development card would you like to play:\n";
-	for (auto i = cards.begin(); i < cards.end(); ++i) {
-		if (cards[i].getType() == VICTORY) {
-			cout << "   VICTORY"
+	for (int index = 0; index < cards.size(); ++index) {
+		if (cards[index].getType() == VICTORY) {
+			cout << "   VICTORY";
 		}
 		else {
-			string type = cards[i].toString();
-			cout << i << "  " << type << endl;
+			string type = cards[index].toString();
+			cout << index << "  " << type << endl;
 		}
 	}
 	cin >> choise;
