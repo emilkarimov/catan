@@ -27,6 +27,7 @@ void testFirstStage();
 void testSecondStage();
 void testFindCorners();
 void testDestributeResources();
+void testRobber();
 vector<Tile> createDefaultTiles();
 vector<Player> createDefaultPlayers();
 
@@ -48,8 +49,12 @@ int main()
 	//testFindCorners();
 
 	// test distribution of resources
-	testDestributeResources();
+	//testDestributeResources();
+
+	// test handle robber
+	testRobber();
 }
+
 
 
 
@@ -271,5 +276,18 @@ void testDestributeResources() {
 	game.distributeResources(6);
 	game.printInfoPlayers();
 	game.distributeResources(12);
+	game.printInfoPlayers();
+}
+
+
+void testRobber() {
+	Robber robber = Robber(0, 0);
+	vector<Player> twoPlayers;
+	vector<Tile> defaultTiles = createDefaultTiles();
+	twoPlayers.push_back(Player("Alex", RED));
+	twoPlayers.push_back(Player("Emil", BLUE));
+
+	GameEngine game(twoPlayers, defaultTiles);
+	game.testfunction(robber);
 	game.printInfoPlayers();
 }

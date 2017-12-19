@@ -5,6 +5,8 @@
 #include "GameEngine.h" // Robber class definition
 #include <iostream>
 #include <string>
+#include <time.h>
+
 using namespace std;
 
 // number of resources distributed for settlements and cities
@@ -271,4 +273,125 @@ void GameEngine::distributeResources(unsigned int diceNum) {
 			}
 		}
 	}
+}
+
+// find players on tile
+bool GameEngine::playersOnTile(Player& p, int x, int y) const {
+	for (auto s : p.getSettlements()) {
+		if (x == s.getLoc()[0] && y == s.getLoc()[1]) {
+			return true;
+		}
+		else {
+			for (auto c : p.getCities()) {
+				if (x == c.getLoc()[0] && y == c.getLoc()[1]) {
+					return true;
+				}
+			}
+		}
+	}
+	return false;
+}
+
+// handle robber function that is called when dice roll result is 7 or Knight card is played
+// move the robber, then randomly draw a resource card from the player on the new tile and add it to the player in turn
+void GameEngine::handleRobber(Robber& robber, Player& player) {
+	// set location of the robber
+	std::array <int, 2> newLoc;
+	int playerindex;
+	cout << "enter new tile coordinates for the robber:";
+	cin >> newLoc[0] >> newLoc[1];
+
+	// check that new location is different than the old one
+	std::array <int, 2> oldLoc;
+	oldLoc = robber.getLoc();
+	while (newLoc[0] == oldLoc[0] && newLoc[1] == oldLoc[1]) {
+		cout << "same location is not allowed, enter different coordinates:";
+		cin >> newLoc[0] >> newLoc[1];
+	}
+
+	// set the location using new coordinates
+	robber.setLoc(newLoc[0], newLoc[1]); 
+
+	//act based on the vector size
+	//vector <int> playercount;
+	int playercount = 0;
+	cout << "which player do you want to rob:\n";
+	for (int i = 0; i < players.size(); ++i) {
+		if (players[i].getColor() == player.getColor()) {
+			//break;
+		}
+		else if (playersOnTile(players[i], newLoc[0], newLoc[1])) {
+			cout << i << " " << players[i].getName() << endl;
+			playercount += 1;
+		}
+	}
+
+
+	if (playercount == 0) {
+		cout << "no players on the tile chosen. nothing to do" << endl;
+		return;
+	}
+	else {
+		cin >> playerindex;
+		//random index draw
+		srand(time(NULL));
+		int index = rand() % players[playerindex].getNumResources();
+		if (index < players[playerindex].getNumGrain()) {
+			players[playerindex].removeResource(GRAIN, 1);
+			player.addResource(GRAIN, 1);
+		}
+		else if (index < players[playerindex].getNumGrain() + players[playerindex].getNumBrick()) {
+			players[playerindex].removeResource(BRICK, 1);
+			player.addResource(BRICK, 1);
+		}
+		else if (index < players[playerindex].getNumGrain() + players[playerindex].getNumBrick() + players[playerindex].getNumWool()) {
+			players[playerindex].removeResource(WOOL, 1);
+			player.addResource(WOOL, 1);
+		}
+		else if (index < players[playerindex].getNumGrain() + players[playerindex].getNumBrick() + players[playerindex].getNumWool() + players[playerindex].getNumLumber()) {
+			players[playerindex].removeResource(LUMBER, 1);
+			player.addResource(LUMBER, 1);
+		}
+		else if (index < players[playerindex].getNumGrain() + players[playerindex].getNumBrick() + players[playerindex].getNumWool() + players[playerindex].getNumLumber() + players[playerindex].getNumOre()) {
+			players[playerindex].removeResource(ORE, 1);
+			player.addResource(ORE, 1);
+		}
+		else;
+	}
+}
+
+void GameEngine::testfunction(Robber& robber) {
+	players[0].buildSettlement(-1, 0, TOP);
+	players[0].buildRoad(-1, 0, UP);
+	players[0].buildSettlement(1, 0, BOTTOM);
+	players[0].buildRoad(0, -1, RIGHT);
+	players[0].addResource(LUMBER, 5);
+	players[0].addResource(ORE, 5);
+	players[0].addResource(WOOL, 5);
+	players[0].addResource(BRICK, 5);
+	players[0].addResource(GRAIN, 5);
+	players[0].addDevCard(KNIGHT);
+	cout << players[0].toString() << "\n";
+
+	players[1].buildSettlement(-2, 0, TOP);
+	players[1].buildRoad(-2, 0, UP);
+	players[1].buildSettlement(2, 0, BOTTOM);
+	players[1].buildRoad(1, -1, RIGHT);
+	players[1].addResource(LUMBER, 5);
+	players[1].addResource(ORE, 5);
+	players[1].addResource(WOOL, 5);
+	players[1].addResource(BRICK, 5);
+	players[1].addResource(GRAIN, 5);
+	players[1].addDevCard(KNIGHT);
+	cout << players[1].toString() << "\n";
+
+
+	cout << robber.toString() << endl;
+	array <int, 2> robber_location = robber.getLoc();
+	cout << "robber is in " << robber_location[0] << " " << robber_location[1] << endl;
+
+	handleRobber(robber, players[0]);
+	robber_location = robber.getLoc();
+	cout << "robber is in " << robber_location[0] << " " << robber_location[1] << endl;
+
 }
