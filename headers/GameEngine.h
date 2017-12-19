@@ -45,9 +45,6 @@ public:
 	/// checks if a corner is available for placing a settlements
 	bool cornerFree(int x, int y, TileIntersection intersec);
 
-	/// roll dice and continue based on 
-	unsigned int rollDice();
-
 	/// distribute resources depending on the rolled dice number
 	void distributeResources(unsigned int diceNum);
 
@@ -56,6 +53,12 @@ public:
 
 	/// retrieve players on a tile
 	bool playersOnTile(Player& p, int x, int y) const;
+
+	/// play development card
+	void GameEngine::playDevCard(Player& player, Robber& robber);
+
+	/// update special cards
+	void GameEngine::updateSpecialCards();
 
 	void testfunction(Robber& robber);
 

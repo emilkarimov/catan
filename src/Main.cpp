@@ -56,10 +56,6 @@ int main()
 }
 
 
-
-
-
-
 void rollDice()
 {
 	int die1, die2;

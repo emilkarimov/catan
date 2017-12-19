@@ -3,18 +3,32 @@
 /// DevelopmentCard class member-function definitions.
 #include "DevelopmentCard.h" // Card class definition
 #include <iostream>
-
 using namespace std;
 
 // constructor
-DevelopmentCard::DevelopmentCard(Devtype type) : type(type) {}
+DevelopmentCard::DevelopmentCard(Devtype type) : type(type) {
+
+}
 
 Devtype DevelopmentCard::getType() const {
 	return type;
 }
 
 string DevelopmentCard::toString() const {
-	return "development card";
+	switch (type) {
+	case KNIGHT:
+		return "Knight";
+	case VICTORY:
+		return "Victory";
+	case ROADBUILDING:
+		return "Road Building";
+	case YEAROFPLENTY:
+		return "Year of plenty";
+	case MONOPOLY:
+		return "Monopoly";
+	default:
+		return "Undefined Development card";
+	}
 }
 
 void DevelopmentCard::draw() const {
@@ -24,6 +38,7 @@ void DevelopmentCard::draw() const {
 bool DevelopmentCard::checkplayedcard() const {
 	return played;
 }
-void DevelopmentCard::playcard(bool a) {
-	played = a;
+void DevelopmentCard::playcard() {
+	played = 1;
 }
+

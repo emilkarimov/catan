@@ -4,6 +4,7 @@
 
 #include "Player.h" // Player class definition
 #include <iostream>
+#include <vector>
 using namespace std;
 
 // build costs
@@ -112,10 +113,33 @@ size_t Player::getNumCities() const {
 	return cities.size();
 }
 
+// get number of knight cards
+int Player::getNumKnightcards() const {
+	int num{ 0 };
+	for (auto Devcards : developmentCards) {
+		if (Devcards.getType() == KNIGHT) {
+			num += 1;
+		}
+	}
+	return num;
+}
+
+// get number of victory cards
+int Player::getNumVictorycards() const {
+	int num{ 0 };
+	for (auto Devcards : developmentCards) {
+		if (Devcards.getType() == VICTORY) {
+			num += 1;
+		}
+	}
+	return num;
+}
+
 // get number of victory points
 size_t Player::getVictoryPoints() const {
-	return getNumSettlements() + 2 * getNumCities();
+	return getNumSettlements() + 2 * getNumCities() + getNumVictorycards() + getNumSpecial();
 }
+
 
 // build a settlement
 void Player::buildSettlement(int x, int y, TileIntersection intersec) {
@@ -148,7 +172,8 @@ std::string Player::toString() const {
 		"\n  lumber: " + std::to_string(getNumLumber()) +
 		"\n  ore: " + std::to_string(getNumOre()) +
 		"\ndevelopment cards: " + std::to_string(getNumDev()) +
-		"\nVP: " + std::to_string(getVictoryPoints());
+		"\nVP: " + std::to_string(getVictoryPoints()) +
+		"\nSpecial Cards:" + std::to_string(getNumSpecial());
 }
 
 // text for all roads
@@ -242,16 +267,57 @@ size_t Player::getNumSpecial() const {
 	return specialCards.size();
 }
 
+// add special card
+void Player::addspecialCard(SpecialType type) {
+	specialCards.push_back(SpecialCard(type));
+}
+
+// remove special card
+void Player::removespecialCard(SpecialType type) {
+	for (int i = 0; i < specialCards.size(); ++i) {
+		if (specialCards[i].getType() == type) {
+			specialCards.erase(specialCards.begin() + i);
+			break;
+		}
+	}
+}
+
+// check largest army ownership
+bool Player::hasLargestArmy() {
+	for (auto e : specialCards) {
+		if (e.getType() == LONGESTROAD) {
+			return true;
+		}
+		else
+			return false;
+	}
+}
+
 // add develompent card
 void Player::addDevCard(Devtype type) {
 	developmentCards.push_back(DevelopmentCard(type));
 }
+
+// return vector of development cards
+vector<DevelopmentCard> Player::returnDevcards() const {
+	return developmentCards;
+}
+
 
 // get number of development cards
 size_t Player::getNumDev() const {
 	return developmentCards.size();
 }
 
+// remove development card
+void Player::removeDevCard(Devtype type) {
+	for (int i = 0; i < developmentCards.size(); ++i) {
+		if (developmentCards[i].getType() == type) {
+			developmentCards.erase(developmentCards.begin() + i);
+			break;
+		}
+	}
+}
 
 // can play development card?
 bool Player::canPlayDev() {

@@ -56,6 +56,12 @@ public:
 	/// getter number of victory points
 	size_t getVictoryPoints() const;
 
+	/// getter number of knight development cards
+	int getNumKnightcards() const;
+
+	/// getter number of victory point development cards
+	int getNumVictorycards() const;
+
 	/// getter number of grain cards
 	size_t getNumGrain() const;
 
@@ -117,8 +123,23 @@ public:
 	/// getter number of special cards
 	size_t getNumSpecial() const;
 
+	/// add a special card
+	void addspecialCard(SpecialType type);
+
+	/// remove a special card
+	void Player::removespecialCard(SpecialType type);
+
+	/// check for largest army ownership
+	bool hasLargestArmy();
+
 	/// add develompent card
 	void addDevCard(Devtype type);
+
+	/// return vector of development cards
+	std::vector<DevelopmentCard> returnDevcards() const;
+
+	/// remove develompent card
+	void removeDevCard(Devtype type);
 
 	/// get number of development cards
 	size_t getNumDev() const;

@@ -3,6 +3,7 @@
 /// GameEngine class member-function definitions.
 
 #include "GameEngine.h" // Robber class definition
+#include "DevCardDeck.h"
 #include <iostream>
 #include <string>
 #include <time.h>
@@ -121,6 +122,7 @@ void GameEngine::secondStage() {
 
 		// handle initial move (roll or play dev card)
 		bool NotLegalMove{ true }; 
+		bool devcardplayed{ false };
 		while (NotLegalMove) {
 			cin >> moveInput;
 			if (moveInput == "1") {
@@ -129,6 +131,7 @@ void GameEngine::secondStage() {
 			}
 			else if (moveInput == "2" && player.canPlayDev()) {
 				cout << "Play development card" << "\n";
+				devcardplayed = true;
 				NotLegalMove = false;
 			}
 			else {
@@ -359,6 +362,172 @@ void GameEngine::handleRobber(Robber& robber, Player& player) {
 		else;
 	}
 }
+
+
+// play development card
+void GameEngine::playDevCard(Player& player, Robber& robber) {
+	int choise{ 0 };
+	vector<DevelopmentCard> cards = player.returnDevcards();
+	cout << "Which development card would you like to play:\n";
+	for (int index = 0; index < cards.size(); ++index) {
+		if (cards[index].getType() == VICTORY) {
+			cout << "   VICTORY" << endl;
+		}
+		else {
+			string type = cards[index].toString();
+			cout << index+1 << "  " << type << endl;
+		}
+	}
+	cin >> choise;
+	Devtype chosentype = cards[choise-1].getType();
+	string z;
+	string type;
+	string grain = "GRAIN";
+	string brick = "BRICK";
+	switch (chosentype) {
+	case KNIGHT:
+		handleRobber(robber, player);
+		cout << "played a knight card";
+		break;
+	case ROADBUILDING:
+		int x, y;
+		TileEdge edge;
+		cout << "identify location for first road:\n";
+		cin >> x >> y >> z;
+		if (z == "UP") {
+			edge = UP;
+		}
+		else if (z == "RIGHT") {
+			edge = RIGHT;
+		}
+		else {
+			edge = DOWN;
+		}
+		player.buildRoad(x, y, edge);
+		cout << "identify location for second road:\n";
+		cin >> x >> y >> z;
+		if (z == "UP") {
+			edge = UP;
+		}
+		else if (z == "RIGHT") {
+			edge = RIGHT;
+		}
+		else {
+			edge = DOWN;
+		}
+		player.buildRoad(x, y, edge);
+		break;
+	case YEAROFPLENTY:
+		for (int i = 0; i < 2; ++i) {
+			label:
+			cout << "identify the resource that you want to add:";
+			cin >> type;
+			cout << type;
+			if (type == "GRAIN") { // type == grain) {
+				player.addResource(GRAIN, 1);
+			}
+			else if (type == "BRICK") {
+				player.addResource(BRICK, 1);
+			}
+			else if (type == string("WOOL")) {
+				player.addResource(WOOL, 1);
+			}
+			else if (type == string("LUMBER")) {
+				player.addResource(LUMBER, 1);
+			}
+			else if (type == string("ORE")) {
+				player.addResource(ORE, 1);
+			}
+			else {
+				goto label;
+			}
+		}
+		break;
+	case MONOPOLY:
+		cout << "what type of reasource would you like to take\n";
+		cin >> z;
+		if (z == string("GRAIN")) {
+			for (auto e : players) {
+				if (e.getName() == player.getName()) {
+					break;
+				}
+				else {
+					player.addResource(GRAIN, e.getNumGrain());
+					e.removeResource(GRAIN, e.getNumGrain());
+				}
+			}
+		}
+		if (z == string("BRICK")) {
+			for (auto e : players) {
+				if (e.getName() == player.getName()) {
+					break;
+				}
+				else {
+					player.addResource(BRICK, e.getNumGrain());
+					e.removeResource(BRICK, e.getNumGrain());
+				}
+			}
+		}
+		if (z == string("WOOL")) {
+			for (auto e : players) {
+				if (e.getName() == player.getName()) {
+					break;
+				}
+				else {
+					player.addResource(WOOL, e.getNumGrain());
+					e.removeResource(WOOL, e.getNumGrain());
+				}
+			}
+		}
+		if (z == string("LUMBER")) {
+			for (auto e : players) {
+				if (e.getName() == player.getName()) {
+					break;
+				}
+				else {
+					player.addResource(GRAIN, e.getNumGrain());
+					e.removeResource(GRAIN, e.getNumGrain());
+				}
+			}
+		}
+		if (z == string("ORE")) {
+			for (auto e : players) {
+				if (e.getName() == player.getName()) {
+					break;
+				}
+				else {
+					player.addResource(GRAIN, e.getNumGrain());
+					e.removeResource(GRAIN, e.getNumGrain());
+				}
+			}
+		}
+		break;
+	}
+	player.removeDevCard(chosentype);
+}
+
+void GameEngine::updateSpecialCards() {
+	for (auto p : players) {
+		if (p.hasLargestArmy()) {
+			Player currentowner = p;
+			for (auto p : players) {
+				if (p.getNumKnightcards() > currentowner.getNumKnightcards()) {
+					p.addspecialCard(LARGESTARMY);
+					currentowner.removespecialCard(LARGESTARMY);
+					cout << "new owner of specialcard11" << p.getName() << endl;
+				}
+			}
+			break;
+		}
+	}
+	for (auto p : players) {
+		if (p.getNumKnightcards() >= 3) {
+			p.addspecialCard(LARGESTARMY);
+			cout << "new owner of specialcard" << p.getName() << endl;
+		}
+	}
+}
+
 
 void GameEngine::testfunction(Robber& robber) {
 	players[0].buildSettlement(-1, 0, TOP);
