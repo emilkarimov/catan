@@ -5,6 +5,8 @@
 #include "GameEngine.h" // Robber class definition
 #include <iostream>
 #include <string>
+#include <cstdlib> // contains prototypes for functions srand and rand
+#include <ctime>
 using namespace std;
 
 // number of resources distributed for settlements and cities
@@ -13,8 +15,8 @@ unsigned int NUMRESCITY{ 2 };
 
 // constructor 
 GameEngine::GameEngine(std::vector<Player> players, Board board)
-	: players(players), board(board) {
-
+	: players(players), board(board), robber(0, 0) {
+	
 }
 
 // start game
@@ -123,10 +125,12 @@ void GameEngine::secondStage() {
 			cin >> moveInput;
 			if (moveInput == "1") {
 				cout << "roll dice" << "\n";
+				handleRollDice(player);
 				NotLegalMove = false;
 			}
 			else if (moveInput == "2" && player.canPlayDev()) {
 				cout << "Play development card" << "\n";
+				playDevCard(player);
 				NotLegalMove = false;
 			}
 			else {
@@ -143,6 +147,7 @@ void GameEngine::secondStage() {
 				cin >> moveInput;
 				if (moveInput == "1") {
 					cout << "roll dice" << "\n";
+					handleRollDice(player);
 					NotLegalMove = false;
 				}
 				else {
@@ -158,7 +163,47 @@ void GameEngine::secondStage() {
 		while (!endOfTurn) {
 			cout << "\n" << player.getName() + ", what is your move? \noptions:\n";
 			cout << possibleMoves(player, stage);
-			endOfTurn = true;
+			bool NotLegalMove{ true };
+			while (NotLegalMove) {
+				cin >> moveInput;
+				if (moveInput == "2" && player.canPlayDev()) {
+					cout << "Play development card" << "\n";
+					playDevCard(player);
+					NotLegalMove = false;
+				}
+				else if (moveInput == "3" && player.canBuildSettlement()) {
+					cout << "build settlement" << "\n";
+					NotLegalMove = false;
+				}
+				else if (moveInput == "4" && player.canBuildCity()) {
+					cout << "build city" << "\n";
+					NotLegalMove = false;
+				}
+				else if (moveInput == "5" && player.canBuildRoad()) {
+					cout << "build road" << "\n";
+					NotLegalMove = false;
+				}
+				else if (moveInput == "6" && player.canBuyDev()) {
+					cout << "buy dev card" << "\n";
+					NotLegalMove = false;
+				}
+				else if (moveInput == "8") {
+					cout << "trade with bank" << "\n";
+					NotLegalMove = false;
+				}
+				else if (moveInput == "9") {
+					cout << "trade with players" << "\n";
+					NotLegalMove = false;
+				}
+				else if (moveInput == "e") {
+					cout << "ending turn" << "\n";
+					NotLegalMove = false;
+					endOfTurn = true;
+				}
+				else {
+					cout << "Illegal move. Choose a valid move from the options above" << "\n";
+				}
+			}
 		}
 
 
@@ -269,6 +314,263 @@ void GameEngine::distributeResources(unsigned int diceNum) {
 					player.addResource(res, NUMRESCITY);
 				}
 			}
+		}
+	}
+	printInfoPlayers();
+}
+
+// roll dice 
+unsigned int GameEngine::rollDice() {
+	srand(static_cast<unsigned int>(time(0)));
+	unsigned int a;
+	unsigned int b;
+	unsigned int c;
+	a = 1 + rand() % 6;
+	b = 1 + rand() % 6;
+	c = a + b;
+	cout << a << " + " << b << " = " << c << "\n";
+	return c;
+
+}
+
+// handle roll dice
+void GameEngine::handleRollDice(Player& player) {
+	cout << "handleRollDice" << "\n";
+	unsigned int rolledNum = rollDice();
+	if (rolledNum == 7) { 
+		handleRobber(player);
+	}
+	else {
+		distributeResources(rolledNum);
+	}
+}
+
+// handle robber function that is called when dice roll result is 7 or Knight card is played
+// move the robber, then randomly draw a resource card from the player on the new tile and add it to the player in turn
+void GameEngine::handleRobber(Player& player) {
+	// set location of the robber
+	std::array <int, 2> newLoc;
+	cout << "enter new tile coordinates for the robber:";
+	cin >> newLoc[0] >> newLoc[1];
+
+	// check that new location is different than the old one
+	std::array <int, 2> oldLoc;
+	oldLoc = robber.getLoc();
+	while (newLoc[0] == oldLoc[0] && newLoc[1] == oldLoc[1]) {
+		cout << "same location is not allowed, enter different coordinates:";
+		cin >> newLoc[0] >> newLoc[1];
+	}
+
+	// set the location using new coordinates
+	robber.setLoc(newLoc[0], newLoc[1]);
+
+	// retrieve players on the new tile
+	vector <Player> players_on_tile = getPlayersOnTile(newLoc[0], newLoc[1]);
+	//act based on the vector size
+	if (players_on_tile.capacity() == 0) {
+		cout << "no players on the tile chosen. nothing to do" << endl;
+	}
+	else if (players_on_tile.capacity() == 1) {
+		//random index draw
+		//players_on_tile[0].removeResource();
+		//player.addResource();
+	}
+	else {
+		// more than 1 player on the tile, pick one
+		int index;
+		cout << "more than 1 player on the tile, pick one (0, 1, etc):";
+		cin >> index;
+		//players_on_tile[index].removeResource();
+		//player.addResource();
+	}
+}
+
+// retrieve players on a tile
+std::vector <Player> GameEngine::getPlayersOnTile(int x, int y) {
+	vector <Player> matchingPlayers;
+	array <int, 2> tileinfocus;
+	tileinfocus[0] = x;
+	tileinfocus[1] = y;
+
+	for (vector<Player>::iterator counterof_players = players.begin(); counterof_players != players.end(); counterof_players++) {
+		vector<Settlement> listof_settlements = counterof_players->getSettlements();
+		vector<City> listof_cities = counterof_players->getCities();
+
+		for (vector<Settlement>::iterator counterof_settlements = listof_settlements.begin(); counterof_settlements != listof_settlements.end(); counterof_settlements++) {
+			if (tileinfocus[0] == counterof_settlements->getLoc()[0] && tileinfocus[1] == counterof_settlements->getLoc()[1])
+				matchingPlayers.push_back(*counterof_players);
+			else {
+				for (vector<City>::iterator counterof_cities = listof_cities.begin(); counterof_cities != listof_cities.end(); counterof_cities++) {
+					if (tileinfocus[0] == counterof_cities->getLoc()[0] && tileinfocus[1] == counterof_cities->getLoc()[1])
+						matchingPlayers.push_back(*counterof_players);
+					else;
+				}
+			}
+		}
+	}
+
+	return matchingPlayers;
+}
+
+
+// play development card
+void GameEngine::playDevCard(Player& player) {
+	int choise{ 0 };
+	vector<DevelopmentCard> cards = player.returnDevcards();
+	cout << "Which development card would you like to play:\n";
+	for (int index = 0; index < cards.size(); ++index) {
+		if (cards[index].getType() == VICTORY) {
+			cout << "   VICTORY" << endl;
+		}
+		else {
+			string type = cards[index].toString();
+			cout << index + 1 << "  " << type << endl;
+		}
+	}
+	cin >> choise;
+	Devtype chosentype = cards[choise - 1].getType();
+	string z;
+	string type;
+	string grain = "GRAIN";
+	string brick = "BRICK";
+	switch (chosentype) {
+	case KNIGHT:
+		///handlerobber();
+		cout << "played a knight card";
+		break;
+	case ROADBUILDING:
+		int x, y;
+		TileEdge edge;
+		cout << "identify location for first road:\n";
+		cin >> x >> y >> z;
+		if (z == "UP") {
+			edge = UP;
+		}
+		else if (z == "RIGHT") {
+			edge = RIGHT;
+		}
+		else {
+			edge = DOWN;
+		}
+		player.buildRoad(x, y, edge);
+		cout << "identify location for second road:\n";
+		cin >> x >> y >> z;
+		if (z == "UP") {
+			edge = UP;
+		}
+		else if (z == "RIGHT") {
+			edge = RIGHT;
+		}
+		else {
+			edge = DOWN;
+		}
+		player.buildRoad(x, y, edge);
+		break;
+	case YEAROFPLENTY:
+		for (int i = 0; i < 2; ++i) {
+		label:
+			cout << "identify the resource that you want to add:";
+			cin >> type;
+			cout << type;
+			if (type == "GRAIN") { // type == grain) {
+				player.addResource(GRAIN, 1);
+			}
+			else if (type == "BRICK") {
+				player.addResource(BRICK, 1);
+			}
+			else if (type == string("WOOL")) {
+				player.addResource(WOOL, 1);
+			}
+			else if (type == string("LUMBER")) {
+				player.addResource(LUMBER, 1);
+			}
+			else if (type == string("ORE")) {
+				player.addResource(ORE, 1);
+			}
+			else {
+				goto label;
+			}
+		}
+		break;
+	case MONOPOLY:
+		cout << "what type of reasource would you like to take\n";
+		cin >> z;
+		if (z == string("GRAIN")) {
+			for (auto e : players) {
+				if (e.getName() == player.getName()) {
+					break;
+				}
+				else {
+					player.addResource(GRAIN, e.getNumGrain());
+					e.removeResource(GRAIN, e.getNumGrain());
+				}
+			}
+		}
+		if (z == string("BRICK")) {
+			for (auto e : players) {
+				if (e.getName() == player.getName()) {
+					break;
+				}
+				else {
+					player.addResource(BRICK, e.getNumGrain());
+					e.removeResource(BRICK, e.getNumGrain());
+				}
+			}
+		}
+		if (z == string("WOOL")) {
+			for (auto e : players) {
+				if (e.getName() == player.getName()) {
+					break;
+				}
+				else {
+					player.addResource(WOOL, e.getNumGrain());
+					e.removeResource(WOOL, e.getNumGrain());
+				}
+			}
+		}
+		if (z == string("LUMBER")) {
+			for (auto e : players) {
+				if (e.getName() == player.getName()) {
+					break;
+				}
+				else {
+					player.addResource(GRAIN, e.getNumGrain());
+					e.removeResource(GRAIN, e.getNumGrain());
+				}
+			}
+		}
+		if (z == string("ORE")) {
+			for (auto e : players) {
+				if (e.getName() == player.getName()) {
+					break;
+				}
+				else {
+					player.addResource(GRAIN, e.getNumGrain());
+					e.removeResource(GRAIN, e.getNumGrain());
+				}
+			}
+		}
+		break;
+	}
+	player.removeDevCard(chosentype);
+}
+
+void GameEngine::updateSpecialCards() {
+	for (auto p : players) {
+		if (p.hasLargestArmy()) {
+			Player currentowner = p;
+			for (auto p : players) {
+				if (p.getNumKnightcards() > currentowner.getNumKnightcards()) {
+					p.addspecialCard(LARGESTARMY);
+					currentowner.removespecialCard(LARGESTARMY);
+				}
+			}
+			break;
+		}
+	}
+	for (auto p : players) {
+		if (p.getNumKnightcards() >= 3) {
+			p.addspecialCard(LARGESTARMY);
 		}
 	}
 }

@@ -56,6 +56,9 @@ public:
 	/// getter number of victory points
 	size_t getVictoryPoints() const;
 
+	/// getter number of knight development cards
+	int getNumKnightcards() const;
+
 	/// getter number of grain cards
 	size_t getNumGrain() const;
 
@@ -81,6 +84,16 @@ public:
 	/// getter to access the settlements
 	/// \return vector of settlements the player has. Cannot be modified
 	const std::vector<Settlement> getSettlements() const;
+
+	/// getter to access the cities
+	/// \return vector of cities the player has. Cannot be modified
+	const std::vector<City> getCities() const;
+
+	/// return vector of development cards
+	std::vector<DevelopmentCard> returnDevcards() const;
+
+	/// remove develompent card
+	void removeDevCard(Devtype type);
 
 	/// build road
 	/// \param x x coord
@@ -116,6 +129,12 @@ public:
 	/// add develompent card
 	void addDevCard(Devtype type);
 
+	///
+	void addspecialCard(SpecialType type);
+
+	///
+	void removespecialCard(SpecialType type);
+
 	/// get number of development cards
 	size_t getNumDev() const;
 
@@ -142,6 +161,9 @@ public:
 
 	/// check if a player has a settlement or a city on specific coord
 	bool hasPropertyAtCoord(int x, int y, int z) const;
+
+	///
+	bool hasLargestArmy();
 private:
 	// buildings
 	/// roads

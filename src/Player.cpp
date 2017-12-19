@@ -202,6 +202,36 @@ const std::vector<Settlement> Player::getSettlements() const {
 	return settlements;
 }
 
+// get references to cities
+const std::vector<City> Player::getCities() const {
+	return cities;
+}
+
+// remove development card
+void Player::removeDevCard(Devtype type) {
+	for (int i = 0; i < developmentCards.size(); ++i) {
+		if (developmentCards[i].getType() == type) {
+			developmentCards.erase(developmentCards.begin() + i);
+			break;
+		}
+	}
+}
+
+// return vector of development cards
+vector<DevelopmentCard> Player::returnDevcards() const {
+	return developmentCards;
+}
+
+int Player::getNumKnightcards() const {
+	int num{ 0 };
+	for (auto Devcards : developmentCards) {
+		if (Devcards.getType() == KNIGHT) {
+			num += 1;
+		}
+	}
+	return num;
+}
+
 // get grain number
 size_t Player::getNumGrain() const {
 	return grain.size();
@@ -247,6 +277,20 @@ size_t Player::getNumDev() const {
 	return developmentCards.size();
 }
 
+// add special card
+void Player::addspecialCard(SpecialType type) {
+	specialCards.push_back(SpecialCard(type));
+}
+
+// remove special card
+void Player::removespecialCard(SpecialType type) {
+	for (int i = 0; i < specialCards.size(); ++i) {
+		if (specialCards[i].getType() == type) {
+			specialCards.erase(specialCards.begin() + i);
+			break;
+		}
+	}
+}
 
 // can play development card?
 bool Player::canPlayDev() {
@@ -310,4 +354,15 @@ bool Player::hasCityAtCoord(int x, int y, int z) const {
 /// check if a player has a settlement or a city on specific coord
 bool Player::hasPropertyAtCoord(int x, int y, int z) const {
 	return (hasCityAtCoord(x, y, z) || hasSettlementAtCoord(x, y, z));
+}
+
+// 
+bool Player::hasLargestArmy() {
+	for (auto e : specialCards) {
+		if (e.getType() == LONGESTROAD) {
+			return true;
+		}
+		else
+			return false;
+	}
 }

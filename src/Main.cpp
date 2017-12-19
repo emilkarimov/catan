@@ -27,6 +27,7 @@ void testFirstStage();
 void testSecondStage();
 void testFindCorners();
 void testDestributeResources();
+void testRollDice();
 vector<Tile> createDefaultTiles();
 vector<Player> createDefaultPlayers();
 
@@ -49,20 +50,12 @@ int main()
 
 	// test distribution of resources
 	//testDestributeResources();
+
+	// test roll dice
+	// testRollDice();
 }
 
 
-
-
-
-void rollDice()
-{
-	int die1, die2;
-	for (int i = 0; i < 20; i++)
-		die1 = (rand() % 6) + 1;
-	die2 = (rand() % 6) + 1;
-	cout << die1 << " " << die2 << "\n";
-}
 
 void iterOneCheck() {
 	// create players
@@ -272,4 +265,19 @@ void testDestributeResources() {
 	game.printInfoPlayers();
 	game.distributeResources(12);
 	game.printInfoPlayers();
+}
+
+
+void testRollDice() {
+	// Default tiles
+	vector<Tile> defaultTiles = createDefaultTiles();
+
+	// only one player (for testing)
+	vector<Player> onePlayer;
+	onePlayer.push_back(Player("Alex", RED));
+	Board board = Board(defaultTiles);
+	GameEngine game(onePlayer, board);
+	game.printInfoPlayers();
+
+	cout << game.rollDice() << "\n";
 }

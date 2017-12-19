@@ -11,6 +11,7 @@
 #include "Player.h"
 #include "Tile.h"
 #include "Board.h"
+#include "Robber.h"
 
 /// GameEngine class
 ///
@@ -50,9 +51,25 @@ public:
 	/// distribute resources depending on the rolled dice number
 	void distributeResources(unsigned int diceNum);
 
+	/// what to do after rolling dice depending on the number rolles
+	void handleRollDice(Player& player);
+
+	/// handle robber function that is called when dice roll result is 7 or Knight card is played
+	void handleRobber(Player& player);
+
+	/// retrieve players on a tile
+	std::vector <Player> getPlayersOnTile(int x, int y);
+
+	///
+	void GameEngine::playDevCard(Player& player);
+
+	///
+	void GameEngine::updateSpecialCards();
+
 private:
 	std::vector<Player> players;
 	Board board;
+	Robber robber;
 
 };
 
