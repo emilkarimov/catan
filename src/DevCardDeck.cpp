@@ -24,10 +24,14 @@ void DevCardDeck::draw() const {
 
 
 void DevCardDeck::buyDevelopmentCard(Player& player) {
+	if (player.getNumGrain() < 1 && player.getNumWool() < 1 && player.getNumOre() < 1) {
+		cout << "insufficient resources\n";
+		return;
+	}
 	int range = deck.size();
 	srand(time(NULL));
 	int index = rand() % range;
-	Devtype type = deck[index + 1].getType();
+	Devtype type = deck[index].getType();
 	deck.erase(deck.begin() + index);
 	player.addDevCard(type);
 	player.removeResource(WOOL, 1);

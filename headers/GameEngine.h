@@ -47,7 +47,7 @@ public:
 	void GameEngine::playDevCard(Player& player);
 
 	///
-	void GameEngine::updateSpecialCards();
+	void GameEngine::updateSpecialCards();``
 
 private:
 	std::vector<Player> players;

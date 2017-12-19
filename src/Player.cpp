@@ -169,7 +169,8 @@ std::string Player::toString() const {
 		"\n  lumber: " + std::to_string(getNumLumber()) +
 		"\n  ore: " + std::to_string(getNumOre()) +
 		"\ndevelopment cards: " + std::to_string(getNumDev()) +
-		"\nVP: " + std::to_string(getVictoryPoints());
+		"\nVP: " + std::to_string(getVictoryPoints()) +
+		"\nSpecial Cards:" + std::to_string(getNumSpecial());
 }
 
 // text for all roads

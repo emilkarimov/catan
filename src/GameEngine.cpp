@@ -111,7 +111,6 @@ void GameEngine::secondStage() {
 			}
 			else if (moveInput == "2" && player.canPlayDev()) {
 				cout << "Play development card" << "\n";
-				playDevCard(player);
 				devcardplayed = true;
 				NotLegalMove = false;
 			}
@@ -252,7 +251,7 @@ Tile* GameEngine::findTile(int x, int y) {
 
 
 // play development card
-void GameEngine::playDevCard(Player& player) {
+void GameEngine::playDevCard(Player& player, Robber& robber) {
 	int choise{ 0 };
 	vector<DevelopmentCard> cards = player.returnDevcards();
 	cout << "Which development card would you like to play:\n";
@@ -273,7 +272,7 @@ void GameEngine::playDevCard(Player& player) {
 	string brick = "BRICK";
 	switch (chosentype) {
 	case KNIGHT:
-		///handlerobber();
+		handleRobber(robber, player);
 		cout << "played a knight card";
 		break;
 	case ROADBUILDING:
@@ -401,6 +400,7 @@ void GameEngine::updateSpecialCards() {
 				if (p.getNumKnightcards() > currentowner.getNumKnightcards()) {
 					p.addspecialCard(LARGESTARMY);
 					currentowner.removespecialCard(LARGESTARMY);
+					cout << "new owner of specialcard11" << p.getName() << endl;
 				}
 			}
 			break;
@@ -409,6 +409,7 @@ void GameEngine::updateSpecialCards() {
 	for (auto p : players) {
 		if (p.getNumKnightcards() >= 3) {
 			p.addspecialCard(LARGESTARMY);
+			cout << "new owner of specialcard" << p.getName() << endl;
 		}
 	}
 }

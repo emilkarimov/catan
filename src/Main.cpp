@@ -40,17 +40,16 @@ int main()
 	player.buildRoad(-1, 0, UP);
 	player.buildSettlement(1, 0, BOTTOM);
 	player.buildRoad(0, -1, RIGHT);
-	player.addResource(LUMBER, 5);
-	player.addResource(ORE, 5);
-	player.addResource(WOOL, 5);
-	player.addResource(BRICK, 5);
-	player.addResource(GRAIN, 5);
-	player.addDevCard(YEAROFPLENTY);
+	player.addResource(LUMBER, 15);
+	player.addResource(ORE, 15);
+	player.addResource(WOOL, 15);
+	player.addResource(BRICK, 15);
+	player.addResource(GRAIN, 15);
 	cout << player.toString() << "\n";
 	deck.buyDevelopmentCard(player);
 	cout << player.toString() << "\n";
 	deck.toString();
-	for (int i = 0; i < 3; ++i) {
+	for (int i = 0; i < 10; ++i) {
 		deck.buyDevelopmentCard(player);
 	}
 	cout << player.toString() << "\n";
@@ -61,14 +60,16 @@ int main()
 	vector<Tile> defaultTiles = createDefaultTiles();
 	GameEngine game(onePlayer, defaultTiles);
 	game.secondStage();
-	game.playDevCard(player);
+	game.playDevCard(onePlayer[0]);
+	
 
+	game.updateSpecialCards();
 	// test first stage
 	// testFirstStage();
 
 	// Iteration 1 tests
-	//iterOneCheck();
-	cout << player.toString();
+	// iterOneCheck();
+	cout << onePlayer[0].toString();
 	string z;
 	cin >> z;
 	return 0;
