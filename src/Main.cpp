@@ -25,6 +25,7 @@ void rollDice();
 void iterOneCheck();
 void testFirstStage();
 void testSecondStage();
+void testSecondStage2();
 void testFindCorners();
 void testDestributeResources();
 void testRollDice();
@@ -43,7 +44,10 @@ int main()
 	//testFirstStage();
 
 	// test second stage
-	testSecondStage();
+	//testSecondStage();
+
+	// test second stage2
+	testSecondStage2();
 
 	// test findCorners
 	//testFindCorners();
@@ -204,6 +208,9 @@ void testSecondStage() {
 	player.addResource(BRICK, 5);
 	player.addResource(GRAIN, 5);
 	player.addDevCard(KNIGHT);
+	player.addDevCard(ROADBUILDING);
+	player.addDevCard(YEAROFPLENTY);
+	player.addDevCard(MONOPOLY);
 	cout << player.toString() << "\n";
 
 	// only one player is in the game
@@ -280,4 +287,83 @@ void testRollDice() {
 	game.printInfoPlayers();
 
 	cout << game.rollDice() << "\n";
+}
+
+
+void testSecondStage2() {
+	// player initialisation
+	Player player1 = Player("Dave", RED);
+	player1.buildSettlement(-1, 0, TOP);
+	player1.buildRoad(-1, 0, UP);
+	player1.buildSettlement(1, 0, BOTTOM);
+	player1.buildRoad(0, -1, RIGHT);
+	player1.addResource(LUMBER, 5);
+	player1.addResource(ORE, 5);
+	player1.addResource(WOOL, 5);
+	player1.addResource(BRICK, 5);
+	player1.addResource(GRAIN, 5);
+	player1.addDevCard(KNIGHT);
+	player1.addDevCard(ROADBUILDING);
+	player1.addDevCard(YEAROFPLENTY);
+	player1.addDevCard(MONOPOLY);
+	cout << player1.toString() << "\n\n";
+
+	Player player2 = Player("Emil", RED);
+	player2.buildSettlement(0, 1, TOP);
+	player2.buildRoad(0, 1, UP);
+	player2.buildSettlement(2, 2, BOTTOM);
+	player2.buildRoad(1, 1, RIGHT);
+	player2.addResource(LUMBER, 5);
+	player2.addResource(ORE, 5);
+	player2.addResource(WOOL, 5);
+	player2.addResource(BRICK, 5);
+	player2.addResource(GRAIN, 5);
+	player2.addDevCard(KNIGHT);
+	player2.addDevCard(ROADBUILDING);
+	player2.addDevCard(YEAROFPLENTY);
+	player2.addDevCard(MONOPOLY);
+	cout << player2.toString() << "\n\n";
+
+	Player player3 = Player("Bram", RED);
+	player3.buildSettlement(2, 1, BOTTOM);
+	player3.buildRoad(1, 0, RIGHT);
+	player3.buildSettlement(-1, -1, BOTTOM);
+	player3.buildRoad(-1, -1, DOWN);
+	player3.addResource(LUMBER, 5);
+	player3.addResource(ORE, 5);
+	player3.addResource(WOOL, 5);
+	player3.addResource(BRICK, 5);
+	player3.addResource(GRAIN, 5);
+	player3.addDevCard(KNIGHT);
+	player3.addDevCard(ROADBUILDING);
+	player3.addDevCard(YEAROFPLENTY);
+	player3.addDevCard(MONOPOLY);
+	cout << player3.toString() << "\n\n";
+
+	Player player4 = Player("Alex", RED);
+	player4.buildSettlement(1, 1, BOTTOM);
+	player4.buildRoad(0, 0, UP);
+	player4.buildSettlement(-2, -1, TOP);
+	player4.buildRoad(-2, -1, UP);
+	player4.addResource(LUMBER, 5);
+	player4.addResource(ORE, 5);
+	player4.addResource(WOOL, 5);
+	player4.addResource(BRICK, 5);
+	player4.addResource(GRAIN, 5);
+	player4.addDevCard(KNIGHT);
+	player4.addDevCard(ROADBUILDING);
+	player4.addDevCard(YEAROFPLENTY);
+	player4.addDevCard(MONOPOLY);
+	cout << player4.toString() << "\n\n";
+
+	// vector of players
+	vector<Player> players;
+	players.push_back(player1);
+	players.push_back(player2);
+	players.push_back(player3);
+	players.push_back(player4);
+	vector<Tile> defaultTiles = createDefaultTiles();
+	Board board = Board(defaultTiles);
+	GameEngine game(players, board);
+	game.secondStage();
 }

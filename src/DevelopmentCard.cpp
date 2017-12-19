@@ -14,7 +14,29 @@ Devtype DevelopmentCard::getType() const {
 }
 
 string DevelopmentCard::toString() const {
-	return "development card";
+	Devtype type{ getType() };
+	string s;
+	switch (type) {
+	case KNIGHT:
+		s = "KNIGHT";
+		break;
+	case VICTORY:
+		s = "VICTORY";
+		break;
+	case ROADBUILDING:
+		s = "ROADBUILDING";
+		break;
+	case YEAROFPLENTY:
+		s = "YEAROFPLENTY";
+		break;
+	case MONOPOLY:
+		s = "MONOPOLY";
+		break;
+	default:
+		s = "error";
+		break;
+	}
+	return s;
 }
 
 void DevelopmentCard::draw() const {

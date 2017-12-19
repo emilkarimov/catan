@@ -350,6 +350,7 @@ void GameEngine::handleRollDice(Player& player) {
 void GameEngine::handleRobber(Player& player) {
 	// set location of the robber
 	std::array <int, 2> newLoc;
+	int playerindex;
 	cout << "enter new tile coordinates for the robber:";
 	cin >> newLoc[0] >> newLoc[1];
 
@@ -364,52 +365,69 @@ void GameEngine::handleRobber(Player& player) {
 	// set the location using new coordinates
 	robber.setLoc(newLoc[0], newLoc[1]);
 
-	// retrieve players on the new tile
-	vector <Player> players_on_tile = getPlayersOnTile(newLoc[0], newLoc[1]);
 	//act based on the vector size
-	if (players_on_tile.capacity() == 0) {
-		cout << "no players on the tile chosen. nothing to do" << endl;
+	//vector <int> playercount;
+	int playercount = 0;
+	cout << "which player do you want to rob:\n";
+	for (int i = 0; i < players.size(); ++i) {
+		if (players[i].getColor() == player.getColor()) {
+			//break;
+		}
+		else if (playersOnTile(players[i], newLoc[0], newLoc[1])) {
+			cout << i << " " << players[i].getName() << endl;
+			playercount += 1;
+		}
 	}
-	else if (players_on_tile.capacity() == 1) {
-		//random index draw
-		//players_on_tile[0].removeResource();
-		//player.addResource();
+
+
+	if (playercount == 0) {
+		cout << "no players on the tile chosen. nothing to do" << endl;
+		return;
 	}
 	else {
-		// more than 1 player on the tile, pick one
-		int index;
-		cout << "more than 1 player on the tile, pick one (0, 1, etc):";
-		cin >> index;
-		//players_on_tile[index].removeResource();
-		//player.addResource();
+		cin >> playerindex;
+		//random index draw
+		srand(time(NULL));
+		int index = rand() % players[playerindex].getNumResources();
+		if (index < players[playerindex].getNumGrain()) {
+			players[playerindex].removeResource(GRAIN, 1);
+			player.addResource(GRAIN, 1);
+		}
+		else if (index < players[playerindex].getNumGrain() + players[playerindex].getNumBrick()) {
+			players[playerindex].removeResource(BRICK, 1);
+			player.addResource(BRICK, 1);
+		}
+		else if (index < players[playerindex].getNumGrain() + players[playerindex].getNumBrick() + players[playerindex].getNumWool()) {
+			players[playerindex].removeResource(WOOL, 1);
+			player.addResource(WOOL, 1);
+		}
+		else if (index < players[playerindex].getNumGrain() + players[playerindex].getNumBrick() + players[playerindex].getNumWool() + players[playerindex].getNumLumber()) {
+			players[playerindex].removeResource(LUMBER, 1);
+			player.addResource(LUMBER, 1);
+		}
+		else if (index < players[playerindex].getNumGrain() + players[playerindex].getNumBrick() + players[playerindex].getNumWool() + players[playerindex].getNumLumber() + players[playerindex].getNumOre()) {
+			players[playerindex].removeResource(ORE, 1);
+			player.addResource(ORE, 1);
+		}
+		else;
 	}
 }
 
-// retrieve players on a tile
-std::vector <Player> GameEngine::getPlayersOnTile(int x, int y) {
-	vector <Player> matchingPlayers;
-	array <int, 2> tileinfocus;
-	tileinfocus[0] = x;
-	tileinfocus[1] = y;
-
-	for (vector<Player>::iterator counterof_players = players.begin(); counterof_players != players.end(); counterof_players++) {
-		vector<Settlement> listof_settlements = counterof_players->getSettlements();
-		vector<City> listof_cities = counterof_players->getCities();
-
-		for (vector<Settlement>::iterator counterof_settlements = listof_settlements.begin(); counterof_settlements != listof_settlements.end(); counterof_settlements++) {
-			if (tileinfocus[0] == counterof_settlements->getLoc()[0] && tileinfocus[1] == counterof_settlements->getLoc()[1])
-				matchingPlayers.push_back(*counterof_players);
-			else {
-				for (vector<City>::iterator counterof_cities = listof_cities.begin(); counterof_cities != listof_cities.end(); counterof_cities++) {
-					if (tileinfocus[0] == counterof_cities->getLoc()[0] && tileinfocus[1] == counterof_cities->getLoc()[1])
-						matchingPlayers.push_back(*counterof_players);
-					else;
+// find players on tile
+bool GameEngine::playersOnTile(Player& p, int x, int y) const {
+	for (auto s : p.getSettlements()) {
+		if (x == s.getLoc()[0] && y == s.getLoc()[1]) {
+			return true;
+		}
+		else {
+			for (auto c : p.getCities()) {
+				if (x == c.getLoc()[0] && y == c.getLoc()[1]) {
+					return true;
 				}
 			}
 		}
 	}
-
-	return matchingPlayers;
+	return false;
 }
 
 
@@ -435,7 +453,7 @@ void GameEngine::playDevCard(Player& player) {
 	string brick = "BRICK";
 	switch (chosentype) {
 	case KNIGHT:
-		///handlerobber();
+		handleRobber(player);
 		cout << "played a knight card";
 		break;
 	case ROADBUILDING:
@@ -553,6 +571,7 @@ void GameEngine::playDevCard(Player& player) {
 		break;
 	}
 	player.removeDevCard(chosentype);
+	cout << player.toString();
 }
 
 void GameEngine::updateSpecialCards() {
@@ -563,6 +582,7 @@ void GameEngine::updateSpecialCards() {
 				if (p.getNumKnightcards() > currentowner.getNumKnightcards()) {
 					p.addspecialCard(LARGESTARMY);
 					currentowner.removespecialCard(LARGESTARMY);
+					cout << "new owner of specialcard11" << p.getName() << endl;
 				}
 			}
 			break;
@@ -571,6 +591,7 @@ void GameEngine::updateSpecialCards() {
 	for (auto p : players) {
 		if (p.getNumKnightcards() >= 3) {
 			p.addspecialCard(LARGESTARMY);
+			cout << "new owner of specialcard" << p.getName() << endl;
 		}
 	}
 }
