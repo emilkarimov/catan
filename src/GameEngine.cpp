@@ -374,6 +374,7 @@ void GameEngine::handleRobber(Player& player) {
 			//break;
 		}
 		else if (playersOnTile(players[i], newLoc[0], newLoc[1])) {
+			playersOnTile(players[i], newLoc[0], newLoc[1]);
 			cout << i << " " << players[i].getName() << endl;
 			playercount += 1;
 		}
