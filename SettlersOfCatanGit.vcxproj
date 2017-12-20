@@ -101,7 +101,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Users\454b\source\repos\catan\headers</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Bram\source\repos\catan\headers;C:\Users\454b\source\repos\catan\headers</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

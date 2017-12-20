@@ -291,6 +291,7 @@ bool Player::hasLargestArmy() {
 		else
 			return false;
 	}
+	return false;
 }
 
 // add develompent card
