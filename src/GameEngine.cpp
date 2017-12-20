@@ -414,17 +414,12 @@ void GameEngine::handleRobber(Player& player) {
 }
 
 // find players on tile
-bool GameEngine::playersOnTile(Player& p, int x, int y) const {
-	for (auto s : p.getSettlements()) {
-		if (x == s.getLoc()[0] && y == s.getLoc()[1]) {
+bool GameEngine::playersOnTile(Player& p, int x, int y) {
+	array<array<int, 3>, 6> sixCorners;
+	sixCorners = board.getSixCorners(x, y);
+	for (auto c : sixCorners) {
+		if (p.hasPropertyAtCoord(c[0], c[1], c[2])) {
 			return true;
-		}
-		else {
-			for (auto c : p.getCities()) {
-				if (x == c.getLoc()[0] && y == c.getLoc()[1]) {
-					return true;
-				}
-			}
 		}
 	}
 	return false;

@@ -308,7 +308,7 @@ void testSecondStage2() {
 	player1.addDevCard(MONOPOLY);
 	cout << player1.toString() << "\n\n";
 
-	Player player2 = Player("Emil", RED);
+	Player player2 = Player("Emil", BLUE);
 	player2.buildSettlement(0, 1, TOP);
 	player2.buildRoad(0, 1, UP);
 	player2.buildSettlement(2, 2, BOTTOM);
@@ -324,7 +324,7 @@ void testSecondStage2() {
 	player2.addDevCard(MONOPOLY);
 	cout << player2.toString() << "\n\n";
 
-	Player player3 = Player("Bram", RED);
+	Player player3 = Player("Bram", YELLOW);
 	player3.buildSettlement(2, 1, BOTTOM);
 	player3.buildRoad(1, 0, RIGHT);
 	player3.buildSettlement(-1, -1, BOTTOM);
@@ -340,7 +340,7 @@ void testSecondStage2() {
 	player3.addDevCard(MONOPOLY);
 	cout << player3.toString() << "\n\n";
 
-	Player player4 = Player("Alex", RED);
+	Player player4 = Player("Alex", GREEN);
 	player4.buildSettlement(1, 1, BOTTOM);
 	player4.buildRoad(0, 0, UP);
 	player4.buildSettlement(-2, -1, TOP);
