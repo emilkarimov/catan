@@ -58,7 +58,7 @@ public:
 	void handleRobber(Player& player);
 
 	/// retrieve players on a tile
-	bool playersOnTile(Player& p, int x, int y) const;
+	bool playersOnTile(Player& p, int x, int y);
 
 	///
 	void GameEngine::playDevCard(Player& player);

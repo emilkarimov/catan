@@ -370,8 +370,11 @@ void GameEngine::handleRobber(Player& player) {
 	int playercount = 0;
 	cout << "which player do you want to rob:\n";
 	for (int i = 0; i < players.size(); ++i) {
+		cout << players[i].getName() << "\n";
+		cout << "On tile?" << playersOnTile(players[i], newLoc[0], newLoc[1]) << "\n";
 		if (players[i].getColor() == player.getColor()) {
 			//break;
+			cout << "branch color" << "\n";
 		}
 		else if (playersOnTile(players[i], newLoc[0], newLoc[1])) {
 			cout << i << " " << players[i].getName() << endl;
@@ -414,17 +417,13 @@ void GameEngine::handleRobber(Player& player) {
 }
 
 // find players on tile
-bool GameEngine::playersOnTile(Player& p, int x, int y) const {
-	for (auto s : p.getSettlements()) {
-		if (x == s.getLoc()[0] && y == s.getLoc()[1]) {
+bool GameEngine::playersOnTile(Player& p, int x, int y) {
+	array<array<int, 3>, 6> sixCorners;
+	sixCorners = board.getSixCorners(x, y);
+
+	for (auto c : sixCorners) {
+		if (p.hasPropertyAtCoord(c[0], c[1], c[2])) {
 			return true;
-		}
-		else {
-			for (auto c : p.getCities()) {
-				if (x == c.getLoc()[0] && y == c.getLoc()[1]) {
-					return true;
-				}
-			}
 		}
 	}
 	return false;
@@ -558,11 +557,14 @@ void GameEngine::playDevCard(Player& player) {
 			}
 		}
 		if (z == string("ORE")) {
-			for (auto e : players) {
+			for (auto& e : players) {
+				cout << "ore chosen" << "\n";
 				if (e.getName() == player.getName()) {
+					cout << "it breaks always" << "\n";
 					break;
 				}
 				else {
+					cout << "NumGrain: " << e.getNumGrain() << "\n";
 					player.addResource(GRAIN, e.getNumGrain());
 					e.removeResource(GRAIN, e.getNumGrain());
 				}
