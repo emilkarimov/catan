@@ -31,7 +31,7 @@ public:
 	bool checkplayedcard() const;
 
 	/// activate dev card
-	void playcard(bool);
+	void playcard();
 
 	/// draw function 
 	virtual void draw() const override;
