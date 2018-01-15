@@ -60,11 +60,17 @@ public:
 	/// retrieve players on a tile
 	bool playersOnTile(Player& p, int x, int y);
 
-	///
+	/// play a dev card
 	void GameEngine::playDevCard(Player& player);
 
-	///
+	/// update special cards and its owners
 	void GameEngine::updateSpecialCards();
+
+	/// player trading with bank
+	void GameEngine::tradeBank(Player& player);
+
+	/// player to player trading 
+	void playerTrading(Player& player);
 
 private:
 	std::vector<Player> players;
