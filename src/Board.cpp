@@ -120,3 +120,7 @@ std::array<std::array<int, 3>, 6> Board::getSixCorners(int x, int y) {
 
 	return allCorners;
 }
+
+std::vector<Tile> Board::getTiles() const {
+	return tiles;
+}

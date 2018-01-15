@@ -7,16 +7,35 @@
 #include <string>
 #include <cstdlib> // contains prototypes for functions srand and rand
 #include <ctime>
+
+//Using SDL and standard IO
+//#include <SDL.h>
+#include <stdio.h>
+
+//Screen dimension constants
+const int SCREEN_WIDTH = 640;
+const int SCREEN_HEIGHT = 480;
+
 using namespace std;
 
 // number of resources distributed for settlements and cities
 unsigned int NUMRESSET{ 1 };
 unsigned int NUMRESCITY{ 2 };
 
+///// SDL //////
+int WIDTH{ 800 };
+int HEIGHT{ 600 };
+std::array<int, 2> CENTER{ WIDTH / 2, HEIGHT / 2 };
+int RADIUS{ 40 };
+int RADCOS{ static_cast<int>(round(RADIUS*sqrt(3) / 2)) };
+///// SDL //////
+
 // constructor 
 GameEngine::GameEngine(std::vector<Player> players, Board board)
 	: players(players), board(board), robber(0, 0) {
-	
+	deck.initDeck();
+	SDL_Init(SDL_INIT_VIDEO);
+	SDL_CreateWindowAndRenderer(800, 600, 0, &window, &renderer);
 }
 
 // start game
@@ -28,6 +47,7 @@ void GameEngine::start() {
 bool GameEngine::cornerFree(int x, int y, TileIntersection intersec) {
 	std::array<std::array<int, 3>, 3> corners;
 	corners = board.getAdjacentCorners(x, y, intersec);
+	// check adjacent corners
 	for (unsigned int i{ 0 }; i < 3; ++i) {
 		for (Player& player : players) {
 			if (player.hasPropertyAtCoord(corners[i][0], corners[i][1], corners[i][2])) {
@@ -35,6 +55,26 @@ bool GameEngine::cornerFree(int x, int y, TileIntersection intersec) {
 			}
 		}
 	}
+
+	// check intended corner 
+	for (Player& player : players) {
+		if (player.hasPropertyAtCoord(x, y, intersec)) {
+			return false;
+		}
+	}
+
+	return true;
+}
+
+// checks if a road is available for placing a new road
+bool GameEngine::roadAvailable(int x, int y, TileEdge edge) {
+	// check if each player has a road at this coord 
+    for (Player& player : players) {
+		if (player.hasRoadAtCoord(x, y, edge)) {
+			return false;
+		}
+	}
+
 	return true;
 }
 
@@ -113,7 +153,9 @@ void GameEngine::firstStage() {
 
 // 2nd stage - players take actions in turn
 void GameEngine::secondStage() {
-	for (auto player : players) {
+	//testSDLGE();
+	drawUpdate();
+	for (Player& player : players) {
 		TurnStage stage = START; // stage of the turn
 		std::string moveInput; // input from user
 		cout << "\n" << player.getName() + ", what is your move? \noptions:\n";
@@ -173,18 +215,22 @@ void GameEngine::secondStage() {
 				}
 				else if (moveInput == "3" && player.canBuildSettlement()) {
 					cout << "build settlement" << "\n";
+					handleBuildSettlement(player);
 					NotLegalMove = false;
 				}
 				else if (moveInput == "4" && player.canBuildCity()) {
 					cout << "build city" << "\n";
+					handleBuildCity(player);
 					NotLegalMove = false;
 				}
 				else if (moveInput == "5" && player.canBuildRoad()) {
 					cout << "build road" << "\n";
+					handleBuildRoad(player);
 					NotLegalMove = false;
 				}
 				else if (moveInput == "6" && player.canBuyDev()) {
 					cout << "buy dev card" << "\n";
+					deck.buyDevelopmentCard(player);
 					NotLegalMove = false;
 				}
 				else if (moveInput == "8") {
@@ -199,6 +245,10 @@ void GameEngine::secondStage() {
 					cout << "ending turn" << "\n";
 					NotLegalMove = false;
 					endOfTurn = true;
+				}
+				else if (moveInput == "p") {
+					NotLegalMove = false;
+					cout << player.toString() <<"\n";
 				}
 				else {
 					cout << "Illegal move. Choose a valid move from the options above" << "\n";
@@ -243,6 +293,7 @@ std::string GameEngine::possibleMoves(Player& player, TurnStage stage) {
 		possible += "8 - trade with bank\n";
 		possible += "9 - trade with players\n";
 		possible += "e - end turn\n";
+		possible += "p - print info\n";
 		break;
 	default:
 		break;
@@ -345,6 +396,133 @@ void GameEngine::handleRollDice(Player& player) {
 	}
 }
 
+void GameEngine::handleBuildSettlement(Player& player) {
+	bool illegalLoc{ true };
+	while (illegalLoc) {
+		cout << "choose the location of your settlement: \n";
+		int x;
+		int y;
+		string z;
+		TileIntersection intersec;
+		cin >> x >> y >> z;
+		if (z == "BOTTOM") {
+			intersec = BOTTOM;
+		}
+		else {
+			intersec = TOP;
+		}
+		if (cornerFree(x, y, intersec)) {
+			player.buildSettlement(x, y, intersec);
+			cout << "settlement was placed";
+			illegalLoc = false;
+		}
+		else {
+			cout << "incorrect location. Try again. \n";
+		}
+	}
+	drawUpdate();
+}
+
+/// handle city building
+void GameEngine::handleBuildCity(Player& player) {
+	bool illegalLoc{ true };
+	while (illegalLoc) {
+		cout << "choose the location of your city: \n";
+		int x;
+		int y;
+		string z;
+		TileIntersection intersec;
+		cin >> x >> y >> z;
+		if (z == "BOTTOM") {
+			intersec = BOTTOM;
+		}
+		else {
+			intersec = TOP;
+		}
+		if (player.hasSettlementAtCoord(x, y, intersec)) {
+			player.buildCity(x, y, intersec);
+			cout << "settlement was upgraded to city";
+			illegalLoc = false;
+		}
+		else {
+			cout << "you don't have a settlement on this location. Try again. \n";
+		}
+	}
+	drawUpdate();
+}
+
+void GameEngine::handleBuildRoad(Player& player) {
+	bool illegalLoc{ true }; // road is already build on this coord
+	bool illegalCorner{ true }; // no property on the corresponding corner to build a road
+	while (illegalLoc || illegalCorner) {
+		cout << "choose the location of your road: \n";
+		int x;
+		int y;
+		string z;
+		TileEdge edge;
+		cin >> x >> y >> z;
+		if (z == "UP") {
+			edge = UP;
+		}
+		else if (z == "RIGHT") {
+			edge = RIGHT;
+		}
+		else {
+			edge = DOWN;
+		}
+
+		// get corners at road tile to be able to check if there is a property on one of corners 
+		std::array<std::array<int, 3>, 6> sixCorners{ board.getSixCorners(x, y) };
+
+		// corners to check depend on the edge
+		switch (edge) {
+		case UP:
+			if ((player.hasPropertyAtCoord(sixCorners[0][0], sixCorners[0][1], sixCorners[0][2])) 
+			 || (player.hasPropertyAtCoord(sixCorners[1][0], sixCorners[1][1], sixCorners[1][2]))
+			 || (player.canContRoad(x, y, edge))) {
+				std::cout << "you have a property for UP road\n";
+				illegalCorner = false;
+				if (roadAvailable(x, y, edge)) {
+					player.buildRoad(x, y, edge);
+					illegalLoc = false;
+				}
+			}
+			break;
+		case RIGHT:
+			if ((player.hasPropertyAtCoord(sixCorners[1][0], sixCorners[1][1], sixCorners[1][2]))
+			 || (player.hasPropertyAtCoord(sixCorners[2][0], sixCorners[2][1], sixCorners[2][2]))
+			 || (player.canContRoad(x, y, edge))) {
+				std::cout << "you have a property for RIGHT road\n";
+				illegalCorner = false;
+				if (roadAvailable(x, y, edge)) {
+					player.buildRoad(x, y, edge);
+					illegalLoc = false;
+				}
+			}
+			break;
+		case DOWN:
+			if ((player.hasPropertyAtCoord(sixCorners[2][0], sixCorners[2][1], sixCorners[2][2]))
+			 || (player.hasPropertyAtCoord(sixCorners[3][0], sixCorners[3][1], sixCorners[3][2]))
+			 || (player.canContRoad(x, y, edge))) {
+				std::cout << "you have a property for DOWN road\n";
+				illegalCorner = false;
+				if (roadAvailable(x, y, edge)) {
+					player.buildRoad(x, y, edge);
+					illegalLoc = false;
+				}
+			}
+			break;
+		default:
+			cout << "smth wrong\n";
+		}
+
+		if (illegalCorner) { cout << "you don't have a city/settlement/road here. Choose other coordinates\n"; }
+		else if (illegalLoc) { cout << "this road is occupied. Choose other coordinates\n"; }
+	}
+	cout << "UPDATE DRAW\n";
+	drawUpdate();
+}
+
 // handle robber function that is called when dice roll result is 7 or Knight card is played
 // move the robber, then randomly draw a resource card from the player on the new tile and add it to the player in turn
 void GameEngine::handleRobber(Player& player) {
@@ -364,6 +542,7 @@ void GameEngine::handleRobber(Player& player) {
 
 	// set the location using new coordinates
 	robber.setLoc(newLoc[0], newLoc[1]);
+	drawUpdate();
 
 	//act based on the vector size
 	//vector <int> playercount;
@@ -467,6 +646,7 @@ void GameEngine::playDevCard(Player& player) {
 			edge = DOWN;
 		}
 		player.buildRoad(x, y, edge);
+		drawUpdate();
 		cout << "identify location for second road:\n";
 		cin >> x >> y >> z;
 		if (z == "UP") {
@@ -479,6 +659,7 @@ void GameEngine::playDevCard(Player& player) {
 			edge = DOWN;
 		}
 		player.buildRoad(x, y, edge);
+		drawUpdate();
 		break;
 	case YEAROFPLENTY:
 		for (int i = 0; i < 2; ++i) {
@@ -585,5 +766,477 @@ void GameEngine::updateSpecialCards() {
 			p.addspecialCard(LARGESTARMY);
 			cout << "new owner of specialcard" << p.getName() << endl;
 		}
+	}
+}
+
+
+void GameEngine::testSDLGE() {
+	int WIDTH{ 800 };
+	int HEIGHT{ 600 };
+	std::array<int, 2> CENTER{ WIDTH / 2, HEIGHT / 2 };
+	int RADIUS{ 40 };
+	int RADCOS{ static_cast<int>(round(RADIUS*sqrt(3) / 2)) };
+	std::cout << RADCOS << "\n";
+
+	if (SDL_Init(SDL_INIT_VIDEO) == 0) {
+		SDL_Window* window = NULL;
+		SDL_Renderer* renderer = NULL;
+
+		if (SDL_CreateWindowAndRenderer(800, 600, 0, &window, &renderer) == 0) {
+			SDL_bool done = SDL_FALSE;
+
+			while (!done) {
+				SDL_Event event;
+
+				SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
+				SDL_RenderClear(renderer);
+
+				SDL_SetRenderDrawColor(renderer, 0, 191, 255, SDL_ALPHA_OPAQUE);
+				// draw tiles
+				std::vector<Tile> tilesToDraw{ board.getTiles() };
+				for (Tile& tile : tilesToDraw) {
+					drawTile(renderer, tile);
+				}
+
+				// settlements
+				for (Player& player : players) {
+					for (const Settlement& settlement : player.getSettlements()) {
+						drawSettlement(renderer, settlement, player.getColor());
+					}
+				}
+
+				// roads
+				for (Player& player : players) {
+					for (const Road& road : player.getRoads()) {
+						drawRoad(renderer, road, player.getColor());
+					}
+				}
+
+				// robber
+				drawRobber(renderer, robber);
+
+
+				SDL_RenderPresent(renderer);
+				done = SDL_TRUE;
+			}
+		}
+	}
+}
+
+
+void GameEngine::drawTile(SDL_Renderer* renderer, Tile& tile) {
+	int WIDTH{ 800 };
+	int HEIGHT{ 600 };
+	std::array<int, 2> CENTER{ WIDTH / 2, HEIGHT / 2 };
+	int RADIUS{ 40 };
+	int RADCOS{ static_cast<int>(round(RADIUS*sqrt(3) / 2)) };
+
+	std::array<int, 2> tileCoord{ tile.getCoord() };
+	int x{ CENTER[0] + 2 * tileCoord[0] * (RADCOS + 1) - tileCoord[1] * (RADCOS + 1) };
+	int y{ CENTER[1] - tileCoord[1] * (RADIUS + RADIUS / 2 + 2) };
+
+
+	Terrain type{ tile.getTerrainType() };
+
+	int R;
+	int G;
+	int B;
+	switch (type) {
+	case FIELDS:
+		R = 252;
+		G = 136;
+		B = 20;
+		break;
+	case DESERT:
+		R = 245;
+		G = 201;
+		B = 89;
+		break;
+	case HILLS:
+		R = 128;
+		G = 44;
+		B = 2;
+		break;
+	case PASTURE:
+		R = 110;
+		G = 190;
+		B = 29;
+		break;
+	case FOREST:
+		R = 1;
+		G = 74;
+		B = 31;
+		break;
+	case MOUNTAINS:
+		R = 93;
+		G = 93;
+		B = 93;
+		break;
+	case SEA:
+		R = 0;
+		G = 191;
+		B = 255;
+		break;
+	default:
+		R = 255;
+		G = 255;
+		B = 255;
+		break;
+	}
+
+	SDL_SetRenderDrawColor(renderer, R, G, B, 130);//SDL_ALPHA_OPAQUE
+
+	SDL_RenderDrawLine(renderer, x, y - RADIUS, x + RADCOS, y - RADIUS / 2);
+	SDL_RenderDrawLine(renderer, x, y - RADIUS, x - RADCOS, y - RADIUS / 2);
+	SDL_RenderDrawLine(renderer, x + RADCOS, y - RADIUS / 2, x + RADCOS, y + RADIUS / 2);
+	SDL_RenderDrawLine(renderer, x - RADCOS, y - RADIUS / 2, x - RADCOS, y + RADIUS / 2);
+	SDL_RenderDrawLine(renderer, x + RADCOS, y + RADIUS / 2, x, y + RADIUS);
+	SDL_RenderDrawLine(renderer, x - RADCOS, y + RADIUS / 2, x, y + RADIUS);
+
+	for (int i{ 40 }; i > 0; i--) {
+		RADCOS = static_cast<int>(round(i*sqrt(3) / 2));
+		RADIUS = i;
+		SDL_RenderDrawLine(renderer, x, y - RADIUS, x + RADCOS, y - RADIUS / 2);
+		SDL_RenderDrawLine(renderer, x, y - RADIUS, x - RADCOS, y - RADIUS / 2);
+		SDL_RenderDrawLine(renderer, x + RADCOS, y - RADIUS / 2, x + RADCOS, y + RADIUS / 2);
+		SDL_RenderDrawLine(renderer, x - RADCOS, y - RADIUS / 2, x - RADCOS, y + RADIUS / 2);
+		SDL_RenderDrawLine(renderer, x + RADCOS, y + RADIUS / 2, x, y + RADIUS);
+		SDL_RenderDrawLine(renderer, x - RADCOS, y + RADIUS / 2, x, y + RADIUS);
+	}
+	for (int i{ 40 }; i > 0; i--) {
+		RADCOS = static_cast<int>(floor(i*sqrt(3) / 2));
+		RADIUS = i;
+		SDL_RenderDrawLine(renderer, x, y - RADIUS, x + RADCOS, y - RADIUS / 2);
+		SDL_RenderDrawLine(renderer, x, y - RADIUS, x - RADCOS, y - RADIUS / 2);
+		SDL_RenderDrawLine(renderer, x + RADCOS, y - RADIUS / 2, x + RADCOS, y + RADIUS / 2);
+		SDL_RenderDrawLine(renderer, x - RADCOS, y - RADIUS / 2, x - RADCOS, y + RADIUS / 2);
+		SDL_RenderDrawLine(renderer, x + RADCOS, y + RADIUS / 2, x, y + RADIUS);
+		SDL_RenderDrawLine(renderer, x - RADCOS, y + RADIUS / 2, x, y + RADIUS);
+	}
+	for (int i{ 40 }; i > 0; i--) {
+		RADCOS = static_cast<int>(ceil(i*sqrt(3) / 2));
+		RADIUS = i;
+		SDL_RenderDrawLine(renderer, x, y - RADIUS, x + RADCOS, y - RADIUS / 2);
+		SDL_RenderDrawLine(renderer, x, y - RADIUS, x - RADCOS, y - RADIUS / 2);
+		SDL_RenderDrawLine(renderer, x + RADCOS, y - RADIUS / 2, x + RADCOS, y + RADIUS / 2);
+		SDL_RenderDrawLine(renderer, x - RADCOS, y - RADIUS / 2, x - RADCOS, y + RADIUS / 2);
+		SDL_RenderDrawLine(renderer, x + RADCOS, y + RADIUS / 2, x, y + RADIUS);
+		SDL_RenderDrawLine(renderer, x - RADCOS, y + RADIUS / 2, x, y + RADIUS);
+	}
+
+	// draw number
+	drawNum(renderer, x, y, tile.getDiceNum());
+}
+
+void GameEngine::drawRoad(SDL_Renderer* renderer, const Road& road, std::string color) {
+	int WIDTH{ 800 };
+	int HEIGHT{ 600 };
+	std::array<int, 2> CENTER{ WIDTH / 2, HEIGHT / 2 };
+	int RADIUS{ 40 };
+	int RADCOS{ static_cast<int>(round(RADIUS*sqrt(3) / 2)) };
+
+	std::array<int, 3> roadCoord{ road.getLoc() };
+	int x{ CENTER[0] + 2 * roadCoord[0] * (RADCOS + 1) - roadCoord[1] * (RADCOS + 1) };
+	int y{ CENTER[1] - roadCoord[1] * (RADIUS + RADIUS / 2 + 2) };
+
+	if (color == "red"){ SDL_SetRenderDrawColor(renderer, 255, 0, 0, SDL_ALPHA_OPAQUE); }
+	else if (color == "green") { SDL_SetRenderDrawColor(renderer, 0, 255, 0, SDL_ALPHA_OPAQUE); }
+	else if (color == "blue") { SDL_SetRenderDrawColor(renderer, 0, 255, 255, SDL_ALPHA_OPAQUE); }
+	else if (color == "yellow") { SDL_SetRenderDrawColor(renderer, 255, 255, 0, SDL_ALPHA_OPAQUE); }
+	else { SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE); }
+
+	switch (roadCoord[2]) {
+	case UP:
+		SDL_RenderDrawLine(renderer, x, y - RADIUS, x + RADCOS, y - RADIUS / 2);
+		SDL_RenderDrawLine(renderer, x, y - RADIUS - 1, x + RADCOS, y - RADIUS / 2 - 1);
+		SDL_RenderDrawLine(renderer, x, y - RADIUS - 2, x + RADCOS, y - RADIUS / 2 - 2);
+		break;
+	case RIGHT:
+		SDL_RenderDrawLine(renderer, x + RADCOS, y - RADIUS / 2, x + RADCOS, y + RADIUS / 2);
+		SDL_RenderDrawLine(renderer, x + RADCOS + 1, y - RADIUS / 2, x + RADCOS + 1, y + RADIUS / 2);
+		//SDL_RenderDrawLine(renderer, x + RADCOS + 2, y - RADIUS / 2, x + RADCOS + 2, y + RADIUS / 2);
+		break;
+	case DOWN:
+		SDL_RenderDrawLine(renderer, x + RADCOS, y + RADIUS / 2, x, y + RADIUS);
+		SDL_RenderDrawLine(renderer, x + RADCOS, y + RADIUS / 2 + 1, x, y + RADIUS + 1);
+		SDL_RenderDrawLine(renderer, x + RADCOS, y + RADIUS / 2 + 2, x, y + RADIUS + 2);
+		break;
+	default:
+		std::cout << "smth wrong\n";
+		break;
+	}
+}
+
+void GameEngine::drawSettlement(SDL_Renderer* renderer, const Settlement& settlement, std::string color) {
+	int WIDTH{ 800 };
+	int HEIGHT{ 600 };
+	std::array<int, 2> CENTER{ WIDTH / 2, HEIGHT / 2 };
+	int RADIUS{ 40 };
+	int RADCOS{ static_cast<int>(round(RADIUS*sqrt(3) / 2)) };
+
+	std::array<int, 3> settlementCoord{ settlement.getLoc() };
+	int x{ CENTER[0] + 2 * settlementCoord[0] * (RADCOS + 1) - settlementCoord[1] * (RADCOS + 1) };
+	int y{ CENTER[1] - settlementCoord[1] * (RADIUS + RADIUS / 2 + 2) };
+
+	// rectangle
+	SDL_Rect srcrect;
+	const SDL_Rect* rectPtr{ &srcrect };
+
+	if (color == "red") { SDL_SetRenderDrawColor(renderer, 255, 0, 0, SDL_ALPHA_OPAQUE); }
+	else if (color == "green") { SDL_SetRenderDrawColor(renderer, 0, 255, 0, SDL_ALPHA_OPAQUE); }
+	else if (color == "blue") { SDL_SetRenderDrawColor(renderer, 0, 255, 255, SDL_ALPHA_OPAQUE); }
+	else if (color == "yellow") { SDL_SetRenderDrawColor(renderer, 255, 255, 0, SDL_ALPHA_OPAQUE); }
+	else { SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE); }
+
+	switch (settlementCoord[2]) {
+	case TOP:
+		srcrect.x = x - 7;
+		srcrect.y = y - RADIUS - 7;
+		srcrect.w = 14;
+		srcrect.h = 14;
+		//SDL_RenderDrawRect(renderer, rectPtr);
+		drawCircle(renderer, x, y - RADIUS, 7);
+		break;
+	case BOTTOM:
+		srcrect.x = x - 7;
+		srcrect.y = y + RADIUS - 7;
+		srcrect.w = 14;
+		srcrect.h = 14;
+		//SDL_RenderDrawRect(renderer, rectPtr);
+		drawCircle(renderer, x, y + RADIUS, 7);
+		break;
+	default:
+		std::cout << "smth wrong\n";
+		break;
+	}
+}
+
+void GameEngine::drawCity(SDL_Renderer* renderer, const City& city, std::string color) {
+	int WIDTH{ 800 };
+	int HEIGHT{ 600 };
+	std::array<int, 2> CENTER{ WIDTH / 2, HEIGHT / 2 };
+	int RADIUS{ 40 };
+	int RADCOS{ static_cast<int>(round(RADIUS*sqrt(3) / 2)) };
+
+	std::array<int, 3> cityCoord{ city.getLoc() };
+	int x{ CENTER[0] + 2 * cityCoord[0] * (RADCOS + 1) - cityCoord[1] * (RADCOS + 1) };
+	int y{ CENTER[1] - cityCoord[1] * (RADIUS + RADIUS / 2 + 2) };
+
+	// rectangle
+	SDL_Rect srcrect;
+	const SDL_Rect* rectPtr{ &srcrect };
+
+	if (color == "red") { SDL_SetRenderDrawColor(renderer, 255, 0, 0, SDL_ALPHA_OPAQUE); }
+	else if (color == "green") { SDL_SetRenderDrawColor(renderer, 0, 255, 0, SDL_ALPHA_OPAQUE); }
+	else if (color == "blue") { SDL_SetRenderDrawColor(renderer, 0, 255, 255, SDL_ALPHA_OPAQUE); }
+	else if (color == "yellow") { SDL_SetRenderDrawColor(renderer, 255, 255, 0, SDL_ALPHA_OPAQUE); }
+	else { SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE); }
+
+	switch (cityCoord[2]) {
+	case TOP:
+		srcrect.x = x - 7;
+		srcrect.y = y - RADIUS - 7;
+		srcrect.w = 14;
+		srcrect.h = 14;
+		//SDL_RenderDrawRect(renderer, rectPtr);
+		//SDL_RenderFillRect(renderer, rectPtr);
+		drawFilledCircle(renderer, x, y - RADIUS, 7);
+		break;
+	case BOTTOM:
+		srcrect.x = x - 7;
+		srcrect.y = y + RADIUS - 7;
+		srcrect.w = 14;
+		srcrect.h = 14;
+		//SDL_RenderDrawRect(renderer, rectPtr);
+		//SDL_RenderFillRect(renderer, rectPtr);
+		drawFilledCircle(renderer, x, y + RADIUS, 7);
+		break;
+	default:
+		std::cout << "smth wrong\n";
+		break;
+	}
+}
+
+void GameEngine::drawRobber(SDL_Renderer* renderer, Robber& robber) {
+	int WIDTH{ 800 };
+	int HEIGHT{ 600 };
+	std::array<int, 2> CENTER{ WIDTH / 2, HEIGHT / 2 };
+	int RADIUS{ 40 };
+	int RADCOS{ static_cast<int>(round(RADIUS*sqrt(3) / 2)) };
+
+	std::array<int, 2> robberCoord{ robber.getLoc() };
+	int x{ CENTER[0] + 2 * robberCoord[0] * (RADCOS + 1) - robberCoord[1] * (RADCOS + 1) };
+	int y{ CENTER[1] - robberCoord[1] * (RADIUS + RADIUS / 2 + 2) };
+
+	// robber
+	int rob_x{ x - 27 };
+	int rob_y{ y };
+	SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
+	SDL_RenderDrawLine(renderer, rob_x, rob_y, rob_x + 4, rob_y + 4);
+	SDL_RenderDrawLine(renderer, rob_x, rob_y, rob_x - 4, rob_y - 4);
+	SDL_RenderDrawLine(renderer, rob_x, rob_y, rob_x - 4, rob_y + 4);
+	SDL_RenderDrawLine(renderer, rob_x, rob_y, rob_x + 4, rob_y - 4);
+
+}
+
+void GameEngine::drawUpdate() {
+	//SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
+	//SDL_RenderClear(renderer);
+
+	// close the current window and make a new one
+	SDL_DestroyRenderer(renderer);
+	SDL_DestroyWindow(window);
+	SDL_CreateWindowAndRenderer(800, 600, 0, &window, &renderer);
+
+	// draw tiles
+	std::vector<Tile> tilesToDraw{ board.getTiles() };
+	for (Tile& tile : tilesToDraw) {
+		drawTile(renderer, tile);
+	}
+
+	// draw settlements
+	for (Player& player : players) {
+		for (const Settlement& settlement : player.getSettlements()) {
+			drawSettlement(renderer, settlement, player.getColor());
+		}
+	}
+
+	// draw cities
+	for (Player& player : players) {
+		for (const City& city : player.getCities()) {
+			drawCity(renderer, city, player.getColor());
+		}
+	}
+
+	// draw roads
+	for (Player& player : players) {
+		const std::vector<Road> playerRoads{ player.getRoads() };
+		for (const Road& road : playerRoads) {
+			drawRoad(renderer, road, player.getColor());
+			cout << road.toString() << "\n";
+		}
+	}
+
+	// draw robber
+	drawRobber(renderer, robber);
+
+	// draw circle
+	drawCircle(renderer, 50, 50, 10);
+
+
+	SDL_RenderPresent(renderer);
+}
+
+void GameEngine::drawNum(SDL_Renderer* renderer, int x, int y, int num) {
+	int NUM_WIDTH{3};
+	int NUM_HEIGHT{ 6 };
+
+	SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
+
+	// middle
+	if (num == 2 || num == 3 || num == 4 || num == 5 || num == 6 || num == 8 || num == 9) {
+		SDL_RenderDrawLine(renderer, x - NUM_WIDTH, y, x + NUM_WIDTH, y);
+	}
+
+	// top
+	if (num == 2 || num == 3 || num == 5 || num == 6 || num == 7 || num == 8 || num == 9) {
+		SDL_RenderDrawLine(renderer, x - NUM_WIDTH, y - NUM_HEIGHT, x + NUM_WIDTH, y - NUM_HEIGHT);
+	}
+
+	// bottom
+	if (num == 2 || num == 3 || num == 5 || num == 6 || num == 8 || num == 9) {
+		SDL_RenderDrawLine(renderer, x - NUM_WIDTH, y + NUM_HEIGHT, x + NUM_WIDTH, y + NUM_HEIGHT);
+	}
+
+	// up right
+	if (num == 2 || num == 3 || num == 4 || num == 7 || num == 8 || num == 9) {
+		SDL_RenderDrawLine(renderer, x + NUM_WIDTH, y - NUM_HEIGHT, x + NUM_WIDTH, y);
+	}
+
+	// down right
+	if (num == 3 || num == 4 || num == 5 || num == 6 || num == 7 || num == 8 || num == 9) {
+		SDL_RenderDrawLine(renderer, x + NUM_WIDTH, y, x + NUM_WIDTH, y + NUM_HEIGHT);
+	}
+
+	// up left
+	if (num == 4 || num == 5 || num == 6 || num == 8 || num == 9) {
+		SDL_RenderDrawLine(renderer, x - NUM_WIDTH, y - NUM_HEIGHT, x - NUM_WIDTH, y);
+	}
+
+	// down left
+	if (num == 2 || num == 6 || num == 8) {
+		SDL_RenderDrawLine(renderer, x - NUM_WIDTH, y, x - NUM_WIDTH, y + NUM_HEIGHT);
+	}
+
+	// 10 11 12
+	if (num == 10 || num == 11 || num == 12) {
+		SDL_RenderDrawLine(renderer, x - NUM_WIDTH, y - NUM_HEIGHT, x - NUM_WIDTH, y);
+		SDL_RenderDrawLine(renderer, x - NUM_WIDTH, y, x - NUM_WIDTH, y + NUM_HEIGHT);
+	}
+
+	// 10
+	if (num == 10) {
+		x += NUM_WIDTH;
+		SDL_RenderDrawLine(renderer, x - NUM_WIDTH, y - NUM_HEIGHT, x + NUM_WIDTH, y - NUM_HEIGHT);
+		SDL_RenderDrawLine(renderer, x - NUM_WIDTH, y + NUM_HEIGHT, x + NUM_WIDTH, y + NUM_HEIGHT);
+		SDL_RenderDrawLine(renderer, x + NUM_WIDTH, y - NUM_HEIGHT, x + NUM_WIDTH, y);
+		SDL_RenderDrawLine(renderer, x + NUM_WIDTH, y, x + NUM_WIDTH, y + NUM_HEIGHT);
+		SDL_RenderDrawLine(renderer, x - NUM_WIDTH, y - NUM_HEIGHT, x - NUM_WIDTH, y);
+		SDL_RenderDrawLine(renderer, x - NUM_WIDTH, y, x - NUM_WIDTH, y + NUM_HEIGHT);
+	}
+
+	// 11
+	if (num == 11) {
+		x += 2*NUM_WIDTH;
+		SDL_RenderDrawLine(renderer, x - NUM_WIDTH, y - NUM_HEIGHT, x - NUM_WIDTH, y);
+		SDL_RenderDrawLine(renderer, x - NUM_WIDTH, y, x - NUM_WIDTH, y + NUM_HEIGHT);
+	}
+
+	// 12
+	if (num == 12) {
+		x += NUM_WIDTH;
+		SDL_RenderDrawLine(renderer, x - NUM_WIDTH, y - NUM_HEIGHT, x + NUM_WIDTH, y - NUM_HEIGHT);
+		SDL_RenderDrawLine(renderer, x + NUM_WIDTH, y - NUM_HEIGHT, x + NUM_WIDTH, y);
+		SDL_RenderDrawLine(renderer, x - NUM_WIDTH, y, x + NUM_WIDTH, y);
+		SDL_RenderDrawLine(renderer, x - NUM_WIDTH, y, x - NUM_WIDTH, y + NUM_HEIGHT);
+		SDL_RenderDrawLine(renderer, x - NUM_WIDTH, y + NUM_HEIGHT, x + NUM_WIDTH, y + NUM_HEIGHT);
+	}
+}
+
+void GameEngine::drawCircle(SDL_Renderer* renderer, int x, int y, int r) {
+	for (int alpha{ 0 }; alpha < 360; alpha++) {
+		double angle{ alpha * 3.14 / 180 };
+		int rcosx{ static_cast<int>(floor(r * cos(angle))) };
+		int rsiny{ static_cast<int>(floor(r * sin(angle))) };
+		SDL_RenderDrawPoint(renderer, x + rcosx, y - rsiny);
+
+		rcosx = static_cast<int>(round(r * cos(angle)));
+		rsiny = static_cast<int>(round(r * sin(angle)));
+		SDL_RenderDrawPoint(renderer, x + rcosx, y - rsiny);
+
+		rcosx = static_cast<int>(ceil(r * cos(angle)));
+		rsiny = static_cast<int>(ceil(r * sin(angle)));
+		SDL_RenderDrawPoint(renderer, x + rcosx, y - rsiny);
+	}
+}
+
+void GameEngine::drawFilledCircle(SDL_Renderer* renderer, int x, int y, int r) {
+	for (int alpha{ 0 }; alpha < 360; alpha++) {
+		double angle{ alpha * 3.14 / 180 };
+		int rcosx{ static_cast<int>(floor(r * cos(angle))) };
+		int rsiny{ static_cast<int>(floor(r * sin(angle))) };
+		SDL_RenderDrawPoint(renderer, x + rcosx, y - rsiny);
+		SDL_RenderDrawLine(renderer, x, y, x + rcosx, y - rsiny);
+
+		rcosx = static_cast<int>(round(r * cos(angle)));
+		rsiny = static_cast<int>(round(r * sin(angle)));
+		SDL_RenderDrawPoint(renderer, x + rcosx, y - rsiny);
+		SDL_RenderDrawLine(renderer, x, y, x + rcosx, y - rsiny);
+
+		rcosx = static_cast<int>(ceil(r * cos(angle)));
+		rsiny = static_cast<int>(ceil(r * sin(angle)));
+		SDL_RenderDrawPoint(renderer, x + rcosx, y - rsiny);
+		SDL_RenderDrawLine(renderer, x, y, x + rcosx, y - rsiny);
+
 	}
 }

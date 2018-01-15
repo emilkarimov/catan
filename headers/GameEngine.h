@@ -12,6 +12,8 @@
 #include "Tile.h"
 #include "Board.h"
 #include "Robber.h"
+#include "DevCardDeck.h"
+#include <SDL.h>
 
 /// GameEngine class
 ///
@@ -45,6 +47,9 @@ public:
 	/// checks if a corner is available for placing a settlements
 	bool cornerFree(int x, int y, TileIntersection intersec);
 
+	/// checks if a road is available for building a new road
+	bool roadAvailable(int x, int y, TileEdge edge);
+
 	/// roll dice and continue based on 
 	unsigned int rollDice();
 
@@ -53,6 +58,15 @@ public:
 
 	/// what to do after rolling dice depending on the number rolles
 	void handleRollDice(Player& player);
+
+	/// handle settlement building
+	void handleBuildSettlement(Player& player);
+
+	/// handle city building
+	void handleBuildCity(Player& player);
+
+	/// handle road building
+	void handleBuildRoad(Player& player);
 
 	/// handle robber function that is called when dice roll result is 7 or Knight card is played
 	void handleRobber(Player& player);
@@ -66,10 +80,35 @@ public:
 	///
 	void GameEngine::updateSpecialCards();
 
+	/// draw
+	void testSDLGE();
+
+	/// draw tiles
+
+	void drawTile(SDL_Renderer* renderer, Tile& tile);
+
+	void drawRoad(SDL_Renderer* renderer, const Road& road, std::string color);
+
+	void drawSettlement(SDL_Renderer* renderer, const Settlement& settlement, std::string color);
+
+	void drawCity(SDL_Renderer* renderer, const City& city, std::string color);
+
+	void drawRobber(SDL_Renderer* renderer, Robber& robber);
+
+	void drawUpdate();
+
+	void drawNum(SDL_Renderer* renderer, int x, int y, int num);
+
+	void drawCircle(SDL_Renderer* renderer, int x, int y, int r);
+	void drawFilledCircle(SDL_Renderer* renderer, int x, int y, int r);
 private:
 	std::vector<Player> players;
 	Board board;
 	Robber robber;
+	DevCardDeck deck;
+	SDL_Renderer* renderer;
+	SDL_Window* window;
+
 
 };
 

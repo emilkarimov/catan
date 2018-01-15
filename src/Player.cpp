@@ -357,7 +357,7 @@ bool Player::canBuyDev() {
 		getNumOre() >= DEV_COST[ORE];
 }
 
-/// check if a player has a settlement on specific coord
+// check if a player has a settlement on specific coord
 bool Player::hasSettlementAtCoord(int x, int y, int z) const {
 	std::array<int, 3> coord{ x, y, z };
 	for (const Settlement& settlement : settlements) {
@@ -365,6 +365,51 @@ bool Player::hasSettlementAtCoord(int x, int y, int z) const {
 			return true;
 		}
 	}
+	return false;
+}
+
+bool Player::hasRoadAtCoord(int x, int y, int z) const {
+	std::array<int, 3> coord{ x, y, z };
+	for (const Road& road : roads) {
+		if (road.getLoc() == coord) {
+			return true;
+		}
+	}
+	return false;
+}
+
+// can continue his road?
+bool Player::canContRoad(int x, int y, int z) const {
+	if (hasRoadAtCoord(x, y, z)) { return false; } // false if player already has road here
+	switch (z) {
+	case UP:
+		if (hasRoadAtCoord(x, y+1, RIGHT) || 
+			hasRoadAtCoord(x, y+1, DOWN) ||
+			hasRoadAtCoord(x+1, y+1, DOWN) ||
+			hasRoadAtCoord(x, y, RIGHT)) {
+			return true;
+		}
+		break;
+	case RIGHT:
+		if (hasRoadAtCoord(x, y, UP) ||
+			hasRoadAtCoord(x+1, y + 1, DOWN) ||
+			hasRoadAtCoord(x, y, DOWN) ||
+			hasRoadAtCoord(x, y-1, UP)) {
+			return true;
+		}
+		break;
+	case DOWN:
+		if (hasRoadAtCoord(x, y, RIGHT) ||
+			hasRoadAtCoord(x, y-1, UP) ||
+			hasRoadAtCoord(x-1, y-1, UP) ||
+			hasRoadAtCoord(x-1, y-1, RIGHT)) {
+			return true;
+		}
+		break;
+	default:
+		return false;
+	}
+
 	return false;
 }
 

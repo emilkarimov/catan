@@ -42,6 +42,9 @@ public:
 	/// all corners of a pecific tile
 	std::array<std::array<int, 3>, 6> getSixCorners(int x, int y);
 
+	/// get tiles
+	std::vector<Tile> getTiles() const;
+
 private:
 	/// pointers to tiles
 	std::vector<Tile> tiles;
