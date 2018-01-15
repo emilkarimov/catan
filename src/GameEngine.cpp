@@ -21,6 +21,7 @@ using namespace std;
 // number of resources distributed for settlements and cities
 unsigned int NUMRESSET{ 1 };
 unsigned int NUMRESCITY{ 1 };
+unsigned int VICTORYNUM{ 10 }; // points needed to win
 
 ///// SDL //////
 int WIDTH{ 800 };
@@ -107,35 +108,15 @@ void GameEngine::firstStage() {
 void GameEngine::secondStage() {
 	//testSDLGE();
 	drawUpdate();
-	for (Player& player : players) {
-		TurnStage stage = START; // stage of the turn
-		std::string moveInput; // input from user
-		cout << "\n" << player.getName() + ", what is your move? \noptions:\n";
-		cout << possibleMoves(player, stage);
+	bool gameOver{ false };
+	while (!gameOver) {
+		for (Player& player : players) {
+			TurnStage stage = START; // stage of the turn
+			std::string moveInput; // input from user
+			cout << "\n" << player.getName() + ", what is your move? \noptions:\n";
+			cout << possibleMoves(player, stage);
 
-		// handle initial move (roll or play dev card)
-		bool NotLegalMove{ true }; 
-		while (NotLegalMove) {
-			cin >> moveInput;
-			if (moveInput == "1") {
-				cout << "roll dice" << "\n";
-				handleRollDice(player);
-				NotLegalMove = false;
-			}
-			else if (moveInput == "2" && player.canPlayDev()) {
-				cout << "Play development card" << "\n";
-				playDevCard(player);
-				NotLegalMove = false;
-			}
-			else {
-				cout << "Illegal move. Choose a valid move from the options above" << "\n";
-			}
-		}
-
-		// roll the dice if the first move was to play dev card
-		if (moveInput != "1") {
-			cout << "\n" << player.getName() + ", what is your move? \noptions:\n"
-				<< "1 - roll dice\n";
+			// handle initial move (roll or play dev card)
 			bool NotLegalMove{ true };
 			while (NotLegalMove) {
 				cin >> moveInput;
@@ -144,85 +125,110 @@ void GameEngine::secondStage() {
 					handleRollDice(player);
 					NotLegalMove = false;
 				}
-				else {
-					cout << "Illegal move. Choose a valid move from the options above" << "\n";
-				}
-			}
-		}
-
-		stage = ROLLED; // dice was rolled
-
-		// next moves
-		bool endOfTurn{ false };
-		while (!endOfTurn) {
-			cout << "\n" << player.getName() + ", what is your move? \noptions:\n";
-			cout << possibleMoves(player, stage);
-			bool NotLegalMove{ true };
-			while (NotLegalMove) {
-				cin >> moveInput;
-				if (moveInput == "2" && player.canPlayDev()) {
+				else if (moveInput == "2" && player.canPlayDev()) {
 					cout << "Play development card" << "\n";
 					playDevCard(player);
 					NotLegalMove = false;
 				}
-				else if (moveInput == "3" && player.canBuildSettlement()) {
-					cout << "build settlement" << "\n";
-					handleBuildSettlement(player);
-					player.removeResource(LUMBER, 1);
-					player.removeResource(BRICK, 1);
-					player.removeResource(GRAIN, 1);
-					player.removeResource(WOOL, 1);
-					NotLegalMove = false;
-				}
-				else if (moveInput == "4" && player.canBuildCity()) {
-					cout << "build city" << "\n";
-					handleBuildCity(player);
-					player.removeResource(GRAIN, 2);
-					player.removeResource(ORE, 3);
-					NotLegalMove = false;
-				}
-				else if (moveInput == "5" && player.canBuildRoad()) {
-					cout << "build road" << "\n";
-					handleBuildRoad(player);
-					player.removeResource(LUMBER, 1);
-					player.removeResource(BRICK, 1);
-					NotLegalMove = false;
-				}
-				else if (moveInput == "6" && player.canBuyDev()) {
-					cout << "buy dev card" << "\n";
-					deck.buyDevelopmentCard(player);
-					NotLegalMove = false;
-				}
-				else if (moveInput == "8") {
-					cout << "trade with bank" << "\n";
-					tradeBank(player);
-					NotLegalMove = false;
-				}
-				else if (moveInput == "9") {
-					cout << "trade with players" << "\n";
-					playerTrading(player);
-					NotLegalMove = false;
-				}
-				else if (moveInput == "e") {
-					cout << "ending turn" << "\n";
-					NotLegalMove = false;
-					endOfTurn = true;
-				}
-				else if (moveInput == "p") {
-					NotLegalMove = false;
-					printInfoPlayers();
-					//cout << player.toString() <<"\n";
-				}
 				else {
 					cout << "Illegal move. Choose a valid move from the options above" << "\n";
 				}
 			}
+
+			// roll the dice if the first move was to play dev card
+			if (moveInput != "1") {
+				cout << "\n" << player.getName() + ", what is your move? \noptions:\n"
+					<< "1 - roll dice\n";
+				bool NotLegalMove{ true };
+				while (NotLegalMove) {
+					cin >> moveInput;
+					if (moveInput == "1") {
+						cout << "roll dice" << "\n";
+						handleRollDice(player);
+						NotLegalMove = false;
+					}
+					else {
+						cout << "Illegal move. Choose a valid move from the options above" << "\n";
+					}
+				}
+			}
+
+			stage = ROLLED; // dice was rolled
+
+			// next moves
+			bool endOfTurn{ false };
+			while (!endOfTurn) {
+				cout << "\n" << player.getName() + ", what is your move? \noptions:\n";
+				cout << possibleMoves(player, stage);
+				bool NotLegalMove{ true };
+				while (NotLegalMove) {
+					cin >> moveInput;
+					if (moveInput == "2" && player.canPlayDev()) {
+						cout << "Play development card" << "\n";
+						playDevCard(player);
+						NotLegalMove = false;
+					}
+					else if (moveInput == "3" && player.canBuildSettlement()) {
+						cout << "build settlement" << "\n";
+						handleBuildSettlement(player);
+						player.removeResource(LUMBER, 1);
+						player.removeResource(BRICK, 1);
+						player.removeResource(GRAIN, 1);
+						player.removeResource(WOOL, 1);
+						NotLegalMove = false;
+					}
+					else if (moveInput == "4" && player.canBuildCity()) {
+						cout << "build city" << "\n";
+						handleBuildCity(player);
+						player.removeResource(GRAIN, 2);
+						player.removeResource(ORE, 3);
+						NotLegalMove = false;
+					}
+					else if (moveInput == "5" && player.canBuildRoad()) {
+						cout << "build road" << "\n";
+						handleBuildRoad(player);
+						player.removeResource(LUMBER, 1);
+						player.removeResource(BRICK, 1);
+						NotLegalMove = false;
+					}
+					else if (moveInput == "6" && player.canBuyDev()) {
+						cout << "buy dev card" << "\n";
+						deck.buyDevelopmentCard(player);
+						NotLegalMove = false;
+					}
+					else if (moveInput == "8") {
+						cout << "trade with bank" << "\n";
+						tradeBank(player);
+						NotLegalMove = false;
+					}
+					else if (moveInput == "9") {
+						cout << "trade with players" << "\n";
+						playerTrading(player);
+						NotLegalMove = false;
+					}
+					else if (moveInput == "e") {
+						cout << "ending turn" << "\n";
+						NotLegalMove = false;
+						endOfTurn = true;
+					}
+					else if (moveInput == "p") {
+						NotLegalMove = false;
+						printInfoPlayers();
+						//cout << player.toString() <<"\n";
+					}
+					else {
+						cout << "Illegal move. Choose a valid move from the options above" << "\n";
+					}
+				}
+
+				if (player.getVictoryPoints() >= VICTORYNUM) {
+					cout << player.getName() + " won!\n";
+					return;
+				}
+			}
+
+
 		}
-
-
-
-
-
 	}
 }
 
@@ -306,7 +312,6 @@ void GameEngine::addInitResources(Player& player) {
 	}
 }
 
-
 // distribute resources depending on the rolled dice number
 void GameEngine::distributeResources(unsigned int diceNum) {
 	std::vector<int> receivedResources{ 0,0,0,0 };
@@ -323,7 +328,7 @@ void GameEngine::distributeResources(unsigned int diceNum) {
 				}
 				if (players[i].hasCityAtCoord(corner[0], corner[1], corner[2])) {
 					players[i].addResource(res, NUMRESCITY);
-					receivedResources[i] += NUMRESSET;
+					receivedResources[i] += NUMRESCITY;
 				}
 			}
 		}
@@ -871,7 +876,7 @@ start:
 	Resource giventype{ NORES };
 	Resource wantedtype{ NORES };
 	string answer;
-	cout << "specify the type you want to give followed by the amount:\n";
+	cout << "specify the type you give followed by the amount:\n";
 	cin >> type >> amount;
 	cout << "specify the type you want to receive followed by the amount\n";
 	cin >> type2 >> amount2;
@@ -941,7 +946,7 @@ start:
 
 	cout << "who would you like to trade with:\n";
 	for (int i = 0; i < players.size(); ++i) {
-		if (players[i].getColor() != player.getColor()) {
+		if (players[i].getColor() != player.getColor() && players[i].hasResource(wantedtype, amount2)) {
 			cout << i << " " << players[i].getName() << endl;
 			playercount += 1;
 		}

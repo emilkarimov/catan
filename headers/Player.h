@@ -171,6 +171,9 @@ public:
 	/// check if a player has a road on a speific coord
 	bool hasRoadAtCoord(int x, int y, int z) const;
 
+	/// check if a player has this amount of resources
+	bool hasResource(Resource type, int num);
+
 	/// check if a player can extend his road
 	bool canContRoad(int x, int y, int z) const;
 private:

@@ -137,7 +137,7 @@ int Player::getNumVictorycards() const {
 
 // get number of victory points
 size_t Player::getVictoryPoints() const {
-	return getNumSettlements() + 2 * getNumCities() + getNumVictorycards() + getNumSpecial();
+	return getNumSettlements() + getNumCities() + getNumVictorycards() + getNumSpecial();
 }
 
 
@@ -424,7 +424,41 @@ bool Player::hasCityAtCoord(int x, int y, int z) const {
 	return false;
 }
 
-/// check if a player has a settlement or a city on specific coord
+// check if a player has a settlement or a city on specific coord
 bool Player::hasPropertyAtCoord(int x, int y, int z) const {
 	return (hasCityAtCoord(x, y, z) || hasSettlementAtCoord(x, y, z));
+}
+
+// check if a player has this amount of resources
+bool Player::hasResource(Resource type, int num) {
+	switch (type) {
+	case GRAIN:
+		if (getNumGrain() >= num) {
+			return true;
+		}
+		break;
+	case BRICK:
+		if (getNumBrick() >= num) {
+			return true;
+		}
+		break;
+	case WOOL:
+		if (getNumWool() >= num) {
+			return true;
+		}
+		break;
+	case LUMBER:
+		if (getNumLumber() >= num) {
+			return true;
+		}
+		break;
+	case ORE:
+		if (getNumOre() >= num) {
+			return true;
+		}
+		break;
+	default:
+		return false;
+	}
+	return false;
 }
