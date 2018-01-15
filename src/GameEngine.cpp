@@ -5,7 +5,7 @@
 #include "GameEngine.h" // Robber class definition
 #include <iostream>
 #include <string>
-#include <cstdlib> // contains prototypes for functions srand and rand
+#include <stdlib.h> // contains prototypes for functions srand and rand
 #include <ctime>
 
 //Using SDL and standard IO
@@ -20,7 +20,7 @@ using namespace std;
 
 // number of resources distributed for settlements and cities
 unsigned int NUMRESSET{ 1 };
-unsigned int NUMRESCITY{ 2 };
+unsigned int NUMRESCITY{ 1 };
 
 ///// SDL //////
 int WIDTH{ 800 };
@@ -36,11 +36,13 @@ GameEngine::GameEngine(std::vector<Player> players, Board board)
 	deck.initDeck();
 	SDL_Init(SDL_INIT_VIDEO);
 	SDL_CreateWindowAndRenderer(800, 600, 0, &window, &renderer);
+	SDL_SetWindowPosition(window, 500, 75);
 }
 
 // start game
 void GameEngine::start() {
-
+	firstStage();
+	secondStage();
 }
 
 // checks if a corner is available for placing a settlement
@@ -80,73 +82,23 @@ bool GameEngine::roadAvailable(int x, int y, TileEdge edge) {
 
 // 1st stage - players build two settlements and two roads
 void GameEngine::firstStage() {
+	drawUpdate();
 	// first settlement and road
 	for (unsigned int i{ 0 }; i < players.size(); ++i) {
 		// settlement
-		cout << players[i].getName() + ", choose the location of your first settlement: \n";
-		int x;
-		int y;
-		string z;
-		TileIntersection intersec;
-		cin >> x >> y >> z;
-		if (z == "BOTTOM") {
-			intersec = BOTTOM;
-		}
-		else {
-			intersec = TOP;
-		}
-		cout << "corner free?: " << cornerFree(x, y, intersec) << "\n"; // check location
-		players[i].buildSettlement(x, y, intersec);
+		handleBuildSettlement(players[i]);
 
 		// road
-		cout << players[i].getName() + ", now select the location of your first road: \n";
-		cin >> x >> y >> z;
-		TileEdge edge;
-		if (z == "UP") {
-			edge = UP;
-		}
-		else if (z == "RIGHT") {
-			edge = RIGHT;
-		}
-		else {
-			edge = DOWN;
-		}
-		players[i].buildRoad(x, y, edge);
+		handleBuildRoad(players[i]);
 	}
-
 	// second settlement and road
 	for (int i{ static_cast<int>(players.size()) - 1 }; i > -1; --i) {
 		// settlement
-		cout << players[i].getName() + ", choose the location of your second settlement: \n";
-		int x;
-		int y;
-		string z;
-		TileIntersection intersec;
-		cin >> x >> y >> z;
-		if (z == "BOTTOM") {
-			intersec = BOTTOM;
-		}
-		else {
-			intersec = TOP;
-		}
-		cout << "corner free?: " << cornerFree(x, y, intersec) << "\n"; // check location
-		players[i].buildSettlement(x, y, intersec);
+		handleBuildSettlement(players[i]);
 		addInitResources(players[i]); // add initial resources 
 
-									  // road
-		cout << players[i].getName() + ", now select the location of your second road: \n";
-		cin >> x >> y >> z;
-		TileEdge edge;
-		if (z == "UP") {
-			edge = UP;
-		}
-		else if (z == "RIGHT") {
-			edge = RIGHT;
-		}
-		else {
-			edge = DOWN;
-		}
-		players[i].buildRoad(x, y, edge);
+		// road
+		handleBuildRoad(players[i]);
 	}
 }
 
@@ -216,16 +168,24 @@ void GameEngine::secondStage() {
 				else if (moveInput == "3" && player.canBuildSettlement()) {
 					cout << "build settlement" << "\n";
 					handleBuildSettlement(player);
+					player.removeResource(LUMBER, 1);
+					player.removeResource(BRICK, 1);
+					player.removeResource(GRAIN, 1);
+					player.removeResource(WOOL, 1);
 					NotLegalMove = false;
 				}
 				else if (moveInput == "4" && player.canBuildCity()) {
 					cout << "build city" << "\n";
 					handleBuildCity(player);
+					player.removeResource(GRAIN, 2);
+					player.removeResource(ORE, 3);
 					NotLegalMove = false;
 				}
 				else if (moveInput == "5" && player.canBuildRoad()) {
 					cout << "build road" << "\n";
 					handleBuildRoad(player);
+					player.removeResource(LUMBER, 1);
+					player.removeResource(BRICK, 1);
 					NotLegalMove = false;
 				}
 				else if (moveInput == "6" && player.canBuyDev()) {
@@ -250,7 +210,8 @@ void GameEngine::secondStage() {
 				}
 				else if (moveInput == "p") {
 					NotLegalMove = false;
-					cout << player.toString() <<"\n";
+					printInfoPlayers();
+					//cout << player.toString() <<"\n";
 				}
 				else {
 					cout << "Illegal move. Choose a valid move from the options above" << "\n";
@@ -316,20 +277,17 @@ void GameEngine::addInitResources(Player& player) {
 	std::array<int, 3> settlementLoc = player.getSettlements()[1].getLoc(); // coord of second settle
 	cout << settlementLoc[0] << " " << settlementLoc[1] << " " << settlementLoc[2] << "\n";
 	Tile* tile1Ptr = board.getTile(settlementLoc[0], settlementLoc[1]); // get the tile with these coord to see what resource to add
-	cout << tile1Ptr->toString() << "\n";
 	player.addResource(tile1Ptr->produces(), 1); // add resources according to the type of tile
 
 	// resources from two upper tiles
 	if (settlementLoc[2] == TOP) {
 		// upper right tile resource addition
 		std::array<int, 2> neighbor1Coord{ tile1Ptr->getNeighborCoord(1) };
-		cout << "neighbor1 coord: " << neighbor1Coord[0] << " " << neighbor1Coord[1] << "\n";
 		Tile* neighbor1TilePtr = board.getTile(neighbor1Coord[0], neighbor1Coord[1]);
 		player.addResource(neighbor1TilePtr->produces(), 1);
 
 		// upper left tile resource addition
 		std::array<int, 2> neighbor6Coord{ tile1Ptr->getNeighborCoord(6) };
-		cout << "neighbor6 coord: " << neighbor6Coord[0] << " " << neighbor6Coord[1] << "\n";
 		Tile* neighbor6TilePtr = board.getTile(neighbor6Coord[0], neighbor6Coord[1]);
 		player.addResource(neighbor6TilePtr->produces(), 1);
 	}
@@ -338,13 +296,11 @@ void GameEngine::addInitResources(Player& player) {
 	if (settlementLoc[2] == BOTTOM) {
 		// lower right tile resource addition
 		std::array<int, 2> neighbor3Coord{ tile1Ptr->getNeighborCoord(3) };
-		cout << "neighbor3 coord: " << neighbor3Coord[0] << " " << neighbor3Coord[1] << "\n";
 		Tile* neighbor3TilePtr = board.getTile(neighbor3Coord[0], neighbor3Coord[1]);
 		player.addResource(neighbor3TilePtr->produces(), 1);
 
 		// lower left tile resource addition
 		std::array<int, 2> neighbor4Coord{ tile1Ptr->getNeighborCoord(4) };
-		cout << "neighbor4 coord: " << neighbor4Coord[0] << " " << neighbor4Coord[1] << "\n";
 		Tile* neighbor4TilePtr = board.getTile(neighbor4Coord[0], neighbor4Coord[1]);
 		player.addResource(neighbor4TilePtr->produces(), 1);
 	}
@@ -353,21 +309,27 @@ void GameEngine::addInitResources(Player& player) {
 
 // distribute resources depending on the rolled dice number
 void GameEngine::distributeResources(unsigned int diceNum) {
+	std::vector<int> receivedResources;
 	std::vector<Tile> tilesWithDiceNum{ board.findTilesWithDiceNum(diceNum) };
 	for (Tile& tile : tilesWithDiceNum) {
 		std::array<int, 2> tileCoord{ tile.getCoord() };
 		Resource res{ tile.produces() };
 		std::array<std::array<int, 3>, 6> corners{ board.getSixCorners(tileCoord[0], tileCoord[1]) };
 		for (auto corner : corners) {
-			for (Player& player : players) {
-				if (player.hasSettlementAtCoord(corner[0], corner[1], corner[2])) {
-					player.addResource(res, NUMRESSET);
+			for (int i{ 0 }; i < players.size(); i++ ) {
+				if (players[i].hasSettlementAtCoord(corner[0], corner[1], corner[2])) {
+					players[i].addResource(res, NUMRESSET);
+					receivedResources[i] += NUMRESSET;
 				}
-				if (player.hasCityAtCoord(corner[0], corner[1], corner[2])) {
-					player.addResource(res, NUMRESCITY);
+				if (players[i].hasCityAtCoord(corner[0], corner[1], corner[2])) {
+					players[i].addResource(res, NUMRESCITY);
+					receivedResources[i] += NUMRESSET;
 				}
 			}
 		}
+	}
+	for (int i{ 0 }; i < players.size(); i++) {
+		cout << players[i].getName() + ": + " + to_string(receivedResources[i]) + "\n";
 	}
 	printInfoPlayers();
 }
@@ -388,7 +350,6 @@ unsigned int GameEngine::rollDice() {
 
 // handle roll dice
 void GameEngine::handleRollDice(Player& player) {
-	cout << "handleRollDice" << "\n";
 	unsigned int rolledNum = rollDice();
 	if (rolledNum == 7) { 
 		handleRobber(player);
@@ -398,24 +359,33 @@ void GameEngine::handleRollDice(Player& player) {
 	}
 }
 
+// handle settlement building
 void GameEngine::handleBuildSettlement(Player& player) {
 	bool illegalLoc{ true };
 	while (illegalLoc) {
-		cout << "choose the location of your settlement: \n";
+		cout << player.getName() + ", choose the location of your settlement (x, y, top/bot): \n";
 		int x;
 		int y;
 		string z;
 		TileIntersection intersec;
 		cin >> x >> y >> z;
-		if (z == "BOTTOM") {
+		while (std::cin.fail() || !(z=="bot" || z=="top")) {
+			std::cout << "Incorrect location. Try again.\n" << std::endl;
+			std::cin.clear();
+			std::cin.ignore(256, '\n');
+			std::cin >> x >> y >> z;
+		}
+		if (z == "bot") {
 			intersec = BOTTOM;
 		}
 		else {
 			intersec = TOP;
 		}
-		if (cornerFree(x, y, intersec)) {
+		if (putInSea(x, y, intersec)) {
+			cout << "Hey! Don't put your settlement in the sea!\n";
+		}
+		else if (cornerFree(x, y, intersec)) {
 			player.buildSettlement(x, y, intersec);
-			cout << "settlement was placed";
 			illegalLoc = false;
 		}
 		else {
@@ -423,9 +393,11 @@ void GameEngine::handleBuildSettlement(Player& player) {
 		}
 	}
 	drawUpdate();
+	std::cin.clear();
+	std::cin.ignore(256, '\n');
 }
 
-/// handle city building
+// handle city building
 void GameEngine::handleBuildCity(Player& player) {
 	bool illegalLoc{ true };
 	while (illegalLoc) {
@@ -435,7 +407,13 @@ void GameEngine::handleBuildCity(Player& player) {
 		string z;
 		TileIntersection intersec;
 		cin >> x >> y >> z;
-		if (z == "BOTTOM") {
+		while (std::cin.fail() || !(z == "bot" || z == "top")) {
+			std::cout << "Incorrect location. Try again.\n" << std::endl;
+			std::cin.clear();
+			std::cin.ignore(256, '\n');
+			std::cin >> x >> y >> z;
+		}
+		if (z == "bot") {
 			intersec = BOTTOM;
 		}
 		else {
@@ -443,7 +421,7 @@ void GameEngine::handleBuildCity(Player& player) {
 		}
 		if (player.hasSettlementAtCoord(x, y, intersec)) {
 			player.buildCity(x, y, intersec);
-			cout << "settlement was upgraded to city";
+			cout << "settlement was upgraded to city\n";
 			illegalLoc = false;
 		}
 		else {
@@ -451,22 +429,30 @@ void GameEngine::handleBuildCity(Player& player) {
 		}
 	}
 	drawUpdate();
+	std::cin.clear();
+	std::cin.ignore(256, '\n');
 }
 
 void GameEngine::handleBuildRoad(Player& player) {
 	bool illegalLoc{ true }; // road is already build on this coord
 	bool illegalCorner{ true }; // no property on the corresponding corner to build a road
 	while (illegalLoc || illegalCorner) {
-		cout << "choose the location of your road: \n";
+		cout << player.getName() + ", choose the location of your road (x, y, up/right/down): \n";
 		int x;
 		int y;
 		string z;
 		TileEdge edge;
 		cin >> x >> y >> z;
-		if (z == "UP") {
+		while (std::cin.fail() || !(z == "up" || z == "right" || z == "down")) {
+			std::cout << "Incorrect location. Try again.\n" << std::endl;
+			std::cin.clear();
+			std::cin.ignore(256, '\n');
+			std::cin >> x >> y >> z;
+		}
+		if (z == "up") {
 			edge = UP;
 		}
-		else if (z == "RIGHT") {
+		else if (z == "right") {
 			edge = RIGHT;
 		}
 		else {
@@ -482,7 +468,6 @@ void GameEngine::handleBuildRoad(Player& player) {
 			if ((player.hasPropertyAtCoord(sixCorners[0][0], sixCorners[0][1], sixCorners[0][2])) 
 			 || (player.hasPropertyAtCoord(sixCorners[1][0], sixCorners[1][1], sixCorners[1][2]))
 			 || (player.canContRoad(x, y, edge))) {
-				std::cout << "you have a property for UP road\n";
 				illegalCorner = false;
 				if (roadAvailable(x, y, edge)) {
 					player.buildRoad(x, y, edge);
@@ -494,7 +479,6 @@ void GameEngine::handleBuildRoad(Player& player) {
 			if ((player.hasPropertyAtCoord(sixCorners[1][0], sixCorners[1][1], sixCorners[1][2]))
 			 || (player.hasPropertyAtCoord(sixCorners[2][0], sixCorners[2][1], sixCorners[2][2]))
 			 || (player.canContRoad(x, y, edge))) {
-				std::cout << "you have a property for RIGHT road\n";
 				illegalCorner = false;
 				if (roadAvailable(x, y, edge)) {
 					player.buildRoad(x, y, edge);
@@ -506,7 +490,6 @@ void GameEngine::handleBuildRoad(Player& player) {
 			if ((player.hasPropertyAtCoord(sixCorners[2][0], sixCorners[2][1], sixCorners[2][2]))
 			 || (player.hasPropertyAtCoord(sixCorners[3][0], sixCorners[3][1], sixCorners[3][2]))
 			 || (player.canContRoad(x, y, edge))) {
-				std::cout << "you have a property for DOWN road\n";
 				illegalCorner = false;
 				if (roadAvailable(x, y, edge)) {
 					player.buildRoad(x, y, edge);
@@ -521,8 +504,9 @@ void GameEngine::handleBuildRoad(Player& player) {
 		if (illegalCorner) { cout << "you don't have a city/settlement/road here. Choose other coordinates\n"; }
 		else if (illegalLoc) { cout << "this road is occupied. Choose other coordinates\n"; }
 	}
-	cout << "UPDATE DRAW\n";
 	drawUpdate();
+	std::cin.clear();
+	std::cin.ignore(256, '\n');
 }
 
 // handle robber function that is called when dice roll result is 7 or Knight card is played
@@ -531,16 +515,41 @@ void GameEngine::handleRobber(Player& player) {
 	// set location of the robber
 	std::array <int, 2> newLoc;
 	int playerindex;
-	cout << "enter new tile coordinates for the robber:";
-	cin >> newLoc[0] >> newLoc[1];
-
-	// check that new location is different than the old one
-	std::array <int, 2> oldLoc;
-	oldLoc = robber.getLoc();
-	while (newLoc[0] == oldLoc[0] && newLoc[1] == oldLoc[1]) {
-		cout << "same location is not allowed, enter different coordinates:";
+	bool incorrectInput{ true };
+	while (incorrectInput) {
+		cout << "enter new tile coordinates for the robber (x, y):\n";
 		cin >> newLoc[0] >> newLoc[1];
+		while (std::cin.fail()) {
+			std::cout << "Incorrect location. Try again.\n" << std::endl;
+			std::cin.clear();
+			std::cin.ignore(256, '\n');
+			std::cin >> newLoc[0] >> newLoc[1];
+		}
+
+		// check that new location is different than the old one
+		std::array <int, 2> oldLoc;
+		oldLoc = robber.getLoc();
+		if (newLoc[0] == oldLoc[0] && newLoc[1] == oldLoc[1]) {
+			cout << "same location is not allowed. Try again.\n";
+		}
+		else {
+			incorrectInput = false;
+		}
+
+		// check that new location is not in the sea
+		if (board.hasTile(newLoc[0], newLoc[1])) {
+			if (board.getTile(newLoc[0], newLoc[1])->getTerrainType() == SEA) {
+				cout << "Hey! Don't put the robber in the sea!\n";
+				incorrectInput = true;
+			}
+		}
+		else {
+			incorrectInput = true;
+			cout << "Hey! Don't put the robber in the sea!\n";
+		}
 	}
+	std::cin.clear();
+	std::cin.ignore(256, '\n');
 
 	// set the location using new coordinates
 	robber.setLoc(newLoc[0], newLoc[1]);
@@ -563,7 +572,7 @@ void GameEngine::handleRobber(Player& player) {
 
 
 	if (playercount == 0) {
-		cout << "no players on the tile chosen. nothing to do" << endl;
+		cout << "no players on the tile chosen. nothing to do\n" << endl;
 		return;
 	}
 	else {
@@ -666,7 +675,7 @@ void GameEngine::playDevCard(Player& player) {
 	case YEAROFPLENTY:
 		for (int i = 0; i < 2; ++i) {
 		label:
-			cout << "identify the resource that you want to add:";
+			cout << "identify the resource that you want to add:\n";
 			cin >> type;
 			cout << type;
 			if (type == "GRAIN") { 
@@ -779,42 +788,44 @@ start:
 	string type2;
 	Resource giventype{ NORES };
 	Resource wantedtype{ NORES };
-	cout << "specify the resource types to be traded with the bank followed by the type you want to receive\n";
-	cout << "followed by the amount you would like to receive (trading rate 4:1):" << endl;
+	//cout << "specify the resource types to be traded with the bank followed by the type you want to receive\n";
+	//cout << "followed by the amount you would like to receive (trading rate 4:1):" << endl;
+	cout << "specify your deal: give get amount\n";
+	cout << "example: {grain, brick, wool, lumber, ore} {grain, brick, wool, lumber, ore} n";
 	cin >> type >> type2 >> amount;
 	if (type == type2) {
 		cout << "the two resource types specified are equal\n";
 		goto start;
 	}
-	if (type == "GRAIN") {
+	if (type == "grain") {
 		if (player.getNumGrain() < amount * 4) {
 			cout << "you do not have enough of this resource" << endl;
 			return;
 		}
 		giventype = GRAIN;
 	}
-	else if (type == "BRICK") {
+	else if (type == "brick") {
 		if (player.getNumBrick() < amount * 4) {
 			cout << "you do not have enough of this resource" << endl;
 			return;
 		}
 		giventype = BRICK;
 	}
-	else if (type == "WOOL") {
+	else if (type == "wool") {
 		if (player.getNumWool() < amount * 4) {
 			cout << "you do not have enough of this resource" << endl;
 			return;
 		}
 		giventype = WOOL;
 	}
-	else if (type == "LUMBER") {
+	else if (type == "lumber") {
 		if (player.getNumLumber() < amount * 4) {
 			cout << "you do not have enough of this resource" << endl;
 			return;
 		}
 		giventype = LUMBER;
 	}
-	else if (type == "ORE") {
+	else if (type == "ore") {
 		if (player.getNumOre() < amount * 4) {
 			cout << "you do not have enough of this resource" << endl;
 			return;
@@ -825,19 +836,19 @@ start:
 		cout << "incorrect resource specified" << endl;
 		goto start;
 	}
-	if (type2 == "GRAIN") {
+	if (type2 == "grain") {
 		wantedtype = GRAIN;
 	}
-	else if (type2 == "BRICK") {
+	else if (type2 == "brick") {
 		wantedtype = BRICK;
 	}
-	else if (type2 == "WOOL") {
+	else if (type2 == "wool") {
 		wantedtype = WOOL;
 	}
-	else if (type2 == "LUMBER") {
+	else if (type2 == "lumber") {
 		wantedtype = LUMBER;
 	}
-	else if (type2 == "ORE") {
+	else if (type2 == "ore") {
 		wantedtype = ORE;
 	}
 	player.addResource(wantedtype, amount);
@@ -869,35 +880,35 @@ start:
 		cout << "the two resource types specified are equal\n";
 		goto start;
 	}
-	if (type == "GRAIN") {
+	if (type == "grain") {
 		if (player.getNumGrain() < amount) {
 			cout << "you do not have enough of this resource" << endl;
 			return;
 		}
 		giventype = GRAIN;
 	}
-	else if (type == "BRICK") {
+	else if (type == "brick") {
 		if (player.getNumBrick() < amount) {
 			cout << "you do not have enough of this resource" << endl;
 			return;
 		}
 		giventype = BRICK;
 	}
-	else if (type == "WOOL") {
+	else if (type == "wool") {
 		if (player.getNumWool() < amount) {
 			cout << "you do not have enough of this resource" << endl;
 			return;
 		}
 		giventype = WOOL;
 	}
-	else if (type == "LUMBER") {
+	else if (type == "lumber") {
 		if (player.getNumLumber() < amount) {
 			cout << "you do not have enough of this resource" << endl;
 			return;
 		}
 		giventype = LUMBER;
 	}
-	else if (type == "ORE") {
+	else if (type == "ore") {
 		if (player.getNumOre() < amount) {
 			cout << "you do not have enough of this resource" << endl;
 			return;
@@ -908,19 +919,19 @@ start:
 		cout << "incorrect resource specified" << endl;
 		goto start;
 	}
-	if (type2 == "GRAIN") {
+	if (type2 == "grain") {
 		wantedtype = GRAIN;
 	}
-	else if (type2 == "BRICK") {
+	else if (type2 == "brick") {
 		wantedtype = BRICK;
 	}
-	else if (type2 == "WOOL") {
+	else if (type2 == "wool") {
 		wantedtype = WOOL;
 	}
-	else if (type2 == "LUMBER") {
+	else if (type2 == "lumber") {
 		wantedtype = LUMBER;
 	}
-	else if (type2 == "ORE") {
+	else if (type2 == "ore") {
 		wantedtype = ORE;
 	}
 	else {
@@ -962,12 +973,27 @@ question:
 
 	}
 	else {
-		cout << "incorrect answer";
+		cout << "incorrect answer\n";
 		goto question;
 	}
 	cout << "trade was succesfull:\n";
 	cout << players[currentplayerindex].toString() << endl;
 	cout << players[playerindex].toString() << endl;
+}
+
+// check whether a player wants to place a settlement into the sea
+bool GameEngine::putInSea(int x, int y, TileIntersection z) {
+	std::array<std::array<int, 3>, 3> adjCorners{ board.getAdjacentCorners(x, y, z) };
+	int numExistingTiles{ 0 }; // number of tiles that exist among the adjacent corners
+	for (int i{ 0 }; i < 3; i++) {
+		if (board.hasTile(adjCorners[i][0], adjCorners[i][1])) {
+			numExistingTiles++;
+		}
+	}
+	if (numExistingTiles >= 2) {
+		return false;
+	}
+	return true;
 }
 
 void GameEngine::testSDLGE() {
@@ -1287,6 +1313,7 @@ void GameEngine::drawUpdate() {
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
 	SDL_CreateWindowAndRenderer(800, 600, 0, &window, &renderer);
+	SDL_SetWindowPosition(window, 500, 75);
 
 	// draw tiles
 	std::vector<Tile> tilesToDraw{ board.getTiles() };
@@ -1313,7 +1340,6 @@ void GameEngine::drawUpdate() {
 		const std::vector<Road> playerRoads{ player.getRoads() };
 		for (const Road& road : playerRoads) {
 			drawRoad(renderer, road, player.getColor());
-			cout << road.toString() << "\n";
 		}
 	}
 

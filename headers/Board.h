@@ -45,6 +45,9 @@ public:
 	/// get tiles
 	std::vector<Tile> getTiles() const;
 
+	/// checks whether the board has a tile with xy coordinates
+	bool hasTile(int x, int y);
+
 private:
 	/// pointers to tiles
 	std::vector<Tile> tiles;

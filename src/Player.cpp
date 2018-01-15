@@ -158,7 +158,7 @@ void Player::buildCity(int x, int y, TileIntersection intersec) {
 
 // to string
 std::string Player::toString() const {
-	return getName() + ":" +
+	return "\n" + getName() + ":" +
 		"\ncolor: " + (getColor()) +
 		"\nroads: " + std::to_string(getNumRoads()) +
 		"\n" + toStringRoads() +

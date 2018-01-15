@@ -86,6 +86,9 @@ public:
 	/// player to player trading 
 	void playerTrading(Player& player);
 
+	/// check whether a player wants to place a settlement into the sea
+	bool putInSea(int x, int y, TileIntersection z);
+
 	/// draw
 	void testSDLGE();
 

@@ -124,3 +124,13 @@ std::array<std::array<int, 3>, 6> Board::getSixCorners(int x, int y) {
 std::vector<Tile> Board::getTiles() const {
 	return tiles;
 }
+
+// checks whether the board has a tile with xy coordinates
+bool Board::hasTile(int x, int y) {
+	for (Tile& tileRef : tiles) {
+		if (tileRef.getCoord()[0] == x && tileRef.getCoord()[1] == y) {
+			return true;
+		}
+	}
+	return false; // return false if there are no tiles with such coordinates
+}
