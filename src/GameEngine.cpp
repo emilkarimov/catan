@@ -309,7 +309,7 @@ void GameEngine::addInitResources(Player& player) {
 
 // distribute resources depending on the rolled dice number
 void GameEngine::distributeResources(unsigned int diceNum) {
-	std::vector<int> receivedResources;
+	std::vector<int> receivedResources{ 0,0,0,0 };
 	std::vector<Tile> tilesWithDiceNum{ board.findTilesWithDiceNum(diceNum) };
 	for (Tile& tile : tilesWithDiceNum) {
 		std::array<int, 2> tileCoord{ tile.getCoord() };
