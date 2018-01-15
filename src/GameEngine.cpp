@@ -235,10 +235,12 @@ void GameEngine::secondStage() {
 				}
 				else if (moveInput == "8") {
 					cout << "trade with bank" << "\n";
+					tradeBank(player);
 					NotLegalMove = false;
 				}
 				else if (moveInput == "9") {
 					cout << "trade with players" << "\n";
+					playerTrading(player);
 					NotLegalMove = false;
 				}
 				else if (moveInput == "e") {
@@ -769,6 +771,204 @@ void GameEngine::updateSpecialCards() {
 	}
 }
 
+// player trading with bank
+void GameEngine::tradeBank(Player& player) {
+start:
+	int amount;
+	string type;
+	string type2;
+	Resource giventype{ NORES };
+	Resource wantedtype{ NORES };
+	cout << "specify the resource types to be traded with the bank followed by the type you want to receive\n";
+	cout << "followed by the amount you would like to receive (trading rate 4:1):" << endl;
+	cin >> type >> type2 >> amount;
+	if (type == type2) {
+		cout << "the two resource types specified are equal\n";
+		goto start;
+	}
+	if (type == "GRAIN") {
+		if (player.getNumGrain() < amount * 4) {
+			cout << "you do not have enough of this resource" << endl;
+			return;
+		}
+		giventype = GRAIN;
+	}
+	else if (type == "BRICK") {
+		if (player.getNumBrick() < amount * 4) {
+			cout << "you do not have enough of this resource" << endl;
+			return;
+		}
+		giventype = BRICK;
+	}
+	else if (type == "WOOL") {
+		if (player.getNumWool() < amount * 4) {
+			cout << "you do not have enough of this resource" << endl;
+			return;
+		}
+		giventype = WOOL;
+	}
+	else if (type == "LUMBER") {
+		if (player.getNumLumber() < amount * 4) {
+			cout << "you do not have enough of this resource" << endl;
+			return;
+		}
+		giventype = LUMBER;
+	}
+	else if (type == "ORE") {
+		if (player.getNumOre() < amount * 4) {
+			cout << "you do not have enough of this resource" << endl;
+			return;
+		}
+		giventype = ORE;
+	}
+	else {
+		cout << "incorrect resource specified" << endl;
+		goto start;
+	}
+	if (type2 == "GRAIN") {
+		wantedtype = GRAIN;
+	}
+	else if (type2 == "BRICK") {
+		wantedtype = BRICK;
+	}
+	else if (type2 == "WOOL") {
+		wantedtype = WOOL;
+	}
+	else if (type2 == "LUMBER") {
+		wantedtype = LUMBER;
+	}
+	else if (type2 == "ORE") {
+		wantedtype = ORE;
+	}
+	player.addResource(wantedtype, amount);
+	player.removeResource(giventype, amount * 4);
+	cout << "trade succesful\n";
+	cout << player.toString();
+	return;
+}
+
+// trading between players
+void GameEngine::playerTrading(Player& player) {
+start:
+	int playercount{ 0 };
+	int playerindex;
+	int currentplayerindex;
+	int amount{ 0 };
+	int amount2{ 0 };
+	string type;
+	string type2;
+	Resource giventype{ NORES };
+	Resource wantedtype{ NORES };
+	string answer;
+	cout << "specify the type you want to give followed by the amount:\n";
+	cin >> type >> amount;
+	cout << "specify the type you want to receive followed by the amount\n";
+	cin >> type2 >> amount2;
+
+	if (type == type2) {
+		cout << "the two resource types specified are equal\n";
+		goto start;
+	}
+	if (type == "GRAIN") {
+		if (player.getNumGrain() < amount) {
+			cout << "you do not have enough of this resource" << endl;
+			return;
+		}
+		giventype = GRAIN;
+	}
+	else if (type == "BRICK") {
+		if (player.getNumBrick() < amount) {
+			cout << "you do not have enough of this resource" << endl;
+			return;
+		}
+		giventype = BRICK;
+	}
+	else if (type == "WOOL") {
+		if (player.getNumWool() < amount) {
+			cout << "you do not have enough of this resource" << endl;
+			return;
+		}
+		giventype = WOOL;
+	}
+	else if (type == "LUMBER") {
+		if (player.getNumLumber() < amount) {
+			cout << "you do not have enough of this resource" << endl;
+			return;
+		}
+		giventype = LUMBER;
+	}
+	else if (type == "ORE") {
+		if (player.getNumOre() < amount) {
+			cout << "you do not have enough of this resource" << endl;
+			return;
+		}
+		giventype = ORE;
+	}
+	else {
+		cout << "incorrect resource specified" << endl;
+		goto start;
+	}
+	if (type2 == "GRAIN") {
+		wantedtype = GRAIN;
+	}
+	else if (type2 == "BRICK") {
+		wantedtype = BRICK;
+	}
+	else if (type2 == "WOOL") {
+		wantedtype = WOOL;
+	}
+	else if (type2 == "LUMBER") {
+		wantedtype = LUMBER;
+	}
+	else if (type2 == "ORE") {
+		wantedtype = ORE;
+	}
+	else {
+		cout << "incorrect resource specified" << endl;
+		goto start;
+	}
+
+	cout << "who would you like to trade with:\n";
+	for (int i = 0; i < players.size(); ++i) {
+		if (players[i].getColor() != player.getColor()) {
+			cout << i << " " << players[i].getName() << endl;
+			playercount += 1;
+		}
+		else {
+			currentplayerindex = i;
+		}
+	}
+	cin >> playerindex;
+
+question:
+	cout << players[playerindex].getName() << endl << "the following player would like to make the following trade with you:" << player.getName() << endl;
+	cout << "you receive: " << amount << " " << type << endl;
+	cout << "in exchange for: " << amount2 << " " << type2 << endl;
+	cout << "would you like to accept this trade? (yes/no)\n";
+	cin >> answer;
+	cout << endl << "before:\n";
+	cout << players[currentplayerindex].toString() << endl;
+	cout << players[playerindex].toString() << endl;
+	if (answer == "no") {
+		cout << player.getName();
+		cout << "the other player did no accept the trade\n";
+		return;
+	}
+	else if (answer == "yes") {
+		players[playerindex].removeResource(wantedtype, amount2);
+		players[currentplayerindex].addResource(wantedtype, amount2);
+		players[playerindex].addResource(giventype, amount);
+		players[currentplayerindex].removeResource(giventype, amount);
+
+	}
+	else {
+		cout << "incorrect answer";
+		goto question;
+	}
+	cout << "trade was succesfull:\n";
+	cout << players[currentplayerindex].toString() << endl;
+	cout << players[playerindex].toString() << endl;
+}
 
 void GameEngine::testSDLGE() {
 	int WIDTH{ 800 };
