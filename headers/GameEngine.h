@@ -14,6 +14,7 @@
 #include "Robber.h"
 #include "DevCardDeck.h"
 #include <SDL.h>
+#include <cmath>
 
 /// GameEngine class
 ///
