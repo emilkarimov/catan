@@ -89,6 +89,9 @@ public:
 	/// check whether a player wants to place a settlement into the sea
 	bool putInSea(int x, int y, TileIntersection z);
 
+	/// discard resources when 7 is rolled and a player has >= 8 cards
+	void discardResources();
+
 	/// draw
 	void testSDLGE();
 

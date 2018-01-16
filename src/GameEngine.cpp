@@ -357,6 +357,7 @@ unsigned int GameEngine::rollDice() {
 void GameEngine::handleRollDice(Player& player) {
 	unsigned int rolledNum = rollDice();
 	if (rolledNum == 7) { 
+		discardResources();
 		handleRobber(player);
 	}
 	else {
@@ -522,7 +523,7 @@ void GameEngine::handleRobber(Player& player) {
 	int playerindex;
 	bool incorrectInput{ true };
 	while (incorrectInput) {
-		cout << "enter new tile coordinates for the robber (x, y):\n";
+		cout << player.getName() + ", enter new tile coordinates for the robber (x, y):\n";
 		cin >> newLoc[0] >> newLoc[1];
 		while (std::cin.fail()) {
 			std::cout << "Incorrect location. Try again.\n" << std::endl;
@@ -999,6 +1000,56 @@ bool GameEngine::putInSea(int x, int y, TileIntersection z) {
 		return false;
 	}
 	return true;
+}
+
+// discard resources
+void GameEngine::discardResources() {
+	for (int i{ 0 }; i < players.size(); i++) {
+		size_t numRes{ players[i].getNumResources() };
+		size_t numDiscard{numRes/2};
+		if (numRes >= 8) {
+			cout << "\n" + players[i].getName() + ", you must discard " + to_string(numDiscard) + " resources\n";
+			cout << "you have the following resources:\n";
+			cout << "grain: " + std::to_string(players[i].getNumGrain()) + "\n"
+				"brick: " + std::to_string(players[i].getNumBrick()) + "\n"
+				"wool: " + std::to_string(players[i].getNumWool()) + "\n"
+				"lumber: " + std::to_string(players[i].getNumLumber()) + "\n"
+				"ore: " + std::to_string(players[i].getNumOre()) + "\n";
+			cout << "specify in vector form the resources to discard\n";
+			cout <<	"example: 1 0 2 1 0\n";
+			int r1;
+			int r2;
+			int r3;
+			int r4;
+			int r5;
+			cin >> r1 >> r2 >> r3 >> r4 >> r5;
+			while (std::cin.fail() || !((r1+r2+r3+r4+r5)==numDiscard) || 
+			r1 < 0 ||
+			r2 < 0 ||
+			r3 < 0 ||
+			r4 < 0 ||
+			r5 < 0 ||
+			r1>players[i].getNumGrain() ||
+			r2>players[i].getNumBrick() ||
+			r3>players[i].getNumWool() ||
+			r4>players[i].getNumLumber() ||
+			r5>players[i].getNumOre()) {
+				std::cout << "Incorrect vector. Try again.\n" << std::endl;
+				std::cin.clear();
+				std::cin.ignore(256, '\n');
+				std::cin >> r1 >> r2 >> r3 >> r4 >> r5;
+			}
+
+			players[i].removeResource(GRAIN, r1);
+			players[i].removeResource(BRICK, r2);
+			players[i].removeResource(WOOL, r3);
+			players[i].removeResource(LUMBER, r4);
+			players[i].removeResource(ORE, r5);
+
+		}
+	}
+	std::cin.clear();
+	std::cin.ignore(256, '\n');
 }
 
 void GameEngine::testSDLGE() {
