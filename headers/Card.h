@@ -14,13 +14,13 @@ public:
 	/// constructor
 	Card();
 	/// destructor
-	virtual ~Card() = default; // compiler generates virtual destructor
+	virtual ~Card() = default;
 
-							   /// draw function
-	virtual void draw() const = 0; // pure virtual    
+	/// draw function
+	virtual void draw() const = 0;
 
-								   /// textual info
-	virtual std::string toString() const; // virtual    
+	/// textual info
+	virtual std::string toString() const;  
 };
 
 #endif // CARD_H

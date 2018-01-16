@@ -106,7 +106,6 @@ void GameEngine::firstStage() {
 
 // 2nd stage - players take actions in turn
 void GameEngine::secondStage() {
-	//testSDLGE();
 	drawUpdate();
 	bool gameOver{ false };
 	while (!gameOver) {
@@ -275,7 +274,6 @@ void GameEngine::printInfoPlayers() {
 	for (Player& player : players) {
 		cout << player.toString() << "\n\n";
 	}
-	//players[0].toString();
 }
 
 // add initial resources depending on the second settlement
@@ -439,6 +437,7 @@ void GameEngine::handleBuildCity(Player& player) {
 	std::cin.ignore(256, '\n');
 }
 
+// handle road building
 void GameEngine::handleBuildRoad(Player& player) {
 	bool illegalLoc{ true }; // road is already build on this coord
 	bool illegalCorner{ true }; // no property on the corresponding corner to build a road
@@ -764,6 +763,7 @@ void GameEngine::playDevCard(Player& player) {
 	cout << player.toString();
 }
 
+// update special cards (longest road, largest army) owners if necesssary
 void GameEngine::updateSpecialCards() {
 	for (auto p : players) {
 		if (p.hasLargestArmy()) {
@@ -879,8 +879,20 @@ start:
 	string answer;
 	cout << "specify the type you give followed by the amount:\n";
 	cin >> type >> amount;
+	while (std::cin.fail()) {
+		std::cout << "Incorrect input. Try again.\n" << std::endl;
+		std::cin.clear();
+		std::cin.ignore(256, '\n');
+		std::cin >> type >> amount;
+	}
 	cout << "specify the type you want to receive followed by the amount\n";
 	cin >> type2 >> amount2;
+	while (std::cin.fail()) {
+		std::cout << "Incorrect input. Try again.\n" << std::endl;
+		std::cin.clear();
+		std::cin.ignore(256, '\n');
+		std::cin >> type2 >> amount2;
+	}
 
 	if (type == type2) {
 		cout << "the two resource types specified are equal\n";
@@ -951,11 +963,17 @@ start:
 			cout << i << " " << players[i].getName() << endl;
 			playercount += 1;
 		}
-		else {
+		if (players[i].getColor() == player.getColor()) {
 			currentplayerindex = i;
 		}
 	}
 	cin >> playerindex;
+	while (std::cin.fail() || !(playerindex>=0 || playerindex<players.size())) {
+		std::cout << "Incorrect input. Try again.\n" << std::endl;
+		std::cin.clear();
+		std::cin.ignore(256, '\n');
+		std::cin >> playerindex;
+	}
 
 question:
 	cout << players[playerindex].getName() << endl << "the following player would like to make the following trade with you:" << player.getName() << endl;
@@ -985,6 +1003,9 @@ question:
 	cout << "trade was succesfull:\n";
 	cout << players[currentplayerindex].toString() << endl;
 	cout << players[playerindex].toString() << endl;
+
+	std::cin.clear();
+	std::cin.ignore(256, '\n');
 }
 
 // check whether a player wants to place a settlement into the sea
@@ -1002,7 +1023,7 @@ bool GameEngine::putInSea(int x, int y, TileIntersection z) {
 	return true;
 }
 
-// discard resources
+// discard resources (when 7 i rolled)
 void GameEngine::discardResources() {
 	for (int i{ 0 }; i < players.size(); i++) {
 		size_t numRes{ players[i].getNumResources() };
@@ -1023,6 +1044,7 @@ void GameEngine::discardResources() {
 			int r4;
 			int r5;
 			cin >> r1 >> r2 >> r3 >> r4 >> r5;
+			// check input inside while
 			while (std::cin.fail() || !((r1+r2+r3+r4+r5)==numDiscard) || 
 			r1 < 0 ||
 			r2 < 0 ||
@@ -1052,6 +1074,7 @@ void GameEngine::discardResources() {
 	std::cin.ignore(256, '\n');
 }
 
+// test function SDL2
 void GameEngine::testSDLGE() {
 	int WIDTH{ 800 };
 	int HEIGHT{ 600 };
@@ -1105,7 +1128,7 @@ void GameEngine::testSDLGE() {
 	}
 }
 
-
+// draw tile
 void GameEngine::drawTile(SDL_Renderer* renderer, Tile& tile) {
 	int WIDTH{ 800 };
 	int HEIGHT{ 600 };
@@ -1210,6 +1233,7 @@ void GameEngine::drawTile(SDL_Renderer* renderer, Tile& tile) {
 	drawNum(renderer, x, y, tile.getDiceNum());
 }
 
+// draw road
 void GameEngine::drawRoad(SDL_Renderer* renderer, const Road& road, std::string color) {
 	int WIDTH{ 800 };
 	int HEIGHT{ 600 };
@@ -1249,6 +1273,7 @@ void GameEngine::drawRoad(SDL_Renderer* renderer, const Road& road, std::string 
 	}
 }
 
+// draw settlement
 void GameEngine::drawSettlement(SDL_Renderer* renderer, const Settlement& settlement, std::string color) {
 	int WIDTH{ 800 };
 	int HEIGHT{ 600 };
@@ -1293,6 +1318,7 @@ void GameEngine::drawSettlement(SDL_Renderer* renderer, const Settlement& settle
 	}
 }
 
+// draw city
 void GameEngine::drawCity(SDL_Renderer* renderer, const City& city, std::string color) {
 	int WIDTH{ 800 };
 	int HEIGHT{ 600 };
@@ -1339,6 +1365,7 @@ void GameEngine::drawCity(SDL_Renderer* renderer, const City& city, std::string 
 	}
 }
 
+// draw robber
 void GameEngine::drawRobber(SDL_Renderer* renderer, Robber& robber) {
 	int WIDTH{ 800 };
 	int HEIGHT{ 600 };
@@ -1361,6 +1388,7 @@ void GameEngine::drawRobber(SDL_Renderer* renderer, Robber& robber) {
 
 }
 
+// main drawing function. Draws everything on the screen by calling draw-functions
 void GameEngine::drawUpdate() {
 	//SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
 	//SDL_RenderClear(renderer);
@@ -1409,6 +1437,7 @@ void GameEngine::drawUpdate() {
 	SDL_RenderPresent(renderer);
 }
 
+// draw dice number on the tile
 void GameEngine::drawNum(SDL_Renderer* renderer, int x, int y, int num) {
 	int NUM_WIDTH{3};
 	int NUM_HEIGHT{ 6 };
@@ -1485,6 +1514,7 @@ void GameEngine::drawNum(SDL_Renderer* renderer, int x, int y, int num) {
 	}
 }
 
+// draw circle(settlement)
 void GameEngine::drawCircle(SDL_Renderer* renderer, int x, int y, int r) {
 	for (int alpha{ 0 }; alpha < 360; alpha++) {
 		double angle{ alpha * 3.14 / 180 };
@@ -1502,6 +1532,7 @@ void GameEngine::drawCircle(SDL_Renderer* renderer, int x, int y, int r) {
 	}
 }
 
+// draw filled circle (city)
 void GameEngine::drawFilledCircle(SDL_Renderer* renderer, int x, int y, int r) {
 	for (int alpha{ 0 }; alpha < 360; alpha++) {
 		double angle{ alpha * 3.14 / 180 };

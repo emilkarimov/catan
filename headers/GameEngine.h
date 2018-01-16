@@ -50,7 +50,7 @@ public:
 	/// checks if a road is available for building a new road
 	bool roadAvailable(int x, int y, TileEdge edge);
 
-	/// roll dice and continue based on 
+	/// roll dice and continue based on outcome
 	unsigned int rollDice();
 
 	/// distribute resources depending on the rolled dice number
@@ -75,13 +75,13 @@ public:
 	bool playersOnTile(Player& p, int x, int y);
 
 	/// play a dev card
-	void GameEngine::playDevCard(Player& player);
+	void playDevCard(Player& player);
 
 	/// update special cards and its owners
-	void GameEngine::updateSpecialCards();
+	void updateSpecialCards();
 
 	/// player trading with bank
-	void GameEngine::tradeBank(Player& player);
+	void tradeBank(Player& player);
 
 	/// player to player trading 
 	void playerTrading(Player& player);
@@ -92,26 +92,26 @@ public:
 	/// discard resources when 7 is rolled and a player has >= 8 cards
 	void discardResources();
 
-	/// draw
+	// drawing functions
+	/// drawing test
 	void testSDLGE();
-
 	/// draw tiles
-
 	void drawTile(SDL_Renderer* renderer, Tile& tile);
-
+	/// draw road
 	void drawRoad(SDL_Renderer* renderer, const Road& road, std::string color);
-
+	/// draw settlement
 	void drawSettlement(SDL_Renderer* renderer, const Settlement& settlement, std::string color);
-
+	/// draw city
 	void drawCity(SDL_Renderer* renderer, const City& city, std::string color);
-
+	/// draw robber
 	void drawRobber(SDL_Renderer* renderer, Robber& robber);
-
+	/// draw everything
 	void drawUpdate();
-
+	/// draw numbers on tiles
 	void drawNum(SDL_Renderer* renderer, int x, int y, int num);
-
+	/// draw circle (settlement)
 	void drawCircle(SDL_Renderer* renderer, int x, int y, int r);
+	/// draw filled circle (city)
 	void drawFilledCircle(SDL_Renderer* renderer, int x, int y, int r);
 private:
 	std::vector<Player> players;

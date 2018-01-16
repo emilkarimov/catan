@@ -369,6 +369,7 @@ bool Player::hasSettlementAtCoord(int x, int y, int z) const {
 	return false;
 }
 
+// check if a player has a road on specific coord
 bool Player::hasRoadAtCoord(int x, int y, int z) const {
 	std::array<int, 3> coord{ x, y, z };
 	for (const Road& road : roads) {
@@ -414,7 +415,7 @@ bool Player::canContRoad(int x, int y, int z) const {
 	return false;
 }
 
-/// check if a player has a city on specific coord
+// check if a player has a city on specific coord
 bool Player::hasCityAtCoord(int x, int y, int z) const {
 	std::array<int, 3> coord{ x, y, z };
 	for (const City& city : cities) {
@@ -464,7 +465,7 @@ bool Player::hasResource(Resource type, int num) {
 	return false;
 }
 
-/// longest road
+// longest road (not finished)
 int Player::calculateLongestRoad(std::vector<Road> visitedRoads = {}) {
-	return 1;
+	return roads.size();
 }

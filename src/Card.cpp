@@ -8,7 +8,7 @@ using namespace std;
 // constructor
 Card::Card() {}
 
-// toString Card's information (virtual, but not pure virtual)
+// toString Card's information
 string Card::toString() const {
 	return "Some unspecified Card";
 }

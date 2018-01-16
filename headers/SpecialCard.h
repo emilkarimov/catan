@@ -11,15 +11,20 @@
 
 class SpecialCard : public Card {
 public:
+	/// constructor
 	SpecialCard(SpecialType);
-	virtual ~SpecialCard() = default; // virtual destructor
+	virtual ~SpecialCard() = default;
 
+	/// getter type
 	SpecialType getType() const;
 
-	// keyword virtual signals intent to override    
+	/// draw
 	virtual void draw() const override;
+
+	/// string info
 	virtual std::string toString() const override;
 private:
+	/// type
 	SpecialType type;
 };
 

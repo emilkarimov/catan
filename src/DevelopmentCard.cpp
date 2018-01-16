@@ -10,10 +10,12 @@ DevelopmentCard::DevelopmentCard(Devtype type) : type(type) {
 
 }
 
+// type of dev card
 Devtype DevelopmentCard::getType() const {
 	return type;
 }
 
+// string info
 string DevelopmentCard::toString() const {
 	switch (type) {
 	case KNIGHT:
@@ -31,13 +33,17 @@ string DevelopmentCard::toString() const {
 	}
 }
 
+// draw
 void DevelopmentCard::draw() const {
 	cout << "draw development card\n";
 }
 
+// check if the card was played
 bool DevelopmentCard::checkplayedcard() const {
 	return played;
 }
+
+// play the card
 void DevelopmentCard::playcard() {
 	played = 1;
 }

@@ -57,13 +57,7 @@
     <ClCompile Include="src\SpecialCard.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Constants.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\DevCardDeck.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\LongRoad.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -110,16 +104,7 @@
     <ClInclude Include="headers\SpecialCard.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="headers\Constants.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="headers\CornerCoord.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="headers\DevCardDeck.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="headers\LongRoad.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -18,9 +18,9 @@ public:
 	/// \param y y-coordinate of the robber
 	Robber(int x, int y);
 	/// destructor
-	~Robber() = default; // virtual destructor
+	~Robber() = default;
 
-						 /// draw function
+	/// draw function
 	void draw() const;
 
 	/// textual info

@@ -12,7 +12,6 @@
 #include "Settlement.h"
 #include "City.h"
 #include <vector>
-#include "LongRoad.h"
 
 /// Player class
 ///
@@ -25,10 +24,10 @@ public:
 	Player(std::string name, Color color);
 
 	/// destructor
-	~Player() = default; // compiler generates virtual destructor
+	~Player() = default;
 
-						 /// text info about player
-						 /// \return string with info about player
+	/// text info about player
+	/// \return string with info about player
 	std::string toString() const;
 
 	/// text for all roads
@@ -128,7 +127,7 @@ public:
 	void addspecialCard(SpecialType type);
 
 	/// remove a special card
-	void Player::removespecialCard(SpecialType type);
+	void removespecialCard(SpecialType type);
 
 	/// check for largest army ownership
 	bool hasLargestArmy();

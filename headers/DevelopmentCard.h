@@ -20,10 +20,10 @@ public:
 	DevelopmentCard(Devtype type);
 
 	/// destructor
-	virtual ~DevelopmentCard() = default; // virtual destructor
+	virtual ~DevelopmentCard() = default; 
 
-										  /// getter type
-										  /// \return type
+	/// getter type
+	/// \return type
 	Devtype getType() const;
 
 	/// check whether the dev card was played

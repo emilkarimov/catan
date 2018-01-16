@@ -16,18 +16,20 @@
 class Board {
 public:
 	/// constructor
-	/// \param a array with pointers to 37 tiles
+	/// \param a vector with 37 tiles
 	Board(std::vector<Tile> tiles);
 	/// destructor
-	~Board() = default; // virtual destructor
+	~Board() = default;
 
-						/// draw function
+	/// draw function
 	void draw() const;
 
 	/// textual info
 	std::string toString() const;
 
 	/// find tile with specific x y coordinates and return the reference
+	/// \param x x coordinate of tile
+	/// \param y y coordinate of tile
 	Tile* getTile(int x, int y);
 
 	/// coordinates of adjacent corners. Actual tiles with these coordinates might not exist
@@ -37,6 +39,7 @@ public:
 	/// finds all tiles with a specific dice number
 	std::vector<std::array<int, 3>> findCornersAtDiceNum(unsigned int diceNum);
 
+	/// finds all the tiles withe the specified dice number
 	std::vector<Tile> findTilesWithDiceNum(unsigned int diceNum);
 
 	/// all corners of a pecific tile
