@@ -795,10 +795,10 @@ start:
 	string type2;
 	Resource giventype{ NORES };
 	Resource wantedtype{ NORES };
-	//cout << "specify the resource types to be traded with the bank followed by the type you want to receive\n";
-	//cout << "followed by the amount you would like to receive (trading rate 4:1):" << endl;
-	cout << "specify your deal: give get amount\n";
-	cout << "example: {grain, brick, wool, lumber, ore} {grain, brick, wool, lumber, ore} n";
+	cout << "specify the resource types to be traded with the bank followed by the type you want to receive\n";
+	cout << "followed by the amount you would like to receive (trading rate 4:1):" << endl;
+	cout << "resource types: {grain, brick, wool, lumber, ore}\n";
+	cout << "example input: grain brick 1\n";
 	cin >> type >> type2 >> amount;
 	if (type == type2) {
 		cout << "the two resource types specified are equal\n";
