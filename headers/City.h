@@ -18,10 +18,10 @@ public:
 	City(int, int, TileIntersection);
 
 	/// destructor
-	virtual ~City() = default; // virtual destructor
+	virtual ~City() = default;
 
-							   /// getter location
-							   /// \return location
+	/// getter location
+	/// \return location
 	const std::array<int, 3>& getLoc() const;
 
 	/// draw function 

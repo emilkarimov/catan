@@ -24,10 +24,10 @@ public:
 	Player(std::string name, Color color);
 
 	/// destructor
-	~Player() = default; // compiler generates virtual destructor
+	~Player() = default;
 
-						 /// text info about player
-						 /// \return string with info about player
+	/// text info about player
+	/// \return string with info about player
 	std::string toString() const;
 
 	/// text for all roads
@@ -127,7 +127,7 @@ public:
 	void addspecialCard(SpecialType type);
 
 	/// remove a special card
-	void Player::removespecialCard(SpecialType type);
+	void removespecialCard(SpecialType type);
 
 	/// check for largest army ownership
 	bool hasLargestArmy();
@@ -167,6 +167,15 @@ public:
 
 	/// check if a player has a settlement or a city on specific coord
 	bool hasPropertyAtCoord(int x, int y, int z) const;
+
+	/// check if a player has a road on a speific coord
+	bool hasRoadAtCoord(int x, int y, int z) const;
+
+	/// check if a player has this amount of resources
+	bool hasResource(Resource type, int num);
+
+	/// check if a player can extend his road
+	bool canContRoad(int x, int y, int z) const;
 private:
 	// buildings
 	/// roads
@@ -205,6 +214,10 @@ private:
 
 	/// special cards
 	std::vector<SpecialCard> specialCards;
+
+	/// longest road
+	int calculateLongestRoad(std::vector<Road> visitedRoads);
+
 };
 
 #endif // PLAYER_H

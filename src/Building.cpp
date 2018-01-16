@@ -9,7 +9,7 @@ using namespace std;
 Building::Building() {
 }
 
-// toString Building's information (virtual, but not pure virtual)
+// toString Building's information
 string Building::toString() const {
 	return "Some unspecified Building";
 }

@@ -22,11 +22,16 @@ public:
 
 	/// destructor
 	~DevCardDeck() = default;
+
+	/// initialize deck
 	void initDeck();
+
+	/// buy dev card
 	void buyDevelopmentCard(Player& player);
+
+	/// add dev card
 	void addDevelopmentCard(Devtype type);
 
-	///	grain.push_back(ResourceCard(GRAIN));
 	/// draw function 
 	virtual void draw() const ;
 

@@ -18,9 +18,9 @@ public:
 	Settlement(int, int, TileIntersection);
 
 	/// destructor
-	virtual ~Settlement() = default; // virtual destructor
+	virtual ~Settlement() = default; 
 
-									 /// getter location
+	/// getter location
 	const std::array<int, 3>& getLoc() const;
 
 	/// draw function   

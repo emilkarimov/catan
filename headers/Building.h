@@ -13,12 +13,14 @@ class Building {
 public:
 	/// constructor
 	Building();
+
 	/// destructor
 	virtual ~Building() = default; // compiler generates virtual destructor
-								   /// draw function
+
+    /// draw function
 	virtual void draw() const = 0; // pure virtual  
 
-								   /// text function
+	/// text function
 	virtual std::string toString() const; // virtual    
 
 private:

@@ -17,9 +17,9 @@ public:
 	Tile(int, int, Terrain, int);
 
 	/// destructor
-	~Tile() = default; // virtual destructor
+	~Tile() = default;
 
-					   /// getter type of tile
+	/// getter type of tile
 	Terrain getTerrainType() const;
 
 	/// getter number of tile

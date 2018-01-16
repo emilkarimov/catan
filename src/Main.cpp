@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <map>
 #include <iostream>
+#include <math.h>
 
 #include "Building.h"
 #include "City.h"
@@ -17,22 +18,37 @@
 #include "Tile.h"
 #include "Robber.h"
 #include "GameEngine.h"
-#include "CornerCoord.h"
+//Using SDL and standard IO
+#include <SDL.h>
+#include <stdio.h>
 
+//Screen dimension constants
+const int SCREEN_WIDTH = 640;
+const int SCREEN_HEIGHT = 480;
 using namespace std;
 
-void rollDice();
+// test functions declarations
 void iterOneCheck();
 void testFirstStage();
 void testSecondStage();
 void testSecondStage2();
+void testSecondStage3();
 void testFindCorners();
 void testDestributeResources();
 void testRollDice();
+void testGame();
+void testSDL1();
+void testSDL2();
+void testSDL3();
+void testSDL4();
+void testSDL5();
+
+// 37 default tiles
 vector<Tile> createDefaultTiles();
+// 4 default players
 vector<Player> createDefaultPlayers();
 
-int main()
+int main(int argc, char* args[])
 {
 	// Let's keep the main clean. If you want to do some tests with your code, you can just create
 	// a function and call it from here like it is done below:
@@ -47,7 +63,7 @@ int main()
 	//testSecondStage();
 
 	// test second stage2
-	testSecondStage2();
+	//testSecondStage2();
 
 	// test findCorners
 	//testFindCorners();
@@ -57,9 +73,17 @@ int main()
 
 	// test roll dice
 	// testRollDice();
+
+	// SDL experiments
+	//testSDL5();
+
+	// test full game (demo)
+	testSecondStage3();
+
+	// test full game
+	//testGame();
+	return 0;
 }
-
-
 
 void iterOneCheck() {
 	// create players
@@ -194,7 +218,6 @@ void testFirstStage() {
 	game.printInfoPlayers();
 }
 
-
 void testSecondStage() {
 	// player initialisation
 	Player player = Player("Alex", RED);
@@ -274,7 +297,6 @@ void testDestributeResources() {
 	game.printInfoPlayers();
 }
 
-
 void testRollDice() {
 	// Default tiles
 	vector<Tile> defaultTiles = createDefaultTiles();
@@ -288,7 +310,6 @@ void testRollDice() {
 
 	cout << game.rollDice() << "\n";
 }
-
 
 void testSecondStage2() {
 	// player initialisation
@@ -366,4 +387,74 @@ void testSecondStage2() {
 	Board board = Board(defaultTiles);
 	GameEngine game(players, board);
 	game.secondStage();
+}
+
+void testSecondStage3() {
+	// player initialisation
+	Player player1 = Player("Dave (red)", RED);
+	player1.buildSettlement(-1, 0, TOP);
+	player1.buildRoad(-1, 0, UP);
+	player1.buildSettlement(1, 0, BOTTOM);
+	player1.buildRoad(0, -1, RIGHT);
+	player1.addResource(LUMBER, 1);
+	player1.addResource(ORE, 1);
+	player1.addResource(WOOL, 1);
+	
+	Player player2 = Player("Emil (blue)", BLUE);
+	player2.buildSettlement(0, 1, TOP);
+	player2.buildRoad(0, 1, UP);
+	player2.buildSettlement(2, 2, BOTTOM);
+	player2.buildRoad(1, 1, RIGHT);
+	player2.addResource(LUMBER, 1);
+	player2.addResource(GRAIN, 1);
+	player2.addResource(WOOL, 1);
+
+	Player player3 = Player("Bram (yellow)", YELLOW);
+	player3.buildSettlement(2, 1, BOTTOM);
+	player3.buildRoad(1, 0, RIGHT);
+	player3.buildSettlement(-1, -1, BOTTOM);
+	player3.buildRoad(-1, -1, DOWN);
+	player3.addResource(ORE, 1);
+	player3.addResource(WOOL, 1);
+	player3.addResource(BRICK, 1);
+	
+	Player player4 = Player("Alex (green)", GREEN);
+	player4.buildSettlement(1, 1, BOTTOM);
+	player4.buildRoad(0, 0, UP);
+	player4.buildSettlement(-2, -1, TOP);
+	player4.buildRoad(-2, -1, UP);
+	player4.addResource(LUMBER, 1);
+	player4.addResource(BRICK, 1);
+	player4.addResource(GRAIN, 1);
+
+	// vector of players
+	vector<Player> players;
+	players.push_back(player1);
+	players.push_back(player2);
+	players.push_back(player3);
+	players.push_back(player4);
+	vector<Tile> defaultTiles = createDefaultTiles();
+	Board board = Board(defaultTiles);
+	GameEngine game(players, board);
+	game.printInfoPlayers();
+	game.secondStage();
+}
+
+void testGame() {
+	// player initialisation
+	Player player1 = Player("Dave", RED);
+	Player player2 = Player("Emil", BLUE);
+	Player player3 = Player("Bram", YELLOW);
+	Player player4 = Player("Alex", GREEN);
+	
+	// vector of players
+	vector<Player> players;
+	players.push_back(player1);
+	players.push_back(player2);
+	players.push_back(player3);
+	players.push_back(player4);
+	vector<Tile> defaultTiles = createDefaultTiles();
+	Board board = Board(defaultTiles);
+	GameEngine game(players, board);
+	game.start();
 }

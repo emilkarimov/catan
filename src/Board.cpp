@@ -80,6 +80,7 @@ std::array<std::array<int, 3>, 3> Board::getAdjacentCorners(int x, int y, TileIn
 	return corners;
 }
 
+// finds all tiles with a specific dice number
 std::vector<std::array<int, 3>> Board::findCornersAtDiceNum(unsigned int diceNum) {
 	std::vector<std::array<int, 3>> corners;
 	for (const Tile& tile : tiles) {
@@ -94,6 +95,7 @@ std::vector<std::array<int, 3>> Board::findCornersAtDiceNum(unsigned int diceNum
 	return corners;
 }
 
+// finds all the tiles withe the specified dice number
 std::vector<Tile> Board::findTilesWithDiceNum(unsigned int diceNum) {
 	std::vector<Tile> tilesWithDiceNum;
 	for (const Tile& tile : tiles) {
@@ -105,7 +107,7 @@ std::vector<Tile> Board::findTilesWithDiceNum(unsigned int diceNum) {
 	return tilesWithDiceNum;
 }
 
-
+// all corners of a pecific tile
 std::array<std::array<int, 3>, 6> Board::getSixCorners(int x, int y) {
 	// coordinates of the six corners
 	std::array<int, 3> c1{ x, y, TOP };
@@ -119,4 +121,19 @@ std::array<std::array<int, 3>, 6> Board::getSixCorners(int x, int y) {
 	std::array<std::array<int, 3>, 6> allCorners{ c1, c2, c3, c4, c5, c6 };
 
 	return allCorners;
+}
+
+// return al tiles in a vector
+std::vector<Tile> Board::getTiles() const {
+	return tiles;
+}
+
+// checks whether the board has a tile with xy coordinates
+bool Board::hasTile(int x, int y) {
+	for (Tile& tileRef : tiles) {
+		if (tileRef.getCoord()[0] == x && tileRef.getCoord()[1] == y) {
+			return true;
+		}
+	}
+	return false; // return false if there are no tiles with such coordinates
 }

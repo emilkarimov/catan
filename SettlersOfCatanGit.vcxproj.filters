@@ -57,9 +57,6 @@
     <ClCompile Include="src\SpecialCard.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Constants.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\DevCardDeck.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -105,9 +102,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="headers\SpecialCard.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="headers\Constants.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="headers\CornerCoord.h">

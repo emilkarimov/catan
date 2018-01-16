@@ -75,6 +75,7 @@ std::array<int, 2> Tile::getNeighborCoord(int neighbor) const {
 	return neighborCoord;
 }
 
+// type of resource the tile produces
 Resource Tile::produces() const {
 	switch (getTerrainType()) {
 	case DESERT:

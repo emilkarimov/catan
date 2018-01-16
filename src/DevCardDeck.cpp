@@ -9,6 +9,7 @@
 #include "time.h"
 using namespace std;
 
+// string info
 string DevCardDeck::toString() const {
 	cout << "The deck currently contains:\n";
 	for (auto e: deck) {
@@ -18,11 +19,12 @@ string DevCardDeck::toString() const {
 	return "development card deck";
 }
 
+// draw function
 void DevCardDeck::draw() const {
 	cout << "draw development card\n";
 }
 
-
+// buy dev card. Gives a new dev card to player, removes resources from player
 void DevCardDeck::buyDevelopmentCard(Player& player) {
 	if (player.getNumGrain() < 1 && player.getNumWool() < 1 && player.getNumOre() < 1) {
 		cout << "insufficient resources\n";
@@ -39,10 +41,12 @@ void DevCardDeck::buyDevelopmentCard(Player& player) {
 	player.removeResource(ORE, 1);
 }
 
+// add dev card to the deck
 void DevCardDeck::addDevelopmentCard(Devtype type) {
 	deck.push_back(DevelopmentCard(type));
 }
 
+// initialization
 void DevCardDeck::initDeck() {
 	for (int i = 0; i < 14; i++) {
 		addDevelopmentCard(KNIGHT);

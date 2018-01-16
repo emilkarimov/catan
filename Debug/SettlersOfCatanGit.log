@@ -1,0 +1,55 @@
+﻿  Tile.cpp
+  SpecialCard.cpp
+  Settlement.cpp
+  Robber.cpp
+  Road.cpp
+  ResourceCard.cpp
+  Player.cpp
+src\Player.cpp(278): warning C4018: '<': signed/unsigned mismatch
+src\Player.cpp(316): warning C4018: '<': signed/unsigned mismatch
+src\Player.cpp(438): warning C4018: '>=': signed/unsigned mismatch
+src\Player.cpp(443): warning C4018: '>=': signed/unsigned mismatch
+src\Player.cpp(448): warning C4018: '>=': signed/unsigned mismatch
+src\Player.cpp(453): warning C4018: '>=': signed/unsigned mismatch
+src\Player.cpp(458): warning C4018: '>=': signed/unsigned mismatch
+  Main.cpp
+  GameEngine.cpp
+src\GameEngine.cpp(323): warning C4018: '<': signed/unsigned mismatch
+src\GameEngine.cpp(335): warning C4018: '<': signed/unsigned mismatch
+src\GameEngine.cpp(568): warning C4018: '<': signed/unsigned mismatch
+src\GameEngine.cpp(587): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+src\GameEngine.cpp(589): warning C4018: '<': signed/unsigned mismatch
+src\GameEngine.cpp(593): warning C4018: '<': signed/unsigned mismatch
+src\GameEngine.cpp(597): warning C4018: '<': signed/unsigned mismatch
+src\GameEngine.cpp(601): warning C4018: '<': signed/unsigned mismatch
+src\GameEngine.cpp(605): warning C4018: '<': signed/unsigned mismatch
+src\GameEngine.cpp(631): warning C4018: '<': signed/unsigned mismatch
+src\GameEngine.cpp(808): warning C4018: '<': signed/unsigned mismatch
+src\GameEngine.cpp(815): warning C4018: '<': signed/unsigned mismatch
+src\GameEngine.cpp(822): warning C4018: '<': signed/unsigned mismatch
+src\GameEngine.cpp(829): warning C4018: '<': signed/unsigned mismatch
+src\GameEngine.cpp(836): warning C4018: '<': signed/unsigned mismatch
+src\GameEngine.cpp(903): warning C4018: '<': signed/unsigned mismatch
+src\GameEngine.cpp(910): warning C4018: '<': signed/unsigned mismatch
+src\GameEngine.cpp(917): warning C4018: '<': signed/unsigned mismatch
+src\GameEngine.cpp(924): warning C4018: '<': signed/unsigned mismatch
+src\GameEngine.cpp(931): warning C4018: '<': signed/unsigned mismatch
+src\GameEngine.cpp(962): warning C4018: '<': signed/unsigned mismatch
+src\GameEngine.cpp(972): warning C4018: '<': signed/unsigned mismatch
+src\GameEngine.cpp(1029): warning C4018: '<': signed/unsigned mismatch
+src\GameEngine.cpp(1055): warning C4018: '>': signed/unsigned mismatch
+src\GameEngine.cpp(1056): warning C4018: '>': signed/unsigned mismatch
+src\GameEngine.cpp(1057): warning C4018: '>': signed/unsigned mismatch
+src\GameEngine.cpp(1058): warning C4018: '>': signed/unsigned mismatch
+src\GameEngine.cpp(1059): warning C4018: '>': signed/unsigned mismatch
+src\GameEngine.cpp(1095): warning C4101: 'event': unreferenced local variable
+  DevelopmentCard.cpp
+  DevCardDeck.cpp
+src\DevCardDeck.cpp(34): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+  City.cpp
+  Card.cpp
+  Building.cpp
+  Board.cpp
+  Generating Code...
+     Creating library C:\catan\Debug\SettlersOfCatanGit.lib and object C:\catan\Debug\SettlersOfCatanGit.exp
+  SettlersOfCatanGit.vcxproj -> C:\catan\Debug\SettlersOfCatanGit.exe

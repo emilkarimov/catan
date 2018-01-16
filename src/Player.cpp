@@ -137,7 +137,7 @@ int Player::getNumVictorycards() const {
 
 // get number of victory points
 size_t Player::getVictoryPoints() const {
-	return getNumSettlements() + 2 * getNumCities() + getNumVictorycards() + getNumSpecial();
+	return getNumSettlements() + getNumCities() + getNumVictorycards() + getNumSpecial();
 }
 
 
@@ -149,6 +149,7 @@ void Player::buildSettlement(int x, int y, TileIntersection intersec) {
 // build a road
 void Player::buildRoad(int x, int y, TileEdge edge) {
 	roads.push_back(Road(x, y, edge));
+
 }
 
 // build a city
@@ -158,7 +159,7 @@ void Player::buildCity(int x, int y, TileIntersection intersec) {
 
 // to string
 std::string Player::toString() const {
-	return getName() + ":" +
+	return "\n" + getName() + ":" +
 		"\ncolor: " + (getColor()) +
 		"\nroads: " + std::to_string(getNumRoads()) +
 		"\n" + toStringRoads() +
@@ -357,7 +358,7 @@ bool Player::canBuyDev() {
 		getNumOre() >= DEV_COST[ORE];
 }
 
-/// check if a player has a settlement on specific coord
+// check if a player has a settlement on specific coord
 bool Player::hasSettlementAtCoord(int x, int y, int z) const {
 	std::array<int, 3> coord{ x, y, z };
 	for (const Settlement& settlement : settlements) {
@@ -368,7 +369,53 @@ bool Player::hasSettlementAtCoord(int x, int y, int z) const {
 	return false;
 }
 
-/// check if a player has a city on specific coord
+// check if a player has a road on specific coord
+bool Player::hasRoadAtCoord(int x, int y, int z) const {
+	std::array<int, 3> coord{ x, y, z };
+	for (const Road& road : roads) {
+		if (road.getLoc() == coord) {
+			return true;
+		}
+	}
+	return false;
+}
+
+// can continue his road?
+bool Player::canContRoad(int x, int y, int z) const {
+	if (hasRoadAtCoord(x, y, z)) { return false; } // false if player already has road here
+	switch (z) {
+	case UP:
+		if (hasRoadAtCoord(x, y+1, RIGHT) || 
+			hasRoadAtCoord(x, y+1, DOWN) ||
+			hasRoadAtCoord(x+1, y+1, DOWN) ||
+			hasRoadAtCoord(x, y, RIGHT)) {
+			return true;
+		}
+		break;
+	case RIGHT:
+		if (hasRoadAtCoord(x, y, UP) ||
+			hasRoadAtCoord(x+1, y + 1, DOWN) ||
+			hasRoadAtCoord(x, y, DOWN) ||
+			hasRoadAtCoord(x, y-1, UP)) {
+			return true;
+		}
+		break;
+	case DOWN:
+		if (hasRoadAtCoord(x, y, RIGHT) ||
+			hasRoadAtCoord(x, y-1, UP) ||
+			hasRoadAtCoord(x-1, y-1, UP) ||
+			hasRoadAtCoord(x-1, y-1, RIGHT)) {
+			return true;
+		}
+		break;
+	default:
+		return false;
+	}
+
+	return false;
+}
+
+// check if a player has a city on specific coord
 bool Player::hasCityAtCoord(int x, int y, int z) const {
 	std::array<int, 3> coord{ x, y, z };
 	for (const City& city : cities) {
@@ -379,7 +426,46 @@ bool Player::hasCityAtCoord(int x, int y, int z) const {
 	return false;
 }
 
-/// check if a player has a settlement or a city on specific coord
+// check if a player has a settlement or a city on specific coord
 bool Player::hasPropertyAtCoord(int x, int y, int z) const {
 	return (hasCityAtCoord(x, y, z) || hasSettlementAtCoord(x, y, z));
+}
+
+// check if a player has this amount of resources
+bool Player::hasResource(Resource type, int num) {
+	switch (type) {
+	case GRAIN:
+		if (getNumGrain() >= num) {
+			return true;
+		}
+		break;
+	case BRICK:
+		if (getNumBrick() >= num) {
+			return true;
+		}
+		break;
+	case WOOL:
+		if (getNumWool() >= num) {
+			return true;
+		}
+		break;
+	case LUMBER:
+		if (getNumLumber() >= num) {
+			return true;
+		}
+		break;
+	case ORE:
+		if (getNumOre() >= num) {
+			return true;
+		}
+		break;
+	default:
+		return false;
+	}
+	return false;
+}
+
+// longest road (not finished)
+int Player::calculateLongestRoad(std::vector<Road> visitedRoads = {}) {
+	return roads.size();
 }
