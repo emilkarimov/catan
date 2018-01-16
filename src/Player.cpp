@@ -149,6 +149,7 @@ void Player::buildSettlement(int x, int y, TileIntersection intersec) {
 // build a road
 void Player::buildRoad(int x, int y, TileEdge edge) {
 	roads.push_back(Road(x, y, edge));
+
 }
 
 // build a city
@@ -461,4 +462,9 @@ bool Player::hasResource(Resource type, int num) {
 		return false;
 	}
 	return false;
+}
+
+/// longest road
+int Player::calculateLongestRoad(std::vector<Road> visitedRoads = {}) {
+	return 1;
 }

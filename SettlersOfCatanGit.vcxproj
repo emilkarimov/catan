@@ -136,6 +136,7 @@
     <ClCompile Include="src\DevCardDeck.cpp" />
     <ClCompile Include="src\DevelopmentCard.cpp" />
     <ClCompile Include="src\GameEngine.cpp" />
+    <ClCompile Include="src\LongRoad.cpp" />
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\Player.cpp" />
     <ClCompile Include="src\ResourceCard.cpp" />
@@ -156,6 +157,7 @@
     <ClInclude Include="headers\DevelopmentCard.h" />
     <ClInclude Include="headers\Enums.h" />
     <ClInclude Include="headers\GameEngine.h" />
+    <ClInclude Include="headers\LongRoad.h" />
     <ClInclude Include="headers\Player.h" />
     <ClInclude Include="headers\ResourceCard.h" />
     <ClInclude Include="headers\Road.h" />

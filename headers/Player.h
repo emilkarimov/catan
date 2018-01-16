@@ -12,6 +12,7 @@
 #include "Settlement.h"
 #include "City.h"
 #include <vector>
+#include "LongRoad.h"
 
 /// Player class
 ///
@@ -214,6 +215,10 @@ private:
 
 	/// special cards
 	std::vector<SpecialCard> specialCards;
+
+	/// longest road
+	int calculateLongestRoad(std::vector<Road> visitedRoads);
+
 };
 
 #endif // PLAYER_H
